@@ -1,0 +1,253 @@
+(* This is a ProVerif description of the Protocol Flow from the SISSI architecture. *)
+
+(* START keys *)
+type SecretKey.
+type PublicKey.
+fun pk(SecretKey):PublicKey.
+(* END keys *)
+
+(* START asymmetric encryption *)
+fun aenc(bitstring(*the message*), PublicKey):bitstring (*asymmetric encrypt input msg*).
+reduc forall msg:bitstring,sk:SecretKey; adec(aenc(msg,pk(sk)),sk)=msg (*asymmetric decrypt*).
+(* END Asymmetric encryption *)
+
+(* START digital signature *)
+fun sign(bitstring(*the message*), SecretKey):bitstring (*sign the input msg*).
+reduc forall msg:bitstring,sk:SecretKey; auth(sign(msg,sk),pk(sk))=msg (*check signature, and get msg*).
+reduc forall msg:bitstring,sk:SecretKey; getMsg(sign(msg,sk))=msg (*just get msg*).
+(* END digital signature *)
+
+(* ALTERNATIVE model authcrypt directly as a set of corresponding funcs and reducs...*)
+letfun authcrypt(msg:bitstring,sk:SecretKey,pk:PublicKey) = aenc(sign(msg,sk),pk).
+letfun authdecrypt(cipher:bitstring,sk:SecretKey,pk:PublicKey) = auth(adec(cipher,sk),pk).
+(* ALTERNATIVE model authcrypt directly as a set of corresponding funcs and reducs...*)
+
+(* START DID *)
+type DID.
+fun genDID(PublicKey,SecretKey(*such that DID can not be inferred by others*)):DID.
+reduc forall sk:SecretKey; getPubKey(genDID(pk(sk),sk)) = pk(sk). (* as of page 129 of manual *)
+(* this implies that a DID may only be associated to only one pubKey, which is not true => model as table*)
+(* but tables do not seem to be publically available? as of page 41 of manual *)
+(* END DID *)
+
+(* START credential *)
+type VC.
+fun issueVC(DID(*the subject*),bitstring(*the attribute*),SecretKey(*for issuer DID and signing*)):VC.
+reduc forall subject:DID,attr:bitstring,issuerSk:SecretKey; verify(issueVC(subject,attr,issuerSk),pk(issuerSk))=(subject,attr,genDID(pk(issuerSk),issuerSk)).
+reduc forall subject:DID,attr:bitstring,issuerSk:SecretKey; getIssuerFromVC(issueVC(subject,attr,issuerSk))=genDID(pk(issuerSk),issuerSk).
+reduc forall subject:DID,attr:bitstring,issuerSk:SecretKey; getAttrFromVC(issueVC(subject,attr,issuerSk))=attr.
+reduc forall subject:DID,attr:bitstring,issuerSk:SecretKey; getSubjectFromVC(issueVC(subject,attr,issuerSk))=subject.
+reduc forall subject:DID,attr:bitstring,issuerSk:SecretKey; getVcAsTuple(issueVC(subject,attr,issuerSk))= (subject,attr,genDID(pk(issuerSk),issuerSk)).
+(* do table for (attr,isserDID) lookup*)
+(* for now use if then *)
+(* END credential *)
+
+(* START access control rule (ACR) *)
+type ACR. (*access control rule*)
+fun makeRule(DID(*the subject*),bitstring(*the attribute*),DID(*the issuer*)):ACR. (* technically, the subject is dynamically injected or when unknown an implicit placeholder in the rule; but for the sake of simplicity we omit that technical detail.*)
+reduc forall subject:DID,attr:bitstring,issuer:DID; getIssuerFromRule(makeRule(subject,attr,issuer))=issuer.
+reduc forall subject:DID,attr:bitstring,issuer:DID; getAttrFromRule(makeRule(subject,attr,issuer))=attr.
+reduc forall subject:DID,attr:bitstring,issuer:DID; getSubjectFromRule(makeRule(subject,attr,issuer))=subject.
+reduc forall subject:DID,attr:bitstring,issuer:DID; getRuleAsTuple(makeRule(subject,attr,issuer))=(subject,attr,issuer).
+(* END access control rule *)
+
+(*DEFS*)
+free h:channel.
+const sk_prover:SecretKey [private].
+const sk_verifier:SecretKey [private].
+const sk_issuer:SecretKey [private].
+const attr:bitstring.
+const uri:bitstring.
+
+(* event received_vp_from_proverDID. *)
+(* event received_vc_matching_rule. *)
+(* event received_access_token. *)
+
+
+event error_nonce_p.
+event error_nonce_v.
+event error_nonce_c.
+event error_unkown_uri.
+event error_no_cred_matching_rule.
+event error_no_match_in_issuer.
+event error_no_match_in_attr.
+
+event debug.
+
+(* START process macros ~ agent *)
+
+(** START Prover **)
+let prover(sk:SecretKey, cred:VC, verifierDID:DID) (* input ~ what the agent starts with in private*) =
+    (* get Verifier DID *)
+    (* lookup uri -> V*) (* TODO lookup V *)            
+    (* lookup pubkey of V *)         
+    let pk_v = getPubKey(verifierDID) in
+    (* mint session key pair *)        
+    new ssk:SecretKey;                          
+    (* mint a nonce *)
+    new n_p:bitstring;
+    (* send authcrypt msg*)
+    out(h, authcrypt((n_p,pk(ssk)),ssk,pk_v));
+    (**)
+    (**)
+    (**)
+    (**)
+    (**)
+    (**)
+    (* receive msg *)
+    in(h,x:bitstring);
+    (* authdecrypt msg *)
+    let msg = authdecrypt(x,ssk,pk_v) in (*<= ERROR*)
+    (* deconstruct msg=(n'_p,n_v,pk(ssk_v)) *)
+    let (n'_p:bitstring,n_v:bitstring,spk_v:PublicKey) = msg in
+    (* check nonce *)
+    if n'_p <> n_p then
+        event  error_nonce_p;0 else
+    (* send authrypt msg /w URI *)
+    out(h, authcrypt((n_v,uri),ssk,spk_v));
+    (**)
+    (**)
+    (**)
+    (**)
+    (**)
+    (**)
+    (* receive msg *)
+    in(h,x:bitstring);
+    (* authdecrypt msg *)
+    let msg = authdecrypt(x,ssk,spk_v) in 
+    (* deconstruct msg=(n_c,r) *)
+    let (n_c:bitstring,rule:ACR) = msg in
+    (* lookup credential *)
+    if getVcAsTuple(cred) <> getRuleAsTuple(rule) then (* TODO lookup *)
+        event error_no_cred_matching_rule;0 else
+    (* create Verifiable Presentation *)
+    let vp = sign((n_c,cred),sk) in
+    (* send authcrypt msg /w VP *)
+    out(h,authcrypt(vp,ssk,spk_v));
+    (**)
+    (**)
+    (**)
+    (**)
+    (**)
+    (**)
+    in(h,x:bitstring);
+    (* authdecrypt msg *)
+    let msg = authdecrypt(x,ssk,spk_v) in 
+    (* deconstruct msg=(n_c,r) *)
+    let access_token = msg in
+    (* event received_access_token; *)
+    0.
+(** END Prover **)
+
+
+(** START Verifier **)
+let verifier(sk:SecretKey, rule:ACR) (* input ~ what the agent starts with in private*) =
+    (**)
+    (**)
+    (**)
+    (**)
+    (**)
+    (**)
+    (* receive msg *)
+    in(h,x:bitstring);
+    (* decrypt msg *)
+    let sgndMsg = adec(x,sk) in
+    (* get pub key *)
+    let (unauth_n_p:bitstring,unauth_spk_p:PublicKey) = getMsg(sgndMsg) in
+    (* auth msg and deconstruct *)
+    let (n_p:bitstring,spk_p:PublicKey) = auth(sgndMsg,unauth_spk_p) in 
+    (* mint session key pair *)        
+    new ssk:SecretKey;                          
+    (* mint a nonce *)
+    new n_v:bitstring;
+    (* create a message *)
+    let msg = (n_p,n_v,pk(ssk)) in (* UNSURE if it would be better to sign with both, session and long? *)
+    (* send authcrypt msg*)
+    out(h, authcrypt(msg,sk,spk_p)); (* UNSURE signing with long-lived secret, is another signature with session secret necessary?*)
+    (**)
+    (**)
+    (**)
+    (**)
+    (**)
+    (**)
+    (* receive msg *)
+    in(h,x:bitstring);
+    (* authdecrypt msg *)
+    let msg = authdecrypt(x,ssk,spk_p) in 
+    (* deconstruct msg=(n'_v,u) *)
+    let (n'_v:bitstring,u:bitstring) = msg in
+    (* check nonce *)
+    if n'_v <> n_v then
+        event  error_nonce_v;0 else
+    (* lookup u's ACR *)
+    if u <> uri then (* TODO lookup *)  
+        event error_unkown_uri;0 else
+    (* mint a nonce *)
+    new n_c:bitstring;
+    (* send authcrypt msg*)
+    out(h, authcrypt((n_c,rule),ssk,spk_p));
+    (**)
+    (**)
+    (**)
+    (**)
+    (**)
+    (**)
+    (* receive msg *)
+    in(h,x:bitstring);
+    (* authdecrypt msg *)
+    let unauth_vp = authdecrypt(x,ssk,spk_p) in 
+    (* deconstruct vp=(n_c,cred) *)
+    let (unauth_n'_c:bitstring,unauth_cred:VC) = getMsg(unauth_vp) in
+    (* get subject pubkey *)
+    let pk_subject = getPubKey(getSubjectFromVC(unauth_cred)) in
+    (* authenticate VP *)
+    let (n'_c:bitstring,cred:VC) = auth(unauth_vp,pk_subject) in
+    (* check nonce *)
+    if n'_c <> n_c then
+        event  error_nonce_c;0 else
+    (* event received_vp_from_proverDID; *)
+    (* check if issuers match from cred and rule *)
+    if getIssuerFromVC(cred) <> getIssuerFromRule(rule) then
+        event error_no_match_in_issuer;0 else
+    (* check cred integrity *)
+    let (subjectDID:DID,asserted_attr:bitstring,issuerDID:DID) = verify(cred,getPubKey(getIssuerFromVC(cred))) in
+    (* check if issuers match from cred and rule *)
+    if asserted_attr <> getAttrFromRule(rule) then
+        event error_no_match_in_attr;0 else
+    (* event received_vc_matching_rule; *)
+    (* mint new access token *)
+    new access_token:bitstring;
+    out(h,authcrypt(access_token,ssk,spk_p));
+    0.
+(** END Verifier **)
+
+(* END process macros *)
+
+
+
+
+query attacker(sk_issuer).
+query attacker(sk_prover).
+query attacker(sk_verifier).
+
+(* query event(received_vp_from_proverDID). *)
+(* query event(received_vc_matching_rule). *)
+(* query event(received_access_token). *)
+
+query event(error_nonce_p).
+query event(error_nonce_v).
+query event(error_nonce_c).
+query event(error_unkown_uri).
+query event(error_no_cred_matching_rule).
+query event(error_no_match_in_issuer).
+query event(error_no_match_in_attr).
+
+query event(debug).
+
+process (*use root process for setup *)
+    (*assume issuer verified prover for attribute*)
+    let cred = issueVC(genDID(pk(sk_prover),sk_prover),attr,sk_issuer) in
+    (*assume verifier trusts issuer for asserting attribute*)
+    let acr = makeRule(genDID(pk(sk_prover),sk_prover),attr,genDID(pk(sk_issuer),sk_issuer)) in
+    (*let agents dance*)
+    (prover(sk_prover,cred,genDID(pk(sk_verifier),sk_verifier)) | verifier(sk_verifier,acr))
