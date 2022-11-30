@@ -56,8 +56,9 @@ free h:channel.
 const attr:bitstring.
 const uri:bitstring.
 
-(* coerces a bitstring to use it as a channel *)
 fun ch(bitstring): channel.
+fun chC(VC): channel.
+fun chR(ACR): channel.
 (* Used to model two secrecy claims. Each should not be revealed *)
 free n_p_fromProver: bitstring [private].
 free rule_fromProver: bitstring [private].
@@ -68,11 +69,11 @@ free access_token_fromProver: bitstring [private].
 
 free n_p_fromVerifier: bitstring [private].
 free rule_fromVerifier: bitstring [private].
+free credRequest_fromVerifier: bitstring [private].
 free unauth_vp_fromVerifier: bitstring [private].
 free vp_fromVerifier: bitstring [private].
 free cred_fromVerifier: bitstring [private].
 free access_token_fromVerifier: bitstring [private].
-
 
 (* START process macros ~ agent *)
 
@@ -138,10 +139,10 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID) (* input ~ what the agent sta
 
     (* checks if m is secret where the second argument is the dummy the query looks for*)
     out(ch(n_p),n_p_fromProver);
-    out(ch((n_c,rule)),rule_fromProver);
+    out(chR(rule),rule_fromProver);
     out(ch((n_c,cred)), unsigned_vp_fromProver);
     out(ch(vp), vp_fromProver);
-    out(ch(getVcAsTuple(cred)),cred_fromProver);
+    out(chC(cred),cred_fromProver);
     out(ch(access_token),access_token_fromProver);
     0.
 (** END Prover **)
@@ -228,10 +229,11 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     if talksOnlyToHonest then
     (* checks if m is secret where the second argument is the dummy the query looks for*)
     out(ch(n_p),n_p_fromVerifier);
-    out(ch((n_c,rule)), rule_fromVerifier);
+    out(chR(rule), rule_fromVerifier);
+    out(ch((n_c,rule)), credRequest_fromVerifier);
     out(ch(unauth_vp),unauth_vp_fromVerifier);
     out(ch((n'_c,cred)),vp_fromVerifier);
-    out(ch(getVcAsTuple(cred)),cred_fromVerifier);
+    out(chC(cred),cred_fromVerifier);
     out(ch(access_token),access_token_fromVerifier);
     0.
 (** END Verifier **)
@@ -247,6 +249,7 @@ query attacker(access_token_fromProver).
 
 query attacker(n_p_fromVerifier). 
 query attacker(rule_fromVerifier).
+query attacker(credRequest_fromVerifier).
 query attacker(unauth_vp_fromVerifier).
 query attacker(vp_fromVerifier).
 query attacker(cred_fromVerifier).
