@@ -230,7 +230,7 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     (* checks if m is secret where the second argument is the dummy the query looks for*)
     out(ch(n_p),n_p_fromVerifier);
     out(chR(rule), rule_fromVerifier); (* each single part of that rule is known by an attacker, so technically, the attacker knows the rule *)
-    out(ch((n_c,rule)), credRequest_fromVerifier); (* but the attacker never receives the rule from the verifier *)
+    out(ch((n_c,rule)), credRequest_fromVerifier); (* but the attacker never receives the rule from a honest-honest session, but may learn it on their own mimicing an honest prover. *)
     out(ch(unauth_vp),unauth_vp_fromVerifier);
     out(ch((n'_c,cred)),vp_fromVerifier);
     out(chC(cred),cred_fromVerifier);
@@ -249,7 +249,7 @@ query attacker(access_token_fromProver).
 
 query attacker(n_p_fromVerifier). 
 query attacker(rule_fromVerifier). (* each single part of that rule is known by an attacker, so technically, the attacker knows the rule *)
-query attacker(credRequest_fromVerifier). (* but the attacker never receives the rule from the verifier *)
+query attacker(credRequest_fromVerifier). (* but the attacker never receives the rule from a honest-honest session, but may learn it on their own mimicing an honest prover. *)
 query attacker(unauth_vp_fromVerifier).
 query attacker(vp_fromVerifier).
 query attacker(cred_fromVerifier).
