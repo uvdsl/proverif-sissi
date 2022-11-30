@@ -63,7 +63,7 @@ free n_p_fromProver: bitstring [private].
 free n_p_fromVerifier: bitstring [private].
 free rule_fromProver: bitstring [private].
 free rule_fromVerifier: bitstring [private].
-free unauth_vp_fromProver: bitstring [private].
+free unsigned_vp_fromProver: bitstring [private].
 free unauth_vp_fromVerifier: bitstring [private].
 free vp_fromProver: bitstring [private].
 free vp_fromVerifier: bitstring [private].
@@ -138,7 +138,7 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID) (* input ~ what the agent sta
     (* checks if m is secret where the second argument is the dummy the query looks for*)
     out(ch(n_p),n_p_fromProver);
     out(ch((n_c,rule)),rule_fromProver);
-    out(ch((n_c,cred)), unauth_vp_fromProver);
+    out(ch((n_c,cred)), unsigned_vp_fromProver);
     out(ch(vp), vp_fromProver);
     out(ch(getVcAsTuple(cred)),cred_fromProver);
     out(ch(access_token),access_token_fromProver);
@@ -241,7 +241,7 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
 query attacker(n_p_fromProver).
 query attacker(n_p_fromVerifier). 
 query attacker(rule_fromVerifier).
-query attacker(unauth_vp_fromProver).
+query attacker(unsigned_vp_fromProver).
 query attacker(unauth_vp_fromVerifier).
 query attacker(vp_fromProver).
 query attacker(vp_fromVerifier).
