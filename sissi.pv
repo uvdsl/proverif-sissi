@@ -59,7 +59,18 @@ const uri:bitstring.
 (* coerces a bitstring to use it as a channel *)
 fun ch(bitstring): channel.
 (* Used to model two secrecy claims. Each should not be revealed *)
-free n_p_fromProver, n_p_fromVerifier: bitstring [private].
+free n_p_fromProver: bitstring [private].
+free n_p_fromVerifier: bitstring [private].
+free rule_fromProver: bitstring [private].
+free rule_fromVerifier: bitstring [private].
+free unauth_vp_fromProver: bitstring [private].
+free unauth_vp_fromVerifier: bitstring [private].
+free vp_fromProver: bitstring [private].
+free vp_fromVerifier: bitstring [private].
+free cred_fromProver: bitstring [private].
+free cred_fromVerifier: bitstring [private].
+free access_token_fromProver: bitstring [private].
+free access_token_fromVerifier: bitstring [private].
 
 
 (* START process macros ~ agent *)
@@ -126,12 +137,17 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID) (* input ~ what the agent sta
 
     (* checks if m is secret where the second argument is the dummy the query looks for*)
     out(ch(n_p),n_p_fromProver);
+    out(ch((n_c,rule)),rule_fromProver);
+    out(ch((n_c,cred)), unauth_vp_fromProver);
+    out(ch(vp), vp_fromProver);
+    out(ch(getVcAsTuple(cred)),cred_fromProver);
+    out(ch(access_token),access_token_fromProver);
     0.
 (** END Prover **)
 
 
 (** START Verifier **)
-let verifier(sk:SecretKey, rule:ACR, talksToHonest:bool) (* input ~ what the agent starts with in private*) =
+let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the agent starts with in private*) =
     (**)
     (**)
     (**)
@@ -208,9 +224,14 @@ let verifier(sk:SecretKey, rule:ACR, talksToHonest:bool) (* input ~ what the age
     new access_token:bitstring;
     out(h,authcrypt(access_token,ssk,spk_p));
 
-    if talksToHonest then
+    if talksOnlyToHonest then
     (* checks if m is secret where the second argument is the dummy the query looks for*)
     out(ch(n_p),n_p_fromVerifier);
+    out(ch((n_c,rule)), rule_fromVerifier);
+    out(ch(unauth_vp),unauth_vp_fromVerifier);
+    out(ch((n'_c,cred)),vp_fromVerifier);
+    out(ch(getVcAsTuple(cred)),cred_fromVerifier);
+    out(ch(access_token),access_token_fromVerifier);
     0.
 (** END Verifier **)
 
@@ -219,6 +240,15 @@ let verifier(sk:SecretKey, rule:ACR, talksToHonest:bool) (* input ~ what the age
 
 query attacker(n_p_fromProver).
 query attacker(n_p_fromVerifier). 
+query attacker(rule_fromVerifier).
+query attacker(unauth_vp_fromProver).
+query attacker(unauth_vp_fromVerifier).
+query attacker(vp_fromProver).
+query attacker(vp_fromVerifier).
+query attacker(cred_fromProver).
+query attacker(cred_fromVerifier).
+query attacker(access_token_fromProver).
+query attacker(access_token_fromVerifier).
 
 free sk_otherAgent:SecretKey. (*other agent may or may not be honest, but we don't know*)
 process (*use root process for setup *)
@@ -230,6 +260,10 @@ process (*use root process for setup *)
     out(h,pk(sk_issuer));
     out(h,pk(sk_verifier));
     out(h,pk(sk_prover));
+    (*advertise DIDs*)
+    out(h,genDID(pk(sk_prover),sk_prover));
+    out(h,genDID(pk(sk_verifier),sk_verifier));
+    out(h,genDID(pk(sk_issuer),sk_issuer));
     
     (*assume issuer verified prover for attribute*)
     (* credential = ( (DID_prover, attriubte, DID_issuer), signature_issuer ) *)
@@ -249,8 +283,12 @@ process (*use root process for setup *)
         !prover(sk_prover, cred, genDID(pk(sk_verifier),sk_verifier))
     |
         !verifier(sk_verifier, acr, true) (* this verifier v needs to talk to prover p (defined as honest) AND NO other agent*)
+        (* In this way, we actively distinguish the prover p from an attacker. *)
     | 
-        !verifier(sk_verifier, acr_otherAgent, false) 
-    )
+        !verifier(sk_verifier, acr_otherAgent, false) (*talk to honest and dishonest alike*)
+        (* Here, we do not distinguish. *)
+    ) 
+    (* And by the distinction made, we allow an authorized (with valid credential) attacker
+       to proceed successfully through the protocol, and yet, learn nothing from the honest-honest sessions.*)
 
    
