@@ -59,10 +59,7 @@ const uri:bitstring.
 (* coerces a bitstring to use it as a channel *)
 fun ch(bitstring): channel.
 (* Used to model two secrecy claims. Each should not be revealed *)
-free secretA, secretB: bitstring [private].
-
-query attacker(secretA).
-query attacker(secretB).
+free n_p_fromProver, n_p_fromVerifier: bitstring [private].
 
 
 (* START process macros ~ agent *)
@@ -127,14 +124,14 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID) (* input ~ what the agent sta
     (* event received_access_token; *)
 
 
-    (* checks if m is secret where secretA is the dummy the query looks for*)
-    out(ch(n_p),secretA);
+    (* checks if m is secret where the second argument is the dummy the query looks for*)
+    out(ch(n_p),n_p_fromProver);
     0.
 (** END Prover **)
 
 
 (** START Verifier **)
-let verifier(sk:SecretKey, rule:ACR, honest:bool) (* input ~ what the agent starts with in private*) =
+let verifier(sk:SecretKey, rule:ACR, talksToHonest:bool) (* input ~ what the agent starts with in private*) =
     (**)
     (**)
     (**)
@@ -192,7 +189,7 @@ let verifier(sk:SecretKey, rule:ACR, honest:bool) (* input ~ what the agent star
     (*get subject *)
     let cred_subject = getSubjectFromVC(unauth_cred) in
 
-    (* check if subject match from cred and rule *) (*TODO delete if you do not want the specificy*)
+    (* check if subject match from cred and rule *) (* delete if you do not want the specificy*)
     if cred_subject = getSubjectFromRule(rule) then (* where prover p is the expected type of agent, i.e. honest*)
 
     (* get subject pubkey *)
@@ -211,15 +208,19 @@ let verifier(sk:SecretKey, rule:ACR, honest:bool) (* input ~ what the agent star
     new access_token:bitstring;
     out(h,authcrypt(access_token,ssk,spk_p));
 
-    if honest then
-    (* checks if m is secret where secretA is the dummy the query looks for*)
-    out(ch(n_p),secretB);
+    if talksToHonest then
+    (* checks if m is secret where the second argument is the dummy the query looks for*)
+    out(ch(n_p),n_p_fromVerifier);
     0.
 (** END Verifier **)
 
 (* END process macros *)
 
-free sk_otherAgent:SecretKey.
+
+query attacker(n_p_fromProver).
+query attacker(n_p_fromVerifier). 
+
+free sk_otherAgent:SecretKey. (*other agent may or may not be honest, but we don't know*)
 process (*use root process for setup *)
     (*declare secret keys*)
     new sk_prover:SecretKey;
@@ -239,7 +240,7 @@ process (*use root process for setup *)
     (*assume verifier trusts issuer for asserting attribute*)
     (* rule = (DID_prover , attribute , DID_issuer) *)
     let acr = makeRule(  genDID(pk(sk_prover),sk_prover),   attr,   genDID(pk(sk_issuer),sk_issuer)  ) in (* where prover p is honest agent*)
-    let acr_otherAgent = makeRule(  genDID(pk(sk_otherAgent),sk_otherAgent),   attr,   genDID(pk(sk_issuer),sk_issuer)  ) in (* where other agent may be dishonest*)
+    let acr_otherAgent = makeRule(  genDID(pk(sk_otherAgent),sk_otherAgent),   attr,   genDID(pk(sk_issuer),sk_issuer)  ) in (* where other agent may or may not be dishonest*)
     
     
     (*let agents dance*)
