@@ -60,16 +60,17 @@ const uri:bitstring.
 fun ch(bitstring): channel.
 (* Used to model two secrecy claims. Each should not be revealed *)
 free n_p_fromProver: bitstring [private].
-free n_p_fromVerifier: bitstring [private].
 free rule_fromProver: bitstring [private].
-free rule_fromVerifier: bitstring [private].
 free unsigned_vp_fromProver: bitstring [private].
-free unauth_vp_fromVerifier: bitstring [private].
 free vp_fromProver: bitstring [private].
-free vp_fromVerifier: bitstring [private].
 free cred_fromProver: bitstring [private].
-free cred_fromVerifier: bitstring [private].
 free access_token_fromProver: bitstring [private].
+
+free n_p_fromVerifier: bitstring [private].
+free rule_fromVerifier: bitstring [private].
+free unauth_vp_fromVerifier: bitstring [private].
+free vp_fromVerifier: bitstring [private].
+free cred_fromVerifier: bitstring [private].
 free access_token_fromVerifier: bitstring [private].
 
 
@@ -239,15 +240,16 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
 
 
 query attacker(n_p_fromProver).
+query attacker(unsigned_vp_fromProver).
+query attacker(vp_fromProver).
+query attacker(cred_fromProver).
+query attacker(access_token_fromProver).
+
 query attacker(n_p_fromVerifier). 
 query attacker(rule_fromVerifier).
-query attacker(unsigned_vp_fromProver).
 query attacker(unauth_vp_fromVerifier).
-query attacker(vp_fromProver).
 query attacker(vp_fromVerifier).
-query attacker(cred_fromProver).
 query attacker(cred_fromVerifier).
-query attacker(access_token_fromProver).
 query attacker(access_token_fromVerifier).
 
 free sk_otherAgent:SecretKey. (*other agent may or may not be honest, but we don't know*)
