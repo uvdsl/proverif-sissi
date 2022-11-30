@@ -53,26 +53,17 @@ reduc forall subject:DID,attr:bitstring,issuer:DID; getRuleAsTuple(makeRule(subj
 
 (*DEFS*)
 free h:channel.
-const sk_prover:SecretKey [private].
-const sk_verifier:SecretKey [private].
-const sk_issuer:SecretKey [private].
 const attr:bitstring.
 const uri:bitstring.
 
-(* event received_vp_from_proverDID. *)
-(* event received_vc_matching_rule. *)
-(* event received_access_token. *)
+(* coerces a bitstring to use it as a channel *)
+fun ch(bitstring): channel.
+(* Used to model two secrecy claims. Each should not be revealed *)
+free secretA, secretB: bitstring [private].
 
+query attacker(secretA).
+query attacker(secretB).
 
-event error_nonce_p.
-event error_nonce_v.
-event error_nonce_c.
-event error_unkown_uri.
-event error_no_cred_matching_rule.
-event error_no_match_in_issuer.
-event error_no_match_in_attr.
-
-event debug.
 
 (* START process macros ~ agent *)
 
@@ -101,8 +92,7 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID) (* input ~ what the agent sta
     (* deconstruct msg=(n'_p,n_v,pk(ssk_v)) *)
     let (n'_p:bitstring,n_v:bitstring,spk_v:PublicKey) = msg in
     (* check nonce *)
-    if n'_p <> n_p then
-        event  error_nonce_p;0 else
+    if n'_p = n_p then
     (* send authrypt msg /w URI *)
     out(h, authcrypt((n_v,uri),ssk,spk_v));
     (**)
@@ -118,8 +108,7 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID) (* input ~ what the agent sta
     (* deconstruct msg=(n_c,r) *)
     let (n_c:bitstring,rule:ACR) = msg in
     (* lookup credential *)
-    if getVcAsTuple(cred) <> getRuleAsTuple(rule) then (* TODO lookup *)
-        event error_no_cred_matching_rule;0 else
+    if getVcAsTuple(cred) = getRuleAsTuple(rule) then (* TODO lookup *)
     (* create Verifiable Presentation *)
     let vp = sign((n_c,cred),sk) in
     (* send authcrypt msg /w VP *)
@@ -136,12 +125,16 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID) (* input ~ what the agent sta
     (* deconstruct msg=(n_c,r) *)
     let access_token = msg in
     (* event received_access_token; *)
+
+
+    (* checks if m is secret where secretA is the dummy the query looks for*)
+    out(ch(n_p),secretA);
     0.
 (** END Prover **)
 
 
 (** START Verifier **)
-let verifier(sk:SecretKey, rule:ACR) (* input ~ what the agent starts with in private*) =
+let verifier(sk:SecretKey, rule:ACR, honest:bool) (* input ~ what the agent starts with in private*) =
     (**)
     (**)
     (**)
@@ -177,11 +170,9 @@ let verifier(sk:SecretKey, rule:ACR) (* input ~ what the agent starts with in pr
     (* deconstruct msg=(n'_v,u) *)
     let (n'_v:bitstring,u:bitstring) = msg in
     (* check nonce *)
-    if n'_v <> n_v then
-        event  error_nonce_v;0 else
+    if n'_v = n_v then 
     (* lookup u's ACR *)
-    if u <> uri then (* TODO lookup *)  
-        event error_unkown_uri;0 else
+    if u = uri then (* TODO lookup *)  
     (* mint a nonce *)
     new n_c:bitstring;
     (* send authcrypt msg*)
@@ -198,56 +189,67 @@ let verifier(sk:SecretKey, rule:ACR) (* input ~ what the agent starts with in pr
     let unauth_vp = authdecrypt(x,ssk,spk_p) in 
     (* deconstruct vp=(n_c,cred) *)
     let (unauth_n'_c:bitstring,unauth_cred:VC) = getMsg(unauth_vp) in
+    (*get subject *)
+    let cred_subject = getSubjectFromVC(unauth_cred) in
+
+    (* check if subject match from cred and rule *) (*TODO delete if you do not want the specificy*)
+    if cred_subject = getSubjectFromRule(rule) then (* where prover p is the expected type of agent, i.e. honest*)
+
     (* get subject pubkey *)
-    let pk_subject = getPubKey(getSubjectFromVC(unauth_cred)) in
+    let pk_subject = getPubKey(cred_subject) in
     (* authenticate VP *)
     let (n'_c:bitstring,cred:VC) = auth(unauth_vp,pk_subject) in
     (* check nonce *)
-    if n'_c <> n_c then
-        event  error_nonce_c;0 else
-    (* event received_vp_from_proverDID; *)
+    if n'_c = n_c then
     (* check if issuers match from cred and rule *)
-    if getIssuerFromVC(cred) <> getIssuerFromRule(rule) then
-        event error_no_match_in_issuer;0 else
+    if getIssuerFromVC(cred) = getIssuerFromRule(rule) then
     (* check cred integrity *)
     let (subjectDID:DID,asserted_attr:bitstring,issuerDID:DID) = verify(cred,getPubKey(getIssuerFromVC(cred))) in
-    (* check if issuers match from cred and rule *)
-    if asserted_attr <> getAttrFromRule(rule) then
-        event error_no_match_in_attr;0 else
-    (* event received_vc_matching_rule; *)
+    (* check if attribute match from cred and rule *)
+    if asserted_attr = getAttrFromRule(rule) then
     (* mint new access token *)
     new access_token:bitstring;
     out(h,authcrypt(access_token,ssk,spk_p));
+
+    if honest then
+    (* checks if m is secret where secretA is the dummy the query looks for*)
+    out(ch(n_p),secretB);
     0.
 (** END Verifier **)
 
 (* END process macros *)
 
-
-
-
-query attacker(sk_issuer).
-query attacker(sk_prover).
-query attacker(sk_verifier).
-
-(* query event(received_vp_from_proverDID). *)
-(* query event(received_vc_matching_rule). *)
-(* query event(received_access_token). *)
-
-query event(error_nonce_p).
-query event(error_nonce_v).
-query event(error_nonce_c).
-query event(error_unkown_uri).
-query event(error_no_cred_matching_rule).
-query event(error_no_match_in_issuer).
-query event(error_no_match_in_attr).
-
-query event(debug).
-
+free sk_otherAgent:SecretKey.
 process (*use root process for setup *)
+    (*declare secret keys*)
+    new sk_prover:SecretKey;
+    new sk_verifier:SecretKey;
+    new sk_issuer:SecretKey;
+    (*advertise public keys*)
+    out(h,pk(sk_issuer));
+    out(h,pk(sk_verifier));
+    out(h,pk(sk_prover));
+    
     (*assume issuer verified prover for attribute*)
-    let cred = issueVC(genDID(pk(sk_prover),sk_prover),attr,sk_issuer) in
+    (* credential = ( (DID_prover, attriubte, DID_issuer), signature_issuer ) *)
+    let cred = issueVC(  genDID(pk(sk_prover),sk_prover),   attr,    sk_issuer   ) in (*this is the issuer*)
+    let cred_otherAgent = issueVC(  genDID(pk(sk_otherAgent),sk_otherAgent),   attr,    sk_issuer   ) in 
+    out(h,cred_otherAgent);
+
     (*assume verifier trusts issuer for asserting attribute*)
-    let acr = makeRule(genDID(pk(sk_prover),sk_prover),attr,genDID(pk(sk_issuer),sk_issuer)) in
+    (* rule = (DID_prover , attribute , DID_issuer) *)
+    let acr = makeRule(  genDID(pk(sk_prover),sk_prover),   attr,   genDID(pk(sk_issuer),sk_issuer)  ) in (* where prover p is honest agent*)
+    let acr_otherAgent = makeRule(  genDID(pk(sk_otherAgent),sk_otherAgent),   attr,   genDID(pk(sk_issuer),sk_issuer)  ) in (* where other agent may be dishonest*)
+    
+    
     (*let agents dance*)
-    (prover(sk_prover,cred,genDID(pk(sk_verifier),sk_verifier)) | verifier(sk_verifier,acr))
+    (
+        (* *)
+        !prover(sk_prover, cred, genDID(pk(sk_verifier),sk_verifier))
+    |
+        !verifier(sk_verifier, acr, true) (* this verifier v needs to talk to prover p (defined as honest) AND NO other agent*)
+    | 
+        !verifier(sk_verifier, acr_otherAgent, false) 
+    )
+
+   
