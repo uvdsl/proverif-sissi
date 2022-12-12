@@ -120,7 +120,7 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID, talksOnlyToHonest:bool) (* in
     (* lookup credential *)
     if getVcAsTuple(cred) = getRuleAsTuple(rule) then (* TODO lookup *)
     (* create Verifiable Presentation *)
-    let vp = sign((n_c,cred),sk) in
+    let vp = sign((n_c,verifierDID,cred),sk) in
     (* send authcrypt msg /w VP *)
     out(h,authcrypt(vp,ssk,spk_v));
     (**)
@@ -140,7 +140,7 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID, talksOnlyToHonest:bool) (* in
     (* checks if m is secret where the second argument is the dummy the query looks for*)
     out(ch(n_p),n_p_fromProver) |
     out(chR(rule),rule_fromProver) |
-    out(ch((n_c,cred)), unsigned_vp_fromProver) |
+    out(ch((n_c,verifierDID,cred)), unsigned_vp_fromProver) |
     out(ch(vp), vp_fromProver) |
     out(chC(cred),cred_fromProver) |
     out(ch(access_token),access_token_fromProver);
@@ -203,7 +203,7 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     (* authdecrypt msg *)
     let unauth_vp = authdecrypt(x,ssk,spk_p) in 
     (* deconstruct vp=(n_c,cred) *)
-    let (unauth_n'_c:bitstring,unauth_cred:VC) = getMsg(unauth_vp) in
+    let (unauth_n'_c:bitstring,unauth_recipient:DID,unauth_cred:VC) = getMsg(unauth_vp) in
     (*get subject *)
     let cred_subject = getSubjectFromVC(unauth_cred) in
 
@@ -213,7 +213,11 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     (* get subject pubkey *)
     let pk_subject = getPubKey(cred_subject) in
     (* authenticate VP *)
-    let (n'_c:bitstring,cred:VC) = auth(unauth_vp,pk_subject) in
+    let (n'_c:bitstring,recipient:DID,cred:VC) = auth(unauth_vp,pk_subject) in
+
+    (* check if verifier is actual recipient*)
+    if recipient = genDID(pk(sk),sk) then
+
     (* check nonce *)
     if n'_c = n_c then
     (* check if issuers match from cred and rule *)
