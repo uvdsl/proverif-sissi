@@ -285,14 +285,14 @@ process (*use root process for setup *)
     (
         !prover(sk_prover, cred, genDID(pk(sk_verifier),sk_verifier), true)
     |
-        !prover(sk_prover, cred, genDID(pk(sk_otherAgent),sk_otherAgent), false)
+        !prover(sk_prover, cred, genDID(pk(sk_otherAgent),sk_otherAgent), false) (* comment out to remove dishonest verifiers*)
     |
         !verifier(sk_verifier, acr, true) 
         (* this verifier v needs to talk to prover p (defined as honest) AND NO other agent*)
         (* In this way, we actively distinguish the prover p from an attacker. *)
     | 
-        !verifier(sk_verifier, acr_otherAgent, false) 
-        (*talk to honest and dishonest alike*)
+        !verifier(sk_verifier, acr_otherAgent, false) (* comment out to remove dishonest provers*)
+        (*talk to honest and dishonest alike*) (*actually does not matter! dishonest provers not needed*)
         (* Here, we do not distinguish. *)
     ) 
     (* And by the distinction made, we allow an authorized (with valid credential) attacker
