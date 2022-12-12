@@ -78,7 +78,7 @@ free access_token_fromVerifier: bitstring [private].
 (* START process macros ~ agent *)
 
 (** START Prover **)
-let prover(sk:SecretKey, cred:VC, verifierDID:DID) (* input ~ what the agent starts with in private*) =
+let prover(sk:SecretKey, cred:VC, verifierDID:DID, talksOnlyToHonest:bool) (* input ~ what the agent starts with in private*) =
     (* get Verifier DID *)
     (* lookup uri -> V*) (* TODO lookup V *)            
     (* lookup pubkey of V *)         
@@ -136,13 +136,13 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID) (* input ~ what the agent sta
     let access_token = msg in
     (* event received_access_token; *)
 
-
+    if talksOnlyToHonest then
     (* checks if m is secret where the second argument is the dummy the query looks for*)
-    out(ch(n_p),n_p_fromProver);
-    out(chR(rule),rule_fromProver);
-    out(ch((n_c,cred)), unsigned_vp_fromProver);
-    out(ch(vp), vp_fromProver);
-    out(chC(cred),cred_fromProver);
+    out(ch(n_p),n_p_fromProver) |
+    out(chR(rule),rule_fromProver) |
+    out(ch((n_c,cred)), unsigned_vp_fromProver) |
+    out(ch(vp), vp_fromProver) |
+    out(chC(cred),cred_fromProver) |
     out(ch(access_token),access_token_fromProver);
     0.
 (** END Prover **)
@@ -228,12 +228,12 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
 
     if talksOnlyToHonest then
     (* checks if m is secret where the second argument is the dummy the query looks for*)
-    out(ch(n_p),n_p_fromVerifier);
-    out(chR(rule), rule_fromVerifier); (* each single part of that rule is known by an attacker, so technically, the attacker knows the rule *)
-    out(ch((n_c,rule)), credRequest_fromVerifier); (* but the attacker never receives the rule from a honest-honest session, but may learn it on their own mimicing an honest prover. *)
-    out(ch(unauth_vp),unauth_vp_fromVerifier);
-    out(ch((n'_c,cred)),vp_fromVerifier);
-    out(chC(cred),cred_fromVerifier);
+    out(ch(n_p),n_p_fromVerifier) |
+    out(chR(rule), rule_fromVerifier) |
+    out(ch((n_c,rule)), credRequest_fromVerifier) |
+    out(ch(unauth_vp),unauth_vp_fromVerifier) |
+    out(ch((n'_c,cred)),vp_fromVerifier) |
+    out(chC(cred),cred_fromVerifier) |
     out(ch(access_token),access_token_fromVerifier);
     0.
 (** END Verifier **)
@@ -248,8 +248,8 @@ query attacker(cred_fromProver).
 query attacker(access_token_fromProver).
 
 query attacker(n_p_fromVerifier). 
-query attacker(rule_fromVerifier). (* each single part of that rule is known by an attacker, so technically, the attacker knows the rule *)
-query attacker(credRequest_fromVerifier). (* but the attacker never receives the rule from a honest-honest session, but may learn it on their own mimicing an honest prover. *)
+query attacker(rule_fromVerifier).
+query attacker(credRequest_fromVerifier).
 query attacker(unauth_vp_fromVerifier).
 query attacker(vp_fromVerifier).
 query attacker(cred_fromVerifier).
@@ -281,10 +281,11 @@ process (*use root process for setup *)
     let acr = makeRule(  genDID(pk(sk_prover),sk_prover),   attr,   genDID(pk(sk_issuer),sk_issuer)  ) in (* where prover p is honest agent*)
     let acr_otherAgent = makeRule(  genDID(pk(sk_otherAgent),sk_otherAgent),   attr,   genDID(pk(sk_issuer),sk_issuer)  ) in (* where other agent may or may not be dishonest*)
     
-    
     (*let agents dance*)
     (
-        !prover(sk_prover, cred, genDID(pk(sk_verifier),sk_verifier))
+        !prover(sk_prover, cred, genDID(pk(sk_verifier),sk_verifier), true)
+    |
+        !prover(sk_prover, cred, genDID(pk(sk_otherAgent),sk_otherAgent), false)
     |
         !verifier(sk_verifier, acr, true) 
         (* this verifier v needs to talk to prover p (defined as honest) AND NO other agent*)
