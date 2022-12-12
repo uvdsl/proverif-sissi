@@ -213,10 +213,10 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     (* get subject pubkey *)
     let pk_subject = getPubKey(cred_subject) in
     (* authenticate VP *)
-    let (n'_c:bitstring,recipient:DID,cred:VC) = auth(unauth_vp,pk_subject) in
+    let (n'_c:bitstring,recipientDID:DID,cred:VC) = auth(unauth_vp,pk_subject) in
 
     (* check if verifier is actual recipient*)
-    if recipient = genDID(pk(sk),sk) then
+    if recipientDID = genDID(pk(sk),sk) then
 
     (* check nonce *)
     if n'_c = n_c then
@@ -236,7 +236,7 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     out(chR(rule), rule_fromVerifier) |
     out(ch((n_c,rule)), credRequest_fromVerifier) |
     out(ch(unauth_vp),unauth_vp_fromVerifier) |
-    out(ch((n'_c,cred)),vp_fromVerifier) |
+    out(ch((n'_c,recipientDID,cred)),vp_fromVerifier) |
     out(chC(cred),cred_fromVerifier) |
     out(ch(access_token),access_token_fromVerifier);
     0.
