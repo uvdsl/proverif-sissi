@@ -136,7 +136,7 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID, talksOnlyToHonest:bool) (* in
     let vp = sign((n_c,verifierDID,cred),sk) in
     (* send authcrypt msg /w VP *)
     let msg_vp = authcrypt(vp,ssk,spk_v) in
-    (* event_just_before_the_last_send_message_of_S  *)
+    (* event_just_before_the_last_send_message_of_S  *) 
     event auth_ProverSendsLastMessageToVerifier(msg_handshakeReq,msg_handshakeResp,msg_uri,msg_rule,msg_vp);
     out(h, msg_vp);
     (**)
@@ -154,6 +154,7 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID, talksOnlyToHonest:bool) (* in
     (* Prover about to complete protocol! *)
 
     if talksOnlyToHonest then
+    (* event_at_the_very_end_of_role_R_in_parallel_with_secrecy_checks *)
     event auth_ProverCompletesProtocol(msg_handshakeReq,msg_handshakeResp,msg_uri,msg_rule,msg_vp, msg_accessToken) |
     (* checks if m is secret where the second argument is the dummy the query looks for*)
     out(ch(n_p),n_p_fromProver) |
@@ -254,11 +255,12 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     new access_token:bitstring;
     let msg = (subjectDID,access_token) in
     let msg_accessToken = authcrypt(msg,ssk,spk_p) in
-    (* Verifier about to complete protocol! *)
+    (* event_just_before_the_last_send_message_of_S  *)
     event auth_VerifierSendsLastMessageToProver(msg_handshakeReq,msg_handshakeResp,msg_uri,msg_rule,msg_vp, msg_accessToken);
     out(h, msg_accessToken);
 
     if talksOnlyToHonest then
+    (* event_at_the_very_end_of_role_R_in_parallel_with_secrecy_checks *)
     event auth_VerifierCompletesProtocol(msg_handshakeReq,msg_handshakeResp,msg_uri,msg_rule,msg_vp) |
     (* checks if m is secret where the second argument is the dummy the query looks for*)
     out(ch(n_p),n_p_fromVerifier) |
