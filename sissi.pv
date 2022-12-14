@@ -77,17 +77,15 @@ free access_token_fromVerifier: bitstring [private].
 
 
 (* Authentication *)
-event auth_ProverStartsProtocol. (*UNSURE*)
-event auth_ProverCompletesProtocol(bitstring,bitstring,bitstring). (*initHandshake,sendURI,sendVP*)
-event auth_VerifierStartsProtocol. (*UNSURE*)
-event auth_VerifierCompletesProtocol(bitstring,bitstring,bitstring). (*sendHandshake,sendRule,sendAccessToken*)
+event auth_VerifierSendsLastMessageToProver(bitstring,bitstring,bitstring,bitstring,bitstring, bitstring).
+event auth_ProverCompletesProtocol(bitstring,bitstring,bitstring,bitstring,bitstring, bitstring).
+event auth_ProverSendsLastMessageToVerifier(bitstring,bitstring,bitstring,bitstring, bitstring).
+event auth_VerifierCompletesProtocol(bitstring,bitstring,bitstring,bitstring, bitstring).
 
 (* START process macros ~ agent *)
 
 (** START Prover **)
 let prover(sk:SecretKey, cred:VC, verifierDID:DID, talksOnlyToHonest:bool) (* input ~ what the agent starts with in private*) =
-    (* Prover about to start protocol! *)
-    event auth_ProverStartsProtocol;  
     (* get Verifier DID *)
     (* lookup uri -> V*) (* TODO lookup V *)            
     (* lookup pubkey of V *)         
@@ -97,8 +95,9 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID, talksOnlyToHonest:bool) (* in
     (* mint a nonce *)
     new n_p:bitstring;
     (* send authcrypt msg*)
-    let msg_handshakeReq = (n_p,pk(ssk)) in
-    out(h, authcrypt(msg_handshakeReq,ssk,pk_v));
+    let msg = (n_p,pk(ssk)) in
+    let msg_handshakeReq = authcrypt(msg,ssk,pk_v) in
+    out(h, msg_handshakeReq);
     (**)
     (**)
     (**)
@@ -107,6 +106,7 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID, talksOnlyToHonest:bool) (* in
     (**)
     (* receive msg *)
     in(h,x:bitstring);
+    let msg_handshakeResp = x in
     (* authdecrypt msg *)
     let msg = authdecrypt(x,ssk,pk_v) in (*<= ERROR*)
     (* deconstruct msg=(n'_p,n_v,pk(ssk_v)) *)
@@ -114,8 +114,9 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID, talksOnlyToHonest:bool) (* in
     (* check nonce *)
     if n'_p = n_p then
     (* send authrypt msg /w URI *)
-    let msg_uri = (n_v,uri) in
-    out(h, authcrypt(msg_uri,ssk,spk_v));
+    let msg = (n_v,uri) in
+    let msg_uri = authcrypt(msg,ssk,spk_v) in
+    out(h, msg_uri);
     (**)
     (**)
     (**)
@@ -124,6 +125,7 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID, talksOnlyToHonest:bool) (* in
     (**)
     (* receive msg *)
     in(h,x:bitstring);
+    let msg_rule = x in
     (* authdecrypt msg *)
     let msg = authdecrypt(x,ssk,spk_v) in 
     (* deconstruct msg=(n_c,r) *)
@@ -133,8 +135,10 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID, talksOnlyToHonest:bool) (* in
     (* create Verifiable Presentation *)
     let vp = sign((n_c,verifierDID,cred),sk) in
     (* send authcrypt msg /w VP *)
-    let msg_vp = vp in
-    out(h, authcrypt(vp,ssk,spk_v));
+    let msg_vp = authcrypt(vp,ssk,spk_v) in
+    (* event_just_before_the_last_send_message_of_S  *)
+    event auth_ProverSendsLastMessageToVerifier(msg_handshakeReq,msg_handshakeResp,msg_uri,msg_rule,msg_vp);
+    out(h, msg_vp);
     (**)
     (**)
     (**)
@@ -143,14 +147,15 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID, talksOnlyToHonest:bool) (* in
     (**)
     in(h,x:bitstring);
     (* authdecrypt msg *)
+    let msg_accessToken = x in
     let msg = authdecrypt(x,ssk,spk_v) in 
     (* deconstruct msg=(n_c,r) *)
     let access_token = msg in
     (* event received_access_token; *)
     (* Prover about to complete protocol! *)
-    event auth_ProverCompletesProtocol(msg_handshakeReq,msg_uri,msg_vp);
 
     if talksOnlyToHonest then
+    event auth_ProverCompletesProtocol(msg_handshakeReq,msg_handshakeResp,msg_uri,msg_rule,msg_vp, msg_accessToken) |
     (* checks if m is secret where the second argument is the dummy the query looks for*)
     out(ch(n_p),n_p_fromProver) |
     out(chR(rule),rule_fromProver) |
@@ -172,10 +177,10 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     (**)
     (* receive msg *)
     in(h,x:bitstring);
-    (* Verifier about to start protocol! *)
-    event auth_VerifierStartsProtocol;
+    let msg_handshakeReq = x in 
     (* decrypt msg *)
     let sgndMsg = adec(x,sk) in
+    let msg = sgndMsg in
     (* get pub key *)
     let (unauth_n_p:bitstring,unauth_spk_p:PublicKey) = getMsg(sgndMsg) in
     (* auth msg and deconstruct *)
@@ -185,8 +190,9 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     (* mint a nonce *)
     new n_v:bitstring;
     (* create a message *)
-    let msg_handshakeResp = (n_p,n_v,pk(ssk)) in (* UNSURE if it would be better to sign with both, session and long? *)
-    out(h, authcrypt(msg_handshakeResp,sk,spk_p)); (* UNSURE signing with long-lived secret, is another signature with session secret necessary?*)
+    let msg = (n_p,n_v,pk(ssk)) in (* UNSURE if it would be better to sign with both, session and long? *)
+    let msg_handshakeResp = authcrypt(msg,sk,spk_p) in
+    out(h,msg_handshakeResp); (* UNSURE signing with long-lived secret, is another signature with session secret necessary?*)
     (**)
     (**)
     (**)
@@ -196,6 +202,7 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     (* receive msg *)
     in(h,x:bitstring);
     (* authdecrypt msg *)
+    let msg_uri = x in
     let msg = authdecrypt(x,ssk,spk_p) in 
     (* deconstruct msg=(n'_v,u) *)
     let (n'_v:bitstring,u:bitstring) = msg in
@@ -206,8 +213,9 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     (* mint a nonce *)
     new n_c:bitstring;
     (* send authcrypt msg*)
-    let msg_rule = (n_c,rule) in
-    out(h, authcrypt(msg_rule,ssk,spk_p));
+    let msg = (n_c,rule) in
+    let msg_rule = authcrypt(msg,ssk,spk_p) in
+    out(h, msg_rule);
     (**)
     (**)
     (**)
@@ -216,6 +224,7 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     (**)
     (* receive msg *)
     in(h,x:bitstring);
+    let msg_vp = x in
     (* authdecrypt msg *)
     let unauth_vp = authdecrypt(x,ssk,spk_p) in 
     (* deconstruct vp=(n_c,cred) *)
@@ -244,12 +253,13 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     if asserted_attr = getAttrFromRule(rule) then
     (* mint new access token *)
     new access_token:bitstring;
-    let msg_accessToken = access_token in
+    let msg_accessToken = authcrypt(access_token,ssk,spk_p) in
     (* Verifier about to complete protocol! *)
-    event auth_VerifierCompletesProtocol(msg_handshakeResp,msg_rule, msg_accessToken);
-    out(h, authcrypt(msg_accessToken,ssk,spk_p));
+    event auth_VerifierSendsLastMessageToProver(msg_handshakeReq,msg_handshakeResp,msg_uri,msg_rule,msg_vp, msg_accessToken);
+    out(h, msg_accessToken);
 
     if talksOnlyToHonest then
+    event auth_VerifierCompletesProtocol(msg_handshakeReq,msg_handshakeResp,msg_uri,msg_rule,msg_vp) |
     (* checks if m is secret where the second argument is the dummy the query looks for*)
     out(ch(n_p),n_p_fromVerifier) |
     out(chR(rule), rule_fromVerifier) |
@@ -281,15 +291,20 @@ query attacker(access_token_fromVerifier).
 
 (* AUTHETNICATION *)
 
-query m_handshakeReq:bitstring, m_uri:bitstring, m_vp:bitstring ; 
-    inj-event(auth_ProverCompletesProtocol(m_handshakeReq, m_uri, m_vp))
-    ==>
-    inj-event(auth_ProverStartsProtocol) .
+(* event_at_the_very_end_of_role_R_in_parallel_with_secrecy_checks
+==> 
+event_just_before_the_last_send_message_of_S *)
 
-query m_handshakeResp:bitstring, m_rule:bitstring, m_accessToken:bitstring; 
-    inj-event(auth_VerifierCompletesProtocol(m_handshakeResp, m_rule, m_accessToken))
+query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_accessToken:bitstring; 
+    inj-event(auth_ProverCompletesProtocol(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp, m_accessToken))
     ==>
-    inj-event(auth_VerifierStartsProtocol) .
+    inj-event(auth_VerifierSendsLastMessageToProver(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp, m_accessToken)) .
+
+
+query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring; 
+    inj-event(auth_VerifierCompletesProtocol(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp))
+    ==>
+    inj-event(auth_ProverSendsLastMessageToVerifier(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp)) .
 
 
 (* MAIN *)
