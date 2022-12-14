@@ -148,10 +148,9 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID, talksOnlyToHonest:bool) (* in
     in(h,x:bitstring);
     (* authdecrypt msg *)
     let msg_accessToken = x in
-    let msg = authdecrypt(x,ssk,spk_v) in 
-    (* deconstruct msg=(n_c,r) *)
-    let access_token = msg in
-    (* event received_access_token; *)
+    let (access_token:bitstring, recipientDID:DID) = authdecrypt(x,ssk,spk_v) in 
+    if recipientDID = genDID(pk(sk),sk) then
+    (* event received_access_token; and I am the recipient *)
     (* Prover about to complete protocol! *)
 
     if talksOnlyToHonest then
@@ -253,7 +252,8 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     if asserted_attr = getAttrFromRule(rule) then
     (* mint new access token *)
     new access_token:bitstring;
-    let msg_accessToken = authcrypt(access_token,ssk,spk_p) in
+    let msg = (subjectDID,access_token) in
+    let msg_accessToken = authcrypt(msg,ssk,spk_p) in
     (* Verifier about to complete protocol! *)
     event auth_VerifierSendsLastMessageToProver(msg_handshakeReq,msg_handshakeResp,msg_uri,msg_rule,msg_vp, msg_accessToken);
     out(h, msg_accessToken);
