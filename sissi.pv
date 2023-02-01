@@ -253,7 +253,7 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     if asserted_attr = getAttrFromRule(rule) then
     (* mint new access token *)
     new access_token:bitstring;
-    let msg = (subjectDID,access_token) in
+    let msg = (access_token,subjectDID) in
     let msg_accessToken = authcrypt(msg,ssk,spk_p) in
     (* event_just_before_the_last_send_message_of_S  *)
     event auth_VerifierSendsLastMessageToProver(msg_handshakeReq,msg_handshakeResp,msg_uri,msg_rule,msg_vp, msg_accessToken);
