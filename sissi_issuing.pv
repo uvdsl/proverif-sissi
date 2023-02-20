@@ -66,7 +66,7 @@ free providingDID_fromHolder: bitstring [private].
 free cred_fromHolder: bitstring [private].
 
 free n_p_fromIssuer: bitstring [private].
-free credIssuing_fromIssuer: bitstring [private]. 
+free credIssuing_fromIssuer_notMeaningful: bitstring [private]. 
 free cred_fromIssuer: bitstring [private].
 
 free n_p_fromProver: bitstring [private].
@@ -366,7 +366,8 @@ let holder(sk:SecretKey, issuerDID:DID, verifierDID:DID, talksOnlyToHonest:bool)
     in(h,x:bitstring);
     (* authdecrypt msg *)
     let msg_credential = x in
-    let (credential:VC, recipientDID:DID, n_issuing:bitstring) = authdecrypt(x,ssk,spk_i) in 
+    (* let (credential:VC, recipientDID:DID, n_strongSecrecy:bitstring) = authdecrypt(x,ssk,spk_i) in  *)
+    let (credential:VC, recipientDID:DID) = authdecrypt(x,ssk,spk_i) in 
     if recipientDID = genDID(pk(sk),sk) then
     if getIssuerFromVC(credential) = issuerDID then
     (* TODO validate credential *)
@@ -441,8 +442,9 @@ let issuer(sk:SecretKey, attr:bitstring, expectedDID:DID, talksOnlyToHonest:bool
 
     (* issue new credential *)
     let cred = issueVC(proverDID, attr, sk) in
-    new n_issuing:bitstring;
-    let msg = (cred,proverDID,n_issuing) in
+    (* new n_strongSecrecy:bitstring; *)
+    (* let msg = (cred,proverDID,n_strongSecrecy) in *)
+    let msg = (cred,proverDID) in
     let msg_cred = authcrypt(msg,ssk,spk_p) in
     (* event_just_before_the_last_send_message_of_S *)
     event auth_IssuerSendsLastMessageToHolder(msg_handshakeReq,msg_handshakeResp,msg_did,msg_cred);
@@ -456,7 +458,8 @@ let issuer(sk:SecretKey, attr:bitstring, expectedDID:DID, talksOnlyToHonest:bool
     (* checks if m is secret where the second argument is the dummy the query looks for*)
     out(ch(n_p),n_p_fromIssuer) |
     out(chC(cred),cred_fromIssuer) | (* currently public anyway ...? *)
-    out(ch((cred,proverDID,n_issuing)),credIssuing_fromIssuer);
+    (* out(ch((cred,proverDID,n_strongSecrecy)),credIssuing_fromIssuer_notMeaningful); *)
+    out(ch((cred,proverDID)),credIssuing_fromIssuer_notMeaningful);
     0.
 (** END Issuer **)
 
@@ -471,7 +474,8 @@ query attacker(providingDID_fromHolder). (* should be private, it is a message t
 (*query attacker(cred_fromHolder). *) (* can be leaked in our model, as the prover explicitly/knowlingly talks to otherAgent (attacker) trying to authenticate with them (dishonest verifier) *)
 
 query attacker(n_p_fromIssuer).
-query attacker(credIssuing_fromIssuer). (* should be private, it is a message that includes credential*)
+query attacker(credIssuing_fromIssuer_notMeaningful). (* should be private, it is a message that includes credential*)
+(* using the n_strongSecrecy is actually a privacy thing, we modified the protocol by introducing it, which is not the way to go. *)
 (*query attacker(cred_fromIssuer).*)  (* can be leaked in our model, as the prover explicitly/knowlingly talks to otherAgent (attacker) trying to authenticate with them (dishonest verifier) *)
 
 query attacker(n_p_fromProver).
