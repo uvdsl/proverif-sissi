@@ -519,13 +519,35 @@ query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_did:bitstring;
 (*  *)
 
 query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_handshakeReq_2:bitstring, m_handshakeResp_2:bitstring, m_did:bitstring, m_cred:bitstring; 
-    inj-event(auth_VerifierCompletesProtocol(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp))
+    inj-event(
+        auth_VerifierCompletesProtocol(
+                m_handshakeReq, 
+                m_handshakeResp, 
+                m_uri, 
+                m_rule, 
+                m_vp))
     ==>
-    inj-event(auth_ProverSendsLastMessageToVerifier(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp)) 
+    inj-event(
+        auth_ProverSendsLastMessageToVerifier(
+                m_handshakeReq, 
+                m_handshakeResp, 
+                m_uri, 
+                m_rule, 
+                m_vp)) 
     &&
-    inj-event(auth_IssuerSendsLastMessageToHolder(m_handshakeReq_2, m_handshakeResp_2, m_did, m_cred)) 
+    inj-event(
+        auth_IssuerSendsLastMessageToHolder(
+                m_handshakeReq_2, 
+                m_handshakeResp_2, 
+                m_did, 
+                m_cred)) 
     &&
-    inj-event(auth_HolderCompletesProtocol(m_handshakeReq_2, m_handshakeResp_2, m_did, m_cred))
+    inj-event(
+        auth_HolderCompletesProtocol(
+                m_handshakeReq_2, 
+                m_handshakeResp_2, 
+                m_did, 
+                m_cred))
     .
 
 query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_handshakeReq_2:bitstring, m_handshakeResp_2:bitstring, m_did:bitstring, m_cred:bitstring; 

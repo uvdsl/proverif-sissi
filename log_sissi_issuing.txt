@@ -3224,7 +3224,15 @@ end(auth_VerifierCompletesProtocol(aenc(sign((n_p_15,pk(ssk_15)),ssk_15),pk(sk_v
 
 51. By 50, end(auth_VerifierCompletesProtocol(aenc(sign((n_p_15,pk(ssk_15)),ssk_15),pk(sk_verifier[])),aenc(sign((n_p_15,n_v_8,pk(ssk_16)),sk_verifier[]),pk(ssk_15)),aenc(sign((n_v_8,uri),ssk_15),pk(ssk_16)),aenc(sign((n_c_8,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_16),pk(ssk_15)),aenc(sign(sign((n_c_8,genDID(pk(sk_verifier[]),sk_verifier[]),issueVC(genDID(pk(sk_prover[]),sk_prover[]),attr,sk_issuer[])),sk_prover[]),ssk_15),pk(ssk_16)))).
 The goal is reached, represented in the following fact:
-end(auth_VerifierCompletesProtocol(aenc(sign((n_p_15,pk(ssk_15)),ssk_15),pk(sk_verifier[])),aenc(sign((n_p_15,n_v_8,pk(ssk_16)),sk_verifier[]),pk(ssk_15)),aenc(sign((n_v_8,uri),ssk_15),pk(ssk_16)),aenc(sign((n_c_8,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_16),pk(ssk_15)),aenc(sign(sign((n_c_8,genDID(pk(sk_verifier[]),sk_verifier[]),issueVC(genDID(pk(sk_prover[]),sk_prover[]),attr,sk_issuer[])),sk_prover[]),ssk_15),pk(ssk_16)))).
+end(
+    auth_VerifierCompletesProtocol(
+        aenc(sign((n_p_15,pk(ssk_15)),ssk_15),pk(sk_verifier[])),
+        aenc(sign((n_p_15,n_v_8,pk(ssk_16)),sk_verifier[]),pk(ssk_15)),
+        aenc(sign((n_v_8,uri),ssk_15),pk(ssk_16)),
+        aenc(sign((n_c_8,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_16),pk(ssk_15)),
+        aenc(sign(sign((n_c_8,genDID(pk(sk_verifier[]),sk_verifier[]),issueVC(genDID(pk(sk_prover[]),sk_prover[]),attr,sk_issuer[])),sk_prover[]),ssk_15),pk(ssk_16))
+    )
+).
 
 
 A more detailed output of the traces is available with
