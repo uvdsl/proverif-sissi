@@ -38,7 +38,7 @@ reduc forall subject:DID,attr:bitstring,issuerSk:SecretKey; getIssuerFromVC(issu
 reduc forall subject:DID,attr:bitstring,issuerSk:SecretKey; getAttrFromVC(issueVC(subject,attr,issuerSk))=attr.
 reduc forall subject:DID,attr:bitstring,issuerSk:SecretKey; getSubjectFromVC(issueVC(subject,attr,issuerSk))=subject.
 reduc forall subject:DID,attr:bitstring,issuerSk:SecretKey; getVcAsTuple(issueVC(subject,attr,issuerSk))= (subject,attr,genDID(pk(issuerSk),issuerSk)).
-(* do table for (attr,isserDID) lookup*)
+(* do table for (attr,issuerDID) lookup*)
 (* for now use if then *)
 (* END credential *)
 
@@ -368,6 +368,8 @@ let holder(sk:SecretKey, issuerDID:DID, verifierDID:DID, talksOnlyToHonest:bool)
     let msg_credential = x in
     let (credential:VC, recipientDID:DID, n_issuing:bitstring) = authdecrypt(x,ssk,spk_i) in 
     if recipientDID = genDID(pk(sk),sk) then
+    if getIssuerFromVC(credential) = issuerDID then
+    (* TODO validate credential *)
     (* event received_access_token; and I am the recipient *)
     (* Prover about to complete protocol! *)
 
