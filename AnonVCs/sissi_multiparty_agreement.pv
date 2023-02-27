@@ -82,6 +82,9 @@ fun encodeDC(DC):bitstring.
 reduc forall dc:DC; decodeDC(encodeDC(dc))=dc.
 (* END anonymous credential *)
 
+type OK.
+fun createOK(bitstring):OK.
+reduc forall seed:bitstring; checkOK(createOK(seed))=true.
 
 
 (* START access control rule (ACR) *)
@@ -171,7 +174,7 @@ let prover(sk:SecretKey, cred:AC, verifierDID:DID, talksOnlyToHonest:bool, msg_h
     (* mint a nonce *)
     new n_p:bitstring;
     (* send authcrypt msg*)
-    let msg = (n_p,genDID(pk(ssk),sk)) in
+    let msg = (n_p,pk(ssk)) in
     let msg_handshakeReq = authcrypt(msg,ssk,pk_v) in
     out(h, msg_handshakeReq);
     (**)
@@ -230,8 +233,8 @@ let prover(sk:SecretKey, cred:AC, verifierDID:DID, talksOnlyToHonest:bool, msg_h
     in(h,x:bitstring);
     (* authdecrypt msg *)
     let msg_accessToken = x in
-    let (access_token:bitstring, recipientDID:DID) = authdecrypt(x,ssk,spk_v) in 
-    if recipientDID=genDID(pk(ssk),sk) then
+    let (access_token:bitstring, status:OK) = authdecrypt(x,ssk,spk_v) in 
+    if checkOK(status) then
     (* let (access_token:bitstring, recipientDID:DID) = authdecrypt(x,ssk,spk_v) in  *)
     (* if recipientDID = genDID(pk(sk),sk) then *)
     (* event received_access_token; and I am the recipient *)
@@ -269,9 +272,7 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     let sgndMsg = adec(x,sk) in
     let msg = sgndMsg in
     (* get pub key *)
-    (* let (unauth_n_p:bitstring,unauth_spk_p:PublicKey) = getMsg(sgndMsg) in *)
-    let (unauth_n_p:bitstring,unauth_sDID:DID) = getMsg(sgndMsg) in
-    let unauth_spk_p = getPubKey(unauth_sDID) in
+    let (unauth_n_p:bitstring,unauth_spk_p:PublicKey) = getMsg(sgndMsg) in
     (* auth msg and deconstruct *)
     let (n_p:bitstring,spk_p:PublicKey) = auth(sgndMsg,unauth_spk_p) in 
     (* mint session key pair *)        
@@ -351,7 +352,7 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     if getAttrFromDC(unauth_dc) = getAttrFromRule(rule) then
     (* mint new access token *)
     new access_token:bitstring;
-    let msg = (access_token, unauth_sDID) in
+    let msg = (createOK(access_token), access_token) in
     let msg_accessToken = authcrypt(msg,ssk,spk_p) in
     (* event_just_before_the_last_send_message_of_S  *)
     event auth_VerifierSendsLastMessageToProver(msg_handshakeReq,msg_handshakeResp,msg_uri,msg_rule,msg_vp, msg_accessToken);
