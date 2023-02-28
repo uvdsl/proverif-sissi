@@ -522,8 +522,7 @@ query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_did:bitstring;
     ==>
     inj-event(auth_HolderSendsLastMessageToIssuer(m_handshakeReq, m_handshakeResp, m_did)) .
 
-(*  *)
-
+(* inj-agreement will not work, expected, since re-use of credentials issued once for multiple provings *)
 query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_handshakeReq_2:bitstring, m_handshakeResp_2:bitstring, m_did:bitstring, m_cred:bitstring; 
     inj-event(
         auth_VerifierCompletesProtocol(
@@ -556,6 +555,7 @@ query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_r
                 m_cred))
     .
 
+(* this should hold, "for every proving, there must be an issuing" *)
 query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_handshakeReq_2:bitstring, m_handshakeResp_2:bitstring, m_did:bitstring, m_cred:bitstring; 
     event(auth_VerifierCompletesProtocol(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp))
     ==>
