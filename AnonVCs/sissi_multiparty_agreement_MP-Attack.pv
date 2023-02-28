@@ -418,7 +418,11 @@ let holder(sk:SecretKey, issuerDID:DID, verifierDID:DID, talksOnlyToHonest:bool)
     (* let (credential:VC, recipientDID:DID, n_strongSecrecy:bitstring) = authdecrypt(x,ssk,spk_i) in  *)
     let (credential:AC, recipientDID:DID) = authdecrypt(x,ssk,spk_i) in 
     if recipientDID = genDID(pk(sk),sk) then
-    if getIssuerFromAC(credential) = issuerDID then
+
+    (* DOES NOT WORK AS ATTACK AS CRED AC IS NEVER REVEALED *)
+    (* if getIssuerFromAC(credential) = issuerDID then *)
+
+
     (* TODO validate credential *)
     (* event received_access_token; and I am the recipient *)
     (* Prover about to complete protocol! *)
