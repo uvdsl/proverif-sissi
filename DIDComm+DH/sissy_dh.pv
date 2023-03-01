@@ -15,10 +15,9 @@ fun pk(SecretKey):PublicKey.
 type G.
 type exponent.
 
-const g: G [data].
-
 fun exp(G, exponent): G.
-equation forall x: exponent, y: exponent; exp(exp(g,x),y) = exp(exp(g,y),x).
+fun g(exponent): G.
+equation forall x: exponent, y: exponent; exp(g(x),y) = exp(g(y),x).
 
 fun GtoSymK(G): SymmetricKey.
 (* END group *)
@@ -47,6 +46,12 @@ reduc forall msg:bitstring,sk:SecretKey; getMsg(sign(msg,sk))=msg (*just get msg
 (*DEFS*)
 free h:channel.
 
+fun ch(G):channel.
+fun chS(SymmetricKey):channel.
+free gx_from_Alice:bitstring [private].
+free gy_from_Bob:bitstring [private].
+free K_private:bitstring [private].
+
 free gx: G [private].
 free gy: G [private].
 free K: SymmetricKey [private].
@@ -57,10 +62,11 @@ free K: SymmetricKey [private].
 
 let Alice(skA:SecretKey, pkB:PublicKey) =
     new x:exponent;
-    let gx = exp(g,x) in
+    let gx = g(x) in
     out(h,gx);
+    out(ch(gx),gx_from_Alice);
     in(h,(gy:G,m:bitstring));
-    let gx = exp(g,x) in
+    let gx = g(x) in
     let K = GtoSymK(exp(gy,x)) in
     if (dec(auth(m,pkB),K)) = (gy,gx) then
     out(h,enc(sign((gx,gy),skA),K));
@@ -70,11 +76,14 @@ let Alice(skA:SecretKey, pkB:PublicKey) =
 let Bob(skB:SecretKey, pkA:PublicKey) =
     in(h,gx:G);
     new y:exponent;
-    let gy = exp(g,y) in
+    let gy = g(y) in
     let K = GtoSymK(exp(gx,y)) in
     out(h,(gy,enc(sign((gy,gx),skB),K)));
+    out(ch(gy),gy_from_Bob);
     in(h,m:bitstring);
     if (dec(auth(m,pkA),K)) = (gx,gy) then
+    (*  *)
+    out(chS(K),K_private);
     0.
 
 (* --------------------------------------------------------------------------------------------------------- *)
@@ -85,10 +94,16 @@ let Bob(skB:SecretKey, pkA:PublicKey) =
 
 (* SECRECY *)
 
+(* 
+These variables are rebound!ss
 query attacker(gx).
 query attacker(gy).
-query attacker(K).
+query attacker(K). 
+*)
 
+query attacker(gx_from_Alice).
+query attacker(gy_from_Bob).
+query attacker(K_private).
 
 (* AUTHENTICATION *)
 
