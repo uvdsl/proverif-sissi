@@ -187,7 +187,7 @@ Process 0 (that is, the initial process):
         {138}let msg_12: bitstring = auth(adec(x_7,sk_14),spk_v) in
         {139}let (n_c: bitstring,rule: ACR) = msg_12 in
         {140}let issuerPk: PublicKey = getPubKey(getIssuerFromAC(credential)) in
-        {141}let ph: bitstring = (n_c,verifierDID,n_p_3,rule) in
+        {141}let ph: bitstring = (n_c,verifierDID) in
         {142}let dc: DC = proofGen(credential,issuerPk,ph) in
         {143}let vp: bitstring = encodeDC(dc) in
         {144}let sk_15: SecretKey = ssk_3 in
@@ -285,7 +285,7 @@ Process 0 (that is, the initial process):
         {218}let msg_19: bitstring = auth(adec(x_12,sk_25),spk_v_1) in
         {219}let (n_c_1: bitstring,rule_1: ACR) = msg_19 in
         {220}let issuerPk_1: PublicKey = getPubKey(getIssuerFromAC(credential_1)) in
-        {221}let ph_1: bitstring = (n_c_1,verifierDID_1,n_p_5,rule_1) in
+        {221}let ph_1: bitstring = (n_c_1,verifierDID_1) in
         {222}let dc_1: DC = proofGen(credential_1,issuerPk_1,ph_1) in
         {223}let vp_1: bitstring = encodeDC(dc_1) in
         {224}let sk_26: SecretKey = ssk_5 in
@@ -383,7 +383,7 @@ Process 0 (that is, the initial process):
         {298}let msg_26: bitstring = auth(adec(x_17,sk_36),spk_v_2) in
         {299}let (n_c_2: bitstring,rule_2: ACR) = msg_26 in
         {300}let issuerPk_2: PublicKey = getPubKey(getIssuerFromAC(credential_2)) in
-        {301}let ph_2: bitstring = (n_c_2,verifierDID_2,n_p_7,rule_2) in
+        {301}let ph_2: bitstring = (n_c_2,verifierDID_2) in
         {302}let dc_2: DC = proofGen(credential_2,issuerPk_2,ph_2) in
         {303}let vp_2: bitstring = encodeDC(dc_2) in
         {304}let sk_37: SecretKey = ssk_7 in
@@ -481,7 +481,7 @@ Process 0 (that is, the initial process):
         {378}let msg_33: bitstring = auth(adec(x_22,sk_47),spk_v_3) in
         {379}let (n_c_3: bitstring,rule_3: ACR) = msg_33 in
         {380}let issuerPk_3: PublicKey = getPubKey(getIssuerFromAC(credential_3)) in
-        {381}let ph_3: bitstring = (n_c_3,verifierDID_3,n_p_9,rule_3) in
+        {381}let ph_3: bitstring = (n_c_3,verifierDID_3) in
         {382}let dc_3: DC = proofGen(credential_3,issuerPk_3,ph_3) in
         {383}let vp_3: bitstring = encodeDC(dc_3) in
         {384}let sk_48: SecretKey = ssk_9 in
@@ -557,7 +557,7 @@ Process 0 (that is, the initial process):
     {437}let unauth_dc: DC = decodeDC(auth(adec(x_26,sk_53),spk_p_2)) in
     {438}let issuer_1: DID = getIssuerFromDC(unauth_dc) in
     {439}let issuerPk_4: PublicKey = getPubKey(issuer_1) in
-    {440}let ph_4: bitstring = (n_c_4,genDID(pk(sk_50),sk_50),n_p_10,acr) in
+    {440}let ph_4: bitstring = (n_c_4,genDID(pk(sk_50),sk_50)) in
     {441}if proofVerify(unauth_dc,ph_4,getAttrFromRule(acr),issuerPk_4) then
     {442}if (issuer_1 = getIssuerFromRule(acr)) then
     {443}if (getAttrFromDC(unauth_dc) = getAttrFromRule(acr)) then
@@ -616,7 +616,7 @@ Process 0 (that is, the initial process):
     {487}let unauth_dc_1: DC = decodeDC(auth(adec(x_29,sk_58),spk_p_3)) in
     {488}let issuer_2: DID = getIssuerFromDC(unauth_dc_1) in
     {489}let issuerPk_5: PublicKey = getPubKey(issuer_2) in
-    {490}let ph_5: bitstring = (n_c_5,genDID(pk(sk_55),sk_55),n_p_11,acr_otherAgent) in
+    {490}let ph_5: bitstring = (n_c_5,genDID(pk(sk_55),sk_55)) in
     {491}if proofVerify(unauth_dc_1,ph_5,getAttrFromRule(acr_otherAgent),issuerPk_5) then
     {492}if (issuer_2 = getIssuerFromRule(acr_otherAgent)) then
     {493}if (getAttrFromDC(unauth_dc_1) = getAttrFromRule(acr_otherAgent)) then
@@ -675,7 +675,7 @@ Process 0 (that is, the initial process):
     {537}let unauth_dc_2: DC = decodeDC(auth(adec(x_32,sk_63),spk_p_4)) in
     {538}let issuer_3: DID = getIssuerFromDC(unauth_dc_2) in
     {539}let issuerPk_6: PublicKey = getPubKey(issuer_3) in
-    {540}let ph_6: bitstring = (n_c_6,genDID(pk(sk_60),sk_60),n_p_12,acr_compromisedIssuer) in
+    {540}let ph_6: bitstring = (n_c_6,genDID(pk(sk_60),sk_60)) in
     {541}if proofVerify(unauth_dc_2,ph_6,getAttrFromRule(acr_compromisedIssuer),issuerPk_6) then
     {542}if (issuer_3 = getIssuerFromRule(acr_compromisedIssuer)) then
     {543}if (getAttrFromDC(unauth_dc_2) = getAttrFromRule(acr_compromisedIssuer)) then
@@ -734,7 +734,7 @@ Process 0 (that is, the initial process):
     {587}let unauth_dc_3: DC = decodeDC(auth(adec(x_35,sk_68),spk_p_5)) in
     {588}let issuer_4: DID = getIssuerFromDC(unauth_dc_3) in
     {589}let issuerPk_7: PublicKey = getPubKey(issuer_4) in
-    {590}let ph_7: bitstring = (n_c_7,genDID(pk(sk_65),sk_65),n_p_13,acr_compromisedIssuer_2) in
+    {590}let ph_7: bitstring = (n_c_7,genDID(pk(sk_65),sk_65)) in
     {591}if proofVerify(unauth_dc_3,ph_7,getAttrFromRule(acr_compromisedIssuer_2),issuerPk_7) then
     {592}if (issuer_4 = getIssuerFromRule(acr_compromisedIssuer_2)) then
     {593}if (getAttrFromDC(unauth_dc_3) = getAttrFromRule(acr_compromisedIssuer_2)) then
@@ -793,7 +793,7 @@ Process 0 (that is, the initial process):
     {637}let unauth_dc_4: DC = decodeDC(auth(adec(x_38,sk_73),spk_p_6)) in
     {638}let issuer_5: DID = getIssuerFromDC(unauth_dc_4) in
     {639}let issuerPk_8: PublicKey = getPubKey(issuer_5) in
-    {640}let ph_8: bitstring = (n_c_8,genDID(pk(sk_70),sk_70),n_p_14,acr_compromised) in
+    {640}let ph_8: bitstring = (n_c_8,genDID(pk(sk_70),sk_70)) in
     {641}if proofVerify(unauth_dc_4,ph_8,getAttrFromRule(acr_compromised),issuerPk_8) then
     {642}if (issuer_5 = getIssuerFromRule(acr_compromised)) then
     {643}if (getAttrFromDC(unauth_dc_4) = getAttrFromRule(acr_compromised)) then
@@ -852,7 +852,7 @@ Process 0 (that is, the initial process):
     {687}let unauth_dc_5: DC = decodeDC(auth(adec(x_41,sk_78),spk_p_7)) in
     {688}let issuer_6: DID = getIssuerFromDC(unauth_dc_5) in
     {689}let issuerPk_9: PublicKey = getPubKey(issuer_6) in
-    {690}let ph_9: bitstring = (n_c_9,genDID(pk(sk_75),sk_75),n_p_15,acr_compromised_2) in
+    {690}let ph_9: bitstring = (n_c_9,genDID(pk(sk_75),sk_75)) in
     {691}if proofVerify(unauth_dc_5,ph_9,getAttrFromRule(acr_compromised_2),issuerPk_9) then
     {692}if (issuer_6 = getIssuerFromRule(acr_compromised_2)) then
     {693}if (getAttrFromDC(unauth_dc_5) = getAttrFromRule(acr_compromised_2)) then
@@ -1028,7 +1028,7 @@ Process 0 (that is, the initial process):
         {139}let (n_c: bitstring,rule: ACR) = msg_12 in
         {140}let issuerPk: PublicKey = getPubKey(getIssuerFromAC(credential)) in
         {144}let sk_15: SecretKey = ssk_3 in
-        {141}let ph: bitstring = (n_c,verifierDID,n_p_3,rule) in
+        {141}let ph: bitstring = (n_c,verifierDID) in
         {142}let dc: DC = proofGen(credential,issuerPk,ph) in
         {143}let vp: bitstring = encodeDC(dc) in
         {145}let msg_vp: bitstring = aenc(sign(vp,sk_15),spk_v) in
@@ -1126,7 +1126,7 @@ Process 0 (that is, the initial process):
         {219}let (n_c_1: bitstring,rule_1: ACR) = msg_19 in
         {220}let issuerPk_1: PublicKey = getPubKey(getIssuerFromAC(credential_1)) in
         {224}let sk_26: SecretKey = ssk_5 in
-        {221}let ph_1: bitstring = (n_c_1,verifierDID_1,n_p_5,rule_1) in
+        {221}let ph_1: bitstring = (n_c_1,verifierDID_1) in
         {222}let dc_1: DC = proofGen(credential_1,issuerPk_1,ph_1) in
         {223}let vp_1: bitstring = encodeDC(dc_1) in
         {225}let msg_vp_1: bitstring = aenc(sign(vp_1,sk_26),spk_v_1) in
@@ -1224,7 +1224,7 @@ Process 0 (that is, the initial process):
         {299}let (n_c_2: bitstring,rule_2: ACR) = msg_26 in
         {300}let issuerPk_2: PublicKey = getPubKey(getIssuerFromAC(credential_2)) in
         {304}let sk_37: SecretKey = ssk_7 in
-        {301}let ph_2: bitstring = (n_c_2,verifierDID_2,n_p_7,rule_2) in
+        {301}let ph_2: bitstring = (n_c_2,verifierDID_2) in
         {302}let dc_2: DC = proofGen(credential_2,issuerPk_2,ph_2) in
         {303}let vp_2: bitstring = encodeDC(dc_2) in
         {305}let msg_vp_2: bitstring = aenc(sign(vp_2,sk_37),spk_v_2) in
@@ -1322,7 +1322,7 @@ Process 0 (that is, the initial process):
         {379}let (n_c_3: bitstring,rule_3: ACR) = msg_33 in
         {380}let issuerPk_3: PublicKey = getPubKey(getIssuerFromAC(credential_3)) in
         {384}let sk_48: SecretKey = ssk_9 in
-        {381}let ph_3: bitstring = (n_c_3,verifierDID_3,n_p_9,rule_3) in
+        {381}let ph_3: bitstring = (n_c_3,verifierDID_3) in
         {382}let dc_3: DC = proofGen(credential_3,issuerPk_3,ph_3) in
         {383}let vp_3: bitstring = encodeDC(dc_3) in
         {385}let msg_vp_3: bitstring = aenc(sign(vp_3,sk_48),spk_v_3) in
@@ -1395,7 +1395,7 @@ Process 0 (that is, the initial process):
     {437}let unauth_dc: DC = decodeDC(auth(adec(x_26,sk_53),spk_p_2)) in
     {438}let issuer_1: DID = getIssuerFromDC(unauth_dc) in
     {439}let issuerPk_4: PublicKey = getPubKey(issuer_1) in
-    {440}let ph_4: bitstring = (n_c_4,genDID(pk(sk_50),sk_50),n_p_10,acr) in
+    {440}let ph_4: bitstring = (n_c_4,genDID(pk(sk_50),sk_50)) in
     {441}if proofVerify(unauth_dc,ph_4,getAttrFromRule(acr),issuerPk_4) then
     {442}if (issuer_1 = getIssuerFromRule(acr)) then
     {443}if (getAttrFromDC(unauth_dc) = getAttrFromRule(acr)) then
@@ -1454,7 +1454,7 @@ Process 0 (that is, the initial process):
     {487}let unauth_dc_1: DC = decodeDC(auth(adec(x_29,sk_58),spk_p_3)) in
     {488}let issuer_2: DID = getIssuerFromDC(unauth_dc_1) in
     {489}let issuerPk_5: PublicKey = getPubKey(issuer_2) in
-    {490}let ph_5: bitstring = (n_c_5,genDID(pk(sk_55),sk_55),n_p_11,acr_otherAgent) in
+    {490}let ph_5: bitstring = (n_c_5,genDID(pk(sk_55),sk_55)) in
     {491}if proofVerify(unauth_dc_1,ph_5,getAttrFromRule(acr_otherAgent),issuerPk_5) then
     {492}if (issuer_2 = getIssuerFromRule(acr_otherAgent)) then
     {493}if (getAttrFromDC(unauth_dc_1) = getAttrFromRule(acr_otherAgent)) then
@@ -1513,7 +1513,7 @@ Process 0 (that is, the initial process):
     {537}let unauth_dc_2: DC = decodeDC(auth(adec(x_32,sk_63),spk_p_4)) in
     {538}let issuer_3: DID = getIssuerFromDC(unauth_dc_2) in
     {539}let issuerPk_6: PublicKey = getPubKey(issuer_3) in
-    {540}let ph_6: bitstring = (n_c_6,genDID(pk(sk_60),sk_60),n_p_12,acr_compromisedIssuer) in
+    {540}let ph_6: bitstring = (n_c_6,genDID(pk(sk_60),sk_60)) in
     {541}if proofVerify(unauth_dc_2,ph_6,getAttrFromRule(acr_compromisedIssuer),issuerPk_6) then
     {542}if (issuer_3 = getIssuerFromRule(acr_compromisedIssuer)) then
     {543}if (getAttrFromDC(unauth_dc_2) = getAttrFromRule(acr_compromisedIssuer)) then
@@ -1572,7 +1572,7 @@ Process 0 (that is, the initial process):
     {587}let unauth_dc_3: DC = decodeDC(auth(adec(x_35,sk_68),spk_p_5)) in
     {588}let issuer_4: DID = getIssuerFromDC(unauth_dc_3) in
     {589}let issuerPk_7: PublicKey = getPubKey(issuer_4) in
-    {590}let ph_7: bitstring = (n_c_7,genDID(pk(sk_65),sk_65),n_p_13,acr_compromisedIssuer_2) in
+    {590}let ph_7: bitstring = (n_c_7,genDID(pk(sk_65),sk_65)) in
     {591}if proofVerify(unauth_dc_3,ph_7,getAttrFromRule(acr_compromisedIssuer_2),issuerPk_7) then
     {592}if (issuer_4 = getIssuerFromRule(acr_compromisedIssuer_2)) then
     {593}if (getAttrFromDC(unauth_dc_3) = getAttrFromRule(acr_compromisedIssuer_2)) then
@@ -1631,7 +1631,7 @@ Process 0 (that is, the initial process):
     {637}let unauth_dc_4: DC = decodeDC(auth(adec(x_38,sk_73),spk_p_6)) in
     {638}let issuer_5: DID = getIssuerFromDC(unauth_dc_4) in
     {639}let issuerPk_8: PublicKey = getPubKey(issuer_5) in
-    {640}let ph_8: bitstring = (n_c_8,genDID(pk(sk_70),sk_70),n_p_14,acr_compromised) in
+    {640}let ph_8: bitstring = (n_c_8,genDID(pk(sk_70),sk_70)) in
     {641}if proofVerify(unauth_dc_4,ph_8,getAttrFromRule(acr_compromised),issuerPk_8) then
     {642}if (issuer_5 = getIssuerFromRule(acr_compromised)) then
     {643}if (getAttrFromDC(unauth_dc_4) = getAttrFromRule(acr_compromised)) then
@@ -1690,7 +1690,7 @@ Process 0 (that is, the initial process):
     {687}let unauth_dc_5: DC = decodeDC(auth(adec(x_41,sk_78),spk_p_7)) in
     {688}let issuer_6: DID = getIssuerFromDC(unauth_dc_5) in
     {689}let issuerPk_9: PublicKey = getPubKey(issuer_6) in
-    {690}let ph_9: bitstring = (n_c_9,genDID(pk(sk_75),sk_75),n_p_15,acr_compromised_2) in
+    {690}let ph_9: bitstring = (n_c_9,genDID(pk(sk_75),sk_75)) in
     {691}if proofVerify(unauth_dc_5,ph_9,getAttrFromRule(acr_compromised_2),issuerPk_9) then
     {692}if (issuer_6 = getIssuerFromRule(acr_compromised_2)) then
     {693}if (getAttrFromDC(unauth_dc_5) = getAttrFromRule(acr_compromised_2)) then
@@ -1733,13 +1733,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(n_p_fromHolder[])
 RESULT not attacker(n_p_fromHolder[]) is true.
 -- Query not attacker(n_i_fromHolder[]) in process 1.
@@ -1753,13 +1753,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(n_i_fromHolder[])
 RESULT not attacker(n_i_fromHolder[]) is true.
 -- Query not attacker(providingDID_fromHolder[]) in process 1.
@@ -1773,13 +1773,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(providingDID_fromHolder[])
 RESULT not attacker(providingDID_fromHolder[]) is true.
 -- Query not attacker(n_p_fromIssuer[]) in process 1.
@@ -1793,13 +1793,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(n_p_fromIssuer[])
 RESULT not attacker(n_p_fromIssuer[]) is true.
 -- Query not attacker(credIssuing_fromIssuer_notMeaningful[]) in process 1.
@@ -1813,13 +1813,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(credIssuing_fromIssuer_notMeaningful[])
 RESULT not attacker(credIssuing_fromIssuer_notMeaningful[]) is true.
 -- Query not attacker(n_p_fromProver[]) in process 1.
@@ -1833,13 +1833,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(n_p_fromProver[])
 RESULT not attacker(n_p_fromProver[]) is true.
 -- Query not attacker(unsigned_vp_fromProver[]) in process 1.
@@ -1853,13 +1853,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(unsigned_vp_fromProver[])
 RESULT not attacker(unsigned_vp_fromProver[]) is true.
 -- Query not attacker(vp_fromProver[]) in process 1.
@@ -1873,13 +1873,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(vp_fromProver[])
 RESULT not attacker(vp_fromProver[]) is true.
 -- Query not attacker(cred_fromProver[]) in process 1.
@@ -1893,13 +1893,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(cred_fromProver[])
 RESULT not attacker(cred_fromProver[]) is true.
 -- Query not attacker(access_token_fromProver[]) in process 1.
@@ -1913,13 +1913,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(access_token_fromProver[])
 RESULT not attacker(access_token_fromProver[]) is true.
 -- Query not attacker(n_p_fromVerifier[]) in process 1.
@@ -1933,13 +1933,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(n_p_fromVerifier[])
 RESULT not attacker(n_p_fromVerifier[]) is true.
 -- Query not attacker(rule_fromVerifier[]) in process 1.
@@ -1953,13 +1953,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(rule_fromVerifier[])
 goal reachable: attacker(rule_fromVerifier[])
 
@@ -2034,12 +2034,12 @@ attacker(aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,gen
 The message aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(sk_prover[]),sk_prover[])),ssk_17),pk(ssk_16)) that the attacker may have by 9 may be received at input {111}.
 The message aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)) that the attacker may have by 11 may be received at input {125}.
 The message aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)) that the attacker may have by 13 may be received at input {135}.
-So the message aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_17,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_18),pk(ssk_19)) may be sent to the attacker at output {148}.
-attacker(aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_17,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_18),pk(ssk_19))).
+So the message aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_18),pk(ssk_19)) may be sent to the attacker at output {148}.
+attacker(aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_18),pk(ssk_19))).
 
 15. The message aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])) that the attacker may have by 10 may be received at input {411}.
 The message aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)) that the attacker may have by 12 may be received at input {422}.
-The message aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_17,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_18),pk(ssk_19)) that the attacker may have by 14 may be received at input {434}.
+The message aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_18),pk(ssk_19)) that the attacker may have by 14 may be received at input {434}.
 So the message rule_fromVerifier[] may be sent on channel chR(makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))) at output {453}.
 mess(chR(makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),rule_fromVerifier[]).
 
@@ -2132,23 +2132,23 @@ out(h, ~M_13) with ~M_13 = aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_
 
 in(h, ~M_13) with ~M_13 = aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)) at {135} in copy a, a_2
 
-event auth_ProverSendsLastMessageToVerifier(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1),n_p_17,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))))),ssk_18),pk(ssk_19))) at {146} in copy a, a_2
+event auth_ProverSendsLastMessageToVerifier(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1)))),ssk_18),pk(ssk_19))) at {146} in copy a, a_2
 
-event auth_ProverSendsLastMessageToVerifierInProtocolFull(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_issuer_1)),aenc(sign((n_p_16,n_i_6,pk(ssk_17)),sk_issuer_1),pk(ssk_16)),aenc(sign(sign((n_i_6,genDID(pk(sk_prover_1),sk_prover_1),genDID(pk(sk_issuer_1),sk_issuer_1)),sk_prover_1),ssk_16),pk(ssk_17)),aenc(sign((issueAC(attr,sk_issuer_1),genDID(pk(sk_prover_1),sk_prover_1)),ssk_17),pk(ssk_16)),aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1),n_p_17,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))))),ssk_18),pk(ssk_19))) at {147} in copy a, a_2
+event auth_ProverSendsLastMessageToVerifierInProtocolFull(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_issuer_1)),aenc(sign((n_p_16,n_i_6,pk(ssk_17)),sk_issuer_1),pk(ssk_16)),aenc(sign(sign((n_i_6,genDID(pk(sk_prover_1),sk_prover_1),genDID(pk(sk_issuer_1),sk_issuer_1)),sk_prover_1),ssk_16),pk(ssk_17)),aenc(sign((issueAC(attr,sk_issuer_1),genDID(pk(sk_prover_1),sk_prover_1)),ssk_17),pk(ssk_16)),aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1)))),ssk_18),pk(ssk_19))) at {147} in copy a, a_2
 
-out(h, ~M_14) with ~M_14 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1),n_p_17,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))))),ssk_18),pk(ssk_19)) at {148} in copy a, a_2
+out(h, ~M_14) with ~M_14 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1)))),ssk_18),pk(ssk_19)) at {148} in copy a, a_2
 
-in(h, ~M_14) with ~M_14 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1),n_p_17,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))))),ssk_18),pk(ssk_19)) at {434} in copy a_3
+in(h, ~M_14) with ~M_14 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1)))),ssk_18),pk(ssk_19)) at {434} in copy a_3
 
 new access_token_4: bitstring creating access_token_10 at {444} in copy a_3
 
-event auth_VerifierSendsLastMessageToProver(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1),n_p_17,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))))),ssk_18),pk(ssk_19)),aenc(sign(sign(access_token_10,sk_verifier_1),ssk_19),pk(ssk_18))) at {448} in copy a_3
+event auth_VerifierSendsLastMessageToProver(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1)))),ssk_18),pk(ssk_19)),aenc(sign(sign(access_token_10,sk_verifier_1),ssk_19),pk(ssk_18))) at {448} in copy a_3
 
 out(h, ~M_15) with ~M_15 = aenc(sign(sign(access_token_10,sk_verifier_1),ssk_19),pk(ssk_18)) at {449} in copy a_3
 
 out(chR(makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))), ~M_16) with ~M_16 = rule_fromVerifier at {453} in copy a_3
 
-event auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1),n_p_17,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))))),ssk_18),pk(ssk_19))) at {451} in copy a_3
+event auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1)))),ssk_18),pk(ssk_19))) at {451} in copy a_3
 
 The attacker has the message ~M_16 = rule_fromVerifier.
 A trace has been found.
@@ -2164,13 +2164,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(credRequest_fromVerifier[])
 RESULT not attacker(credRequest_fromVerifier[]) is true.
 -- Query not attacker(unauth_vp_fromVerifier[]) in process 1.
@@ -2184,13 +2184,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(unauth_vp_fromVerifier[])
 RESULT not attacker(unauth_vp_fromVerifier[]) is true.
 -- Query not attacker(vp_fromVerifier[]) in process 1.
@@ -2204,13 +2204,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(vp_fromVerifier[])
 RESULT not attacker(vp_fromVerifier[]) is true.
 -- Query not attacker(cred_fromVerifier[]) in process 1.
@@ -2224,13 +2224,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(cred_fromVerifier[])
 RESULT not attacker(cred_fromVerifier[]) is true.
 -- Query not attacker(access_token_fromVerifier[]) in process 1.
@@ -2244,13 +2244,13 @@ Completing...
 1200 rules inserted. Base: 948 rules (152 with conclusion selected). Queue: 110 rules.
 1400 rules inserted. Base: 1045 rules (174 with conclusion selected). Queue: 193 rules.
 1600 rules inserted. Base: 1234 rules (187 with conclusion selected). Queue: 151 rules.
-1800 rules inserted. Base: 1334 rules (201 with conclusion selected). Queue: 145 rules.
-2000 rules inserted. Base: 1445 rules (202 with conclusion selected). Queue: 58 rules.
-2200 rules inserted. Base: 1437 rules (216 with conclusion selected). Queue: 87 rules.
-2400 rules inserted. Base: 1517 rules (230 with conclusion selected). Queue: 71 rules.
-2600 rules inserted. Base: 1547 rules (247 with conclusion selected). Queue: 89 rules.
-2800 rules inserted. Base: 1485 rules (256 with conclusion selected). Queue: 101 rules.
-3000 rules inserted. Base: 1579 rules (265 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1346 rules (201 with conclusion selected). Queue: 145 rules.
+2000 rules inserted. Base: 1456 rules (202 with conclusion selected). Queue: 58 rules.
+2200 rules inserted. Base: 1424 rules (216 with conclusion selected). Queue: 80 rules.
+2400 rules inserted. Base: 1500 rules (230 with conclusion selected). Queue: 97 rules.
+2600 rules inserted. Base: 1564 rules (248 with conclusion selected). Queue: 81 rules.
+2800 rules inserted. Base: 1491 rules (259 with conclusion selected). Queue: 84 rules.
+3000 rules inserted. Base: 1590 rules (275 with conclusion selected). Queue: 1 rules.
 Starting query not attacker(access_token_fromVerifier[])
 RESULT not attacker(access_token_fromVerifier[]) is true.
 -- Query inj-event(auth_ProverCompletesProtocol(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp,m_accessToken)) ==> inj-event(auth_VerifierSendsLastMessageToProver(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp,m_accessToken)) in process 1.
@@ -2264,17 +2264,16 @@ Completing...
 1200 rules inserted. Base: 989 rules (150 with conclusion selected). Queue: 125 rules.
 1400 rules inserted. Base: 1056 rules (174 with conclusion selected). Queue: 242 rules.
 1600 rules inserted. Base: 1244 rules (178 with conclusion selected). Queue: 196 rules.
-1800 rules inserted. Base: 1396 rules (191 with conclusion selected). Queue: 155 rules.
-2000 rules inserted. Base: 1475 rules (201 with conclusion selected). Queue: 146 rules.
-2200 rules inserted. Base: 1610 rules (204 with conclusion selected). Queue: 46 rules.
-2400 rules inserted. Base: 1650 rules (216 with conclusion selected). Queue: 98 rules.
-2600 rules inserted. Base: 1732 rules (231 with conclusion selected). Queue: 73 rules.
-2800 rules inserted. Base: 1821 rules (248 with conclusion selected). Queue: 107 rules.
-3000 rules inserted. Base: 1923 rules (255 with conclusion selected). Queue: 112 rules.
-3200 rules inserted. Base: 2045 rules (262 with conclusion selected). Queue: 99 rules.
-3400 rules inserted. Base: 2145 rules (266 with conclusion selected). Queue: 38 rules.
+1800 rules inserted. Base: 1406 rules (191 with conclusion selected). Queue: 155 rules.
+2000 rules inserted. Base: 1487 rules (201 with conclusion selected). Queue: 146 rules.
+2200 rules inserted. Base: 1612 rules (204 with conclusion selected). Queue: 46 rules.
+2400 rules inserted. Base: 1637 rules (216 with conclusion selected). Queue: 77 rules.
+2600 rules inserted. Base: 1726 rules (231 with conclusion selected). Queue: 103 rules.
+2800 rules inserted. Base: 1820 rules (249 with conclusion selected). Queue: 87 rules.
+3000 rules inserted. Base: 1956 rules (257 with conclusion selected). Queue: 127 rules.
+3200 rules inserted. Base: 2078 rules (265 with conclusion selected). Queue: 103 rules.
 Starting query inj-event(auth_ProverCompletesProtocol(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp,m_accessToken)) ==> inj-event(auth_VerifierSendsLastMessageToProver(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp,m_accessToken))
-goal reachable: begin(auth_VerifierSendsLastMessageToProver(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),aenc(sign((n_p_16,n_v_10,pk(ssk_17)),sk_verifier[]),pk(ssk_16)),aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_17),pk(ssk_16)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_16,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_16),pk(ssk_17)),aenc(sign(sign(access_token_10,sk_verifier[]),ssk_17),pk(ssk_16))),@occ448_1) -> end(@occ155_1,auth_ProverCompletesProtocol(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),aenc(sign((n_p_16,n_v_10,pk(ssk_17)),sk_verifier[]),pk(ssk_16)),aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_17),pk(ssk_16)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_16,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_16),pk(ssk_17)),aenc(sign(sign(access_token_10,sk_verifier[]),ssk_17),pk(ssk_16))))
+goal reachable: begin(auth_VerifierSendsLastMessageToProver(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),aenc(sign((n_p_16,n_v_10,pk(ssk_17)),sk_verifier[]),pk(ssk_16)),aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_17),pk(ssk_16)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_16),pk(ssk_17)),aenc(sign(sign(access_token_10,sk_verifier[]),ssk_17),pk(ssk_16))),@occ448_1) -> end(@occ155_1,auth_ProverCompletesProtocol(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),aenc(sign((n_p_16,n_v_10,pk(ssk_17)),sk_verifier[]),pk(ssk_16)),aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_17),pk(ssk_16)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_16),pk(ssk_17)),aenc(sign(sign(access_token_10,sk_verifier[]),ssk_17),pk(ssk_16))))
 The hypothesis occurs strictly before the conclusion.
 Abbreviations:
 n_p_17 = n_p_2[!1 = @sid]
@@ -2286,9 +2285,9 @@ ssk_16 = ssk_3[!2 = @sid_2,x_5 = aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(
 n_v_10 = n_v_4[x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
 ssk_17 = ssk_10[x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
 n_c_10 = n_c_4[x_25 = aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
-access_token_10 = access_token_4[x_26 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_16,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_16),pk(ssk_17)),x_25 = aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
+access_token_10 = access_token_4[x_26 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_16),pk(ssk_17)),x_25 = aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
 @occ155_1 = @occ155[x_8 = aenc(sign(sign(access_token_10,sk_verifier[]),ssk_17),pk(ssk_16)),x_7 = aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_17),pk(ssk_16)),x_6 = aenc(sign((n_p_16,n_v_10,pk(ssk_17)),sk_verifier[]),pk(ssk_16)),!2 = @sid_2,x_5 = aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(sk_prover[]),sk_prover[])),ssk_19),pk(ssk_18)),x_4 = aenc(sign((n_p_17,n_i_6,pk(ssk_19)),sk_issuer[]),pk(ssk_18)),!1 = @sid]
-@occ448_1 = @occ448[x_26 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_16,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_16),pk(ssk_17)),x_25 = aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
+@occ448_1 = @occ448[x_26 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_16),pk(ssk_17)),x_25 = aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
 RESULT inj-event(auth_ProverCompletesProtocol(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp,m_accessToken)) ==> inj-event(auth_VerifierSendsLastMessageToProver(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp,m_accessToken)) is true.
 -- Query inj-event(auth_VerifierCompletesProtocol(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp)) ==> inj-event(auth_ProverSendsLastMessageToVerifier(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp)) in process 1.
 Translating the process into Horn clauses...
@@ -2301,18 +2300,18 @@ Completing...
 1200 rules inserted. Base: 991 rules (152 with conclusion selected). Queue: 111 rules.
 1400 rules inserted. Base: 1142 rules (174 with conclusion selected). Queue: 255 rules.
 1600 rules inserted. Base: 1334 rules (181 with conclusion selected). Queue: 248 rules.
-1800 rules inserted. Base: 1486 rules (191 with conclusion selected). Queue: 196 rules.
-2000 rules inserted. Base: 1564 rules (205 with conclusion selected). Queue: 195 rules.
-2200 rules inserted. Base: 1705 rules (210 with conclusion selected). Queue: 88 rules.
-2400 rules inserted. Base: 1771 rules (219 with conclusion selected). Queue: 72 rules.
-2600 rules inserted. Base: 1850 rules (225 with conclusion selected). Queue: 58 rules.
-2800 rules inserted. Base: 1936 rules (251 with conclusion selected). Queue: 88 rules.
-3000 rules inserted. Base: 2043 rules (259 with conclusion selected). Queue: 142 rules.
-3200 rules inserted. Base: 2142 rules (266 with conclusion selected). Queue: 171 rules.
-3400 rules inserted. Base: 2276 rules (271 with conclusion selected). Queue: 113 rules.
-3600 rules inserted. Base: 2411 rules (276 with conclusion selected). Queue: 56 rules.
+1800 rules inserted. Base: 1497 rules (191 with conclusion selected). Queue: 196 rules.
+2000 rules inserted. Base: 1577 rules (205 with conclusion selected). Queue: 195 rules.
+2200 rules inserted. Base: 1718 rules (210 with conclusion selected). Queue: 88 rules.
+2400 rules inserted. Base: 1747 rules (219 with conclusion selected). Queue: 79 rules.
+2600 rules inserted. Base: 1845 rules (237 with conclusion selected). Queue: 72 rules.
+2800 rules inserted. Base: 1903 rules (252 with conclusion selected). Queue: 109 rules.
+3000 rules inserted. Base: 2048 rules (262 with conclusion selected). Queue: 179 rules.
+3200 rules inserted. Base: 2190 rules (269 with conclusion selected). Queue: 151 rules.
+3400 rules inserted. Base: 2317 rules (275 with conclusion selected). Queue: 117 rules.
+3600 rules inserted. Base: 2427 rules (284 with conclusion selected). Queue: 4 rules.
 Starting query inj-event(auth_VerifierCompletesProtocol(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp)) ==> inj-event(auth_ProverSendsLastMessageToVerifier(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp))
-goal reachable: begin(auth_ProverSendsLastMessageToVerifier(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),aenc(sign((n_p_16,n_v_10,pk(ssk_17)),sk_verifier[]),pk(ssk_16)),aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_17),pk(ssk_16)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_16,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_16),pk(ssk_17))),@occ146_1) -> end(@occ451_1,auth_VerifierCompletesProtocol(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),aenc(sign((n_p_16,n_v_10,pk(ssk_17)),sk_verifier[]),pk(ssk_16)),aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_17),pk(ssk_16)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_16,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_16),pk(ssk_17))))
+goal reachable: begin(auth_ProverSendsLastMessageToVerifier(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),aenc(sign((n_p_16,n_v_10,pk(ssk_17)),sk_verifier[]),pk(ssk_16)),aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_17),pk(ssk_16)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_16),pk(ssk_17))),@occ146_1) -> end(@occ451_1,auth_VerifierCompletesProtocol(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),aenc(sign((n_p_16,n_v_10,pk(ssk_17)),sk_verifier[]),pk(ssk_16)),aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_17),pk(ssk_16)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_16),pk(ssk_17))))
 The hypothesis occurs strictly before the conclusion.
 Abbreviations:
 n_p_17 = n_p_2[!1 = @sid]
@@ -2324,7 +2323,7 @@ ssk_16 = ssk_3[!2 = @sid_2,x_5 = aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(
 n_v_10 = n_v_4[x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
 ssk_17 = ssk_10[x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
 n_c_10 = n_c_4[x_25 = aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
-@occ451_1 = @occ451[x_26 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_16,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_16),pk(ssk_17)),x_25 = aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
+@occ451_1 = @occ451[x_26 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_16),pk(ssk_17)),x_25 = aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
 @occ146_1 = @occ146[x_7 = aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_17),pk(ssk_16)),x_6 = aenc(sign((n_p_16,n_v_10,pk(ssk_17)),sk_verifier[]),pk(ssk_16)),!2 = @sid_2,x_5 = aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(sk_prover[]),sk_prover[])),ssk_19),pk(ssk_18)),x_4 = aenc(sign((n_p_17,n_i_6,pk(ssk_19)),sk_issuer[]),pk(ssk_18)),!1 = @sid]
 RESULT inj-event(auth_VerifierCompletesProtocol(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp)) ==> inj-event(auth_ProverSendsLastMessageToVerifier(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp)) is true.
 -- Query inj-event(auth_HolderCompletesProtocol(m_handshakeReq,m_handshakeResp,m_did,m_cred)) ==> inj-event(auth_IssuerSendsLastMessageToHolder(m_handshakeReq,m_handshakeResp,m_did,m_cred)) in process 1.
@@ -2338,13 +2337,13 @@ Completing...
 1200 rules inserted. Base: 987 rules (153 with conclusion selected). Queue: 125 rules.
 1400 rules inserted. Base: 1052 rules (177 with conclusion selected). Queue: 216 rules.
 1600 rules inserted. Base: 1240 rules (182 with conclusion selected). Queue: 169 rules.
-1800 rules inserted. Base: 1376 rules (204 with conclusion selected). Queue: 139 rules.
-2000 rules inserted. Base: 1463 rules (206 with conclusion selected). Queue: 101 rules.
-2200 rules inserted. Base: 1494 rules (214 with conclusion selected). Queue: 60 rules.
-2400 rules inserted. Base: 1560 rules (223 with conclusion selected). Queue: 58 rules.
-2600 rules inserted. Base: 1643 rules (248 with conclusion selected). Queue: 70 rules.
-2800 rules inserted. Base: 1608 rules (255 with conclusion selected). Queue: 115 rules.
-3000 rules inserted. Base: 1651 rules (264 with conclusion selected). Queue: 67 rules.
+1800 rules inserted. Base: 1388 rules (204 with conclusion selected). Queue: 139 rules.
+2000 rules inserted. Base: 1475 rules (206 with conclusion selected). Queue: 101 rules.
+2200 rules inserted. Base: 1466 rules (214 with conclusion selected). Queue: 60 rules.
+2400 rules inserted. Base: 1558 rules (232 with conclusion selected). Queue: 63 rules.
+2600 rules inserted. Base: 1616 rules (247 with conclusion selected). Queue: 88 rules.
+2800 rules inserted. Base: 1593 rules (257 with conclusion selected). Queue: 107 rules.
+3000 rules inserted. Base: 1679 rules (268 with conclusion selected). Queue: 48 rules.
 Starting query inj-event(auth_HolderCompletesProtocol(m_handshakeReq,m_handshakeResp,m_did,m_cred)) ==> inj-event(auth_IssuerSendsLastMessageToHolder(m_handshakeReq,m_handshakeResp,m_did,m_cred))
 goal reachable: begin(auth_IssuerSendsLastMessageToHolder(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_issuer[])),aenc(sign((n_p_16,n_i_6,pk(ssk_17)),sk_issuer[]),pk(ssk_16)),aenc(sign(sign((n_i_6,genDID(pk(sk_prover[]),sk_prover[]),genDID(pk(sk_issuer[]),sk_issuer[])),sk_prover[]),ssk_16),pk(ssk_17)),aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(sk_prover[]),sk_prover[])),ssk_17),pk(ssk_16))),@occ45_1) -> end(@occ163_1,auth_HolderCompletesProtocol(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_issuer[])),aenc(sign((n_p_16,n_i_6,pk(ssk_17)),sk_issuer[]),pk(ssk_16)),aenc(sign(sign((n_i_6,genDID(pk(sk_prover[]),sk_prover[]),genDID(pk(sk_issuer[]),sk_issuer[])),sk_prover[]),ssk_16),pk(ssk_17)),aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(sk_prover[]),sk_prover[])),ssk_17),pk(ssk_16))))
 The hypothesis occurs strictly before the conclusion.
@@ -2367,14 +2366,13 @@ Completing...
 1200 rules inserted. Base: 984 rules (155 with conclusion selected). Queue: 134 rules.
 1400 rules inserted. Base: 1034 rules (175 with conclusion selected). Queue: 183 rules.
 1600 rules inserted. Base: 1213 rules (182 with conclusion selected). Queue: 171 rules.
-1800 rules inserted. Base: 1359 rules (197 with conclusion selected). Queue: 137 rules.
-2000 rules inserted. Base: 1444 rules (207 with conclusion selected). Queue: 121 rules.
-2200 rules inserted. Base: 1568 rules (215 with conclusion selected). Queue: 60 rules.
-2400 rules inserted. Base: 1542 rules (221 with conclusion selected). Queue: 78 rules.
-2600 rules inserted. Base: 1628 rules (238 with conclusion selected). Queue: 74 rules.
-2800 rules inserted. Base: 1610 rules (254 with conclusion selected). Queue: 108 rules.
-3000 rules inserted. Base: 1631 rules (263 with conclusion selected). Queue: 70 rules.
-3200 rules inserted. Base: 1696 rules (277 with conclusion selected). Queue: 15 rules.
+1800 rules inserted. Base: 1370 rules (197 with conclusion selected). Queue: 137 rules.
+2000 rules inserted. Base: 1456 rules (207 with conclusion selected). Queue: 121 rules.
+2200 rules inserted. Base: 1543 rules (215 with conclusion selected). Queue: 60 rules.
+2400 rules inserted. Base: 1537 rules (221 with conclusion selected). Queue: 56 rules.
+2600 rules inserted. Base: 1598 rules (235 with conclusion selected). Queue: 92 rules.
+2800 rules inserted. Base: 1571 rules (257 with conclusion selected). Queue: 115 rules.
+3000 rules inserted. Base: 1639 rules (268 with conclusion selected). Queue: 57 rules.
 Starting query inj-event(auth_IssuerCompletesProtocol(m_handshakeReq,m_handshakeResp,m_did)) ==> inj-event(auth_HolderSendsLastMessageToIssuer(m_handshakeReq,m_handshakeResp,m_did))
 goal reachable: begin(auth_HolderSendsLastMessageToIssuer(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_issuer[])),aenc(sign((n_p_16,n_i_6,pk(ssk_17)),sk_issuer[]),pk(ssk_16)),aenc(sign(sign((n_i_6,genDID(pk(sk_prover[]),sk_prover[]),genDID(pk(sk_issuer[]),sk_issuer[])),sk_prover[]),ssk_16),pk(ssk_17))),@occ189_1) -> end(@occ48_1,auth_IssuerCompletesProtocol(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_issuer[])),aenc(sign((n_p_16,n_i_6,pk(ssk_17)),sk_issuer[]),pk(ssk_16)),aenc(sign(sign((n_i_6,genDID(pk(sk_prover[]),sk_prover[]),genDID(pk(sk_issuer[]),sk_issuer[])),sk_prover[]),ssk_16),pk(ssk_17))))
 The hypothesis occurs strictly before the conclusion.
@@ -2406,18 +2404,18 @@ Completing...
 1200 rules inserted. Base: 1024 rules (152 with conclusion selected). Queue: 121 rules.
 1400 rules inserted. Base: 1143 rules (176 with conclusion selected). Queue: 258 rules.
 1600 rules inserted. Base: 1332 rules (180 with conclusion selected). Queue: 245 rules.
-1800 rules inserted. Base: 1498 rules (191 with conclusion selected). Queue: 210 rules.
-2000 rules inserted. Base: 1595 rules (204 with conclusion selected). Queue: 196 rules.
-2200 rules inserted. Base: 1711 rules (212 with conclusion selected). Queue: 118 rules.
-2400 rules inserted. Base: 1830 rules (221 with conclusion selected). Queue: 66 rules.
-2600 rules inserted. Base: 1857 rules (227 with conclusion selected). Queue: 95 rules.
-2800 rules inserted. Base: 1954 rules (241 with conclusion selected). Queue: 80 rules.
-3000 rules inserted. Base: 2055 rules (259 with conclusion selected). Queue: 134 rules.
-3200 rules inserted. Base: 2165 rules (266 with conclusion selected). Queue: 137 rules.
-3400 rules inserted. Base: 2301 rules (272 with conclusion selected). Queue: 131 rules.
-3600 rules inserted. Base: 2436 rules (277 with conclusion selected). Queue: 80 rules.
+1800 rules inserted. Base: 1507 rules (191 with conclusion selected). Queue: 210 rules.
+2000 rules inserted. Base: 1608 rules (204 with conclusion selected). Queue: 196 rules.
+2200 rules inserted. Base: 1724 rules (212 with conclusion selected). Queue: 118 rules.
+2400 rules inserted. Base: 1799 rules (221 with conclusion selected). Queue: 66 rules.
+2600 rules inserted. Base: 1850 rules (227 with conclusion selected). Queue: 63 rules.
+2800 rules inserted. Base: 1932 rules (241 with conclusion selected). Queue: 117 rules.
+3000 rules inserted. Base: 2051 rules (260 with conclusion selected). Queue: 86 rules.
+3200 rules inserted. Base: 2205 rules (269 with conclusion selected). Queue: 160 rules.
+3400 rules inserted. Base: 2331 rules (276 with conclusion selected). Queue: 140 rules.
+3600 rules inserted. Base: 2468 rules (278 with conclusion selected). Queue: 31 rules.
 Starting query inj-event(auth_VerifierCompletesProtocol(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp)) ==> inj-event(auth_ProverSendsLastMessageToVerifier(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp)) && inj-event(auth_IssuerSendsLastMessageToHolder(m_handshakeReq_2,m_handshakeResp_2,m_did,m_cred)) && inj-event(auth_HolderCompletesProtocol(m_handshakeReq_2,m_handshakeResp_2,m_did,m_cred))
-goal reachable: begin(auth_ProverSendsLastMessageToVerifier(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),aenc(sign((n_p_16,n_v_10,pk(ssk_17)),sk_verifier[]),pk(ssk_16)),aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_17),pk(ssk_16)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_16,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_16),pk(ssk_17))),@occ146_2) && begin(auth_IssuerSendsLastMessageToHolder(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_issuer[])),aenc(sign((n_p_17,n_i_6,pk(ssk_19)),sk_issuer[]),pk(ssk_18)),aenc(sign(sign((n_i_6,genDID(pk(sk_prover[]),sk_prover[]),genDID(pk(sk_issuer[]),sk_issuer[])),sk_prover[]),ssk_18),pk(ssk_19)),aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(sk_prover[]),sk_prover[])),ssk_19),pk(ssk_18))),@occ45_2) -> end(@occ451_2,auth_VerifierCompletesProtocol(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),aenc(sign((n_p_16,n_v_10,pk(ssk_17)),sk_verifier[]),pk(ssk_16)),aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_17),pk(ssk_16)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_16,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_16),pk(ssk_17))))
+goal reachable: begin(auth_ProverSendsLastMessageToVerifier(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),aenc(sign((n_p_16,n_v_10,pk(ssk_17)),sk_verifier[]),pk(ssk_16)),aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_17),pk(ssk_16)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_16),pk(ssk_17))),@occ146_2) && begin(auth_IssuerSendsLastMessageToHolder(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_issuer[])),aenc(sign((n_p_17,n_i_6,pk(ssk_19)),sk_issuer[]),pk(ssk_18)),aenc(sign(sign((n_i_6,genDID(pk(sk_prover[]),sk_prover[]),genDID(pk(sk_issuer[]),sk_issuer[])),sk_prover[]),ssk_18),pk(ssk_19)),aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(sk_prover[]),sk_prover[])),ssk_19),pk(ssk_18))),@occ45_2) -> end(@occ451_2,auth_VerifierCompletesProtocol(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),aenc(sign((n_p_16,n_v_10,pk(ssk_17)),sk_verifier[]),pk(ssk_16)),aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_17),pk(ssk_16)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_16),pk(ssk_17))))
 Abbreviations:
 n_p_17 = n_p_2[!1 = @sid]
 ssk_18 = ssk_2[!1 = @sid]
@@ -2428,7 +2426,7 @@ ssk_16 = ssk_3[!2 = @sid_2,x_5 = aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(
 n_v_10 = n_v_4[x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
 ssk_17 = ssk_10[x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
 n_c_10 = n_c_4[x_25 = aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
-@occ451_2 = @occ451_1[x_26 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_16,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_16),pk(ssk_17)),x_25 = aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
+@occ451_2 = @occ451_1[x_26 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_16),pk(ssk_17)),x_25 = aenc(sign((n_v_10,uri),ssk_16),pk(ssk_17)),x_24 = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_verifier[])),!1 = @sid_3]
 @occ146_2 = @occ146_1[x_7 = aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_17),pk(ssk_16)),x_6 = aenc(sign((n_p_16,n_v_10,pk(ssk_17)),sk_verifier[]),pk(ssk_16)),!2 = @sid_2,x_5 = aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(sk_prover[]),sk_prover[])),ssk_19),pk(ssk_18)),x_4 = aenc(sign((n_p_17,n_i_6,pk(ssk_19)),sk_issuer[]),pk(ssk_18)),!1 = @sid]
 @occ45_2 = @occ45_1[x_1 = aenc(sign(sign((n_i_6,genDID(pk(sk_prover[]),sk_prover[]),genDID(pk(sk_issuer[]),sk_issuer[])),sk_prover[]),ssk_18),pk(ssk_19)),x = aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_issuer[])),!1 = @sid_1]
 
@@ -2443,7 +2441,7 @@ ssk_18 = ssk_3[!2 = @sid_2,x_5 = aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(
 n_v_10 = n_v_4[x_24 = aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),!1 = @sid_3]
 ssk_19 = ssk_10[x_24 = aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),!1 = @sid_3]
 n_c_10 = n_c_4[x_25 = aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),x_24 = aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),!1 = @sid_3]
-@occ451_2 = @occ451_1[x_26 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_17,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_18),pk(ssk_19)),x_25 = aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),x_24 = aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),!1 = @sid_3]
+@occ451_2 = @occ451_1[x_26 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_18),pk(ssk_19)),x_25 = aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),x_24 = aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),!1 = @sid_3]
 @occ146_2 = @occ146_1[x_7 = aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)),x_6 = aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)),!2 = @sid_2,x_5 = aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(sk_prover[]),sk_prover[])),ssk_17),pk(ssk_16)),x_4 = aenc(sign((n_p_16,n_i_6,pk(ssk_17)),sk_issuer[]),pk(ssk_16)),!1 = @sid]
 @occ45_2 = @occ45_1[x_1 = aenc(sign(sign((n_i_6,genDID(pk(sk_prover[]),sk_prover[]),genDID(pk(sk_issuer[]),sk_issuer[])),sk_prover[]),ssk_16),pk(ssk_17)),x = aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_issuer[])),!1 = @sid_1]
 
@@ -2488,19 +2486,19 @@ attacker(aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,gen
 The message aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(sk_prover[]),sk_prover[])),ssk_17),pk(ssk_16)) that the attacker may have by 4 may be received at input {111}.
 The message aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)) that the attacker may have by 6 may be received at input {125}.
 The message aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)) that the attacker may have by 8 may be received at input {135}.
-The event auth_ProverSendsLastMessageToVerifier(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_17,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_18),pk(ssk_19))) (with occurrence name @occ146_2) may be executed at {146}.
-So the message aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_17,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_18),pk(ssk_19)) may be sent to the attacker at output {148}.
-attacker(aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_17,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_18),pk(ssk_19))).
+The event auth_ProverSendsLastMessageToVerifier(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_18),pk(ssk_19))) (with occurrence name @occ146_2) may be executed at {146}.
+So the message aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_18),pk(ssk_19)) may be sent to the attacker at output {148}.
+attacker(aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_18),pk(ssk_19))).
 
 10. The message aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])) that the attacker may have by 5 may be received at input {411}.
 The message aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)) that the attacker may have by 7 may be received at input {422}.
-The message aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_17,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_18),pk(ssk_19)) that the attacker may have by 9 may be received at input {434}.
-So event auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_17,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_18),pk(ssk_19))) may be executed at {451} in session @sid_3.
-end(@occ451_2,auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_17,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_18),pk(ssk_19)))).
+The message aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_18),pk(ssk_19)) that the attacker may have by 9 may be received at input {434}.
+So event auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_18),pk(ssk_19))) may be executed at {451} in session @sid_3.
+end(@occ451_2,auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_18),pk(ssk_19)))).
 
-11. By 10, end(@occ451_2,auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_17,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_18),pk(ssk_19)))).
+11. By 10, end(@occ451_2,auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_18),pk(ssk_19)))).
 The goal is reached, represented in the following fact:
-end(@occ451_2,auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_17,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_18),pk(ssk_19)))).
+end(@occ451_2,auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_18),pk(ssk_19)))).
 
 
 A more detailed output of the traces is available with
@@ -2580,23 +2578,23 @@ out(h, ~M_13) with ~M_13 = aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_
 
 in(h, ~M_13) with ~M_13 = aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)) at {135} in copy a, a_2
 
-event auth_ProverSendsLastMessageToVerifier(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1),n_p_17,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))))),ssk_18),pk(ssk_19))) at {146} in copy a, a_2
+event auth_ProverSendsLastMessageToVerifier(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1)))),ssk_18),pk(ssk_19))) at {146} in copy a, a_2
 
-event auth_ProverSendsLastMessageToVerifierInProtocolFull(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_issuer_1)),aenc(sign((n_p_16,n_i_6,pk(ssk_17)),sk_issuer_1),pk(ssk_16)),aenc(sign(sign((n_i_6,genDID(pk(sk_prover_1),sk_prover_1),genDID(pk(sk_issuer_1),sk_issuer_1)),sk_prover_1),ssk_16),pk(ssk_17)),aenc(sign((issueAC(attr,sk_issuer_1),genDID(pk(sk_prover_1),sk_prover_1)),ssk_17),pk(ssk_16)),aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1),n_p_17,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))))),ssk_18),pk(ssk_19))) at {147} in copy a, a_2
+event auth_ProverSendsLastMessageToVerifierInProtocolFull(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_issuer_1)),aenc(sign((n_p_16,n_i_6,pk(ssk_17)),sk_issuer_1),pk(ssk_16)),aenc(sign(sign((n_i_6,genDID(pk(sk_prover_1),sk_prover_1),genDID(pk(sk_issuer_1),sk_issuer_1)),sk_prover_1),ssk_16),pk(ssk_17)),aenc(sign((issueAC(attr,sk_issuer_1),genDID(pk(sk_prover_1),sk_prover_1)),ssk_17),pk(ssk_16)),aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1)))),ssk_18),pk(ssk_19))) at {147} in copy a, a_2
 
-out(h, ~M_14) with ~M_14 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1),n_p_17,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))))),ssk_18),pk(ssk_19)) at {148} in copy a, a_2
+out(h, ~M_14) with ~M_14 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1)))),ssk_18),pk(ssk_19)) at {148} in copy a, a_2
 
-in(h, ~M_14) with ~M_14 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1),n_p_17,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))))),ssk_18),pk(ssk_19)) at {434} in copy a_3
+in(h, ~M_14) with ~M_14 = aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1)))),ssk_18),pk(ssk_19)) at {434} in copy a_3
 
 new access_token_4: bitstring creating access_token_10 at {444} in copy a_3
 
-event auth_VerifierSendsLastMessageToProver(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1),n_p_17,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))))),ssk_18),pk(ssk_19)),aenc(sign(sign(access_token_10,sk_verifier_1),ssk_19),pk(ssk_18))) at {448} in copy a_3
+event auth_VerifierSendsLastMessageToProver(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1)))),ssk_18),pk(ssk_19)),aenc(sign(sign(access_token_10,sk_verifier_1),ssk_19),pk(ssk_18))) at {448} in copy a_3
 
 out(h, ~M_15) with ~M_15 = aenc(sign(sign(access_token_10,sk_verifier_1),ssk_19),pk(ssk_18)) at {449} in copy a_3
 
-event auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1),n_p_17,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))))),ssk_18),pk(ssk_19))) at {451} in copy a_3 (goal)
+event auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1)))),ssk_18),pk(ssk_19))) at {451} in copy a_3 (goal)
 
-The event auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1),n_p_17,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))))),ssk_18),pk(ssk_19))) is executed at {451} in copy a_3.
+The event auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier_1)),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier_1),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover_1),sk_prover_1),attr,genDID(pk(sk_issuer_1),sk_issuer_1))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer_1),pk(sk_issuer_1),(n_c_10,genDID(pk(sk_verifier_1),sk_verifier_1)))),ssk_18),pk(ssk_19))) is executed at {451} in copy a_3.
 A trace has been found.
 RESULT inj-event(auth_VerifierCompletesProtocol(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp)) ==> inj-event(auth_ProverSendsLastMessageToVerifier(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp)) && inj-event(auth_IssuerSendsLastMessageToHolder(m_handshakeReq_2,m_handshakeResp_2,m_did,m_cred)) && inj-event(auth_HolderCompletesProtocol(m_handshakeReq_2,m_handshakeResp_2,m_did,m_cred)) is false.
 RESULT (even event(auth_VerifierCompletesProtocol(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp)) ==> event(auth_ProverSendsLastMessageToVerifier(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp)) && event(auth_IssuerSendsLastMessageToHolder(m_handshakeReq_2,m_handshakeResp_2,m_did,m_cred)) && event(auth_HolderCompletesProtocol(m_handshakeReq_2,m_handshakeResp_2,m_did,m_cred)) is false.)
@@ -2611,18 +2609,18 @@ Completing...
 1200 rules inserted. Base: 1024 rules (152 with conclusion selected). Queue: 121 rules.
 1400 rules inserted. Base: 1143 rules (176 with conclusion selected). Queue: 258 rules.
 1600 rules inserted. Base: 1332 rules (180 with conclusion selected). Queue: 245 rules.
-1800 rules inserted. Base: 1498 rules (191 with conclusion selected). Queue: 210 rules.
-2000 rules inserted. Base: 1595 rules (204 with conclusion selected). Queue: 196 rules.
-2200 rules inserted. Base: 1711 rules (212 with conclusion selected). Queue: 118 rules.
-2400 rules inserted. Base: 1830 rules (221 with conclusion selected). Queue: 66 rules.
-2600 rules inserted. Base: 1847 rules (227 with conclusion selected). Queue: 95 rules.
-2800 rules inserted. Base: 1944 rules (241 with conclusion selected). Queue: 80 rules.
-3000 rules inserted. Base: 2000 rules (259 with conclusion selected). Queue: 134 rules.
-3200 rules inserted. Base: 2035 rules (266 with conclusion selected). Queue: 137 rules.
-3400 rules inserted. Base: 2106 rules (272 with conclusion selected). Queue: 131 rules.
-3600 rules inserted. Base: 2226 rules (277 with conclusion selected). Queue: 80 rules.
+1800 rules inserted. Base: 1507 rules (191 with conclusion selected). Queue: 210 rules.
+2000 rules inserted. Base: 1608 rules (204 with conclusion selected). Queue: 196 rules.
+2200 rules inserted. Base: 1724 rules (212 with conclusion selected). Queue: 118 rules.
+2400 rules inserted. Base: 1799 rules (221 with conclusion selected). Queue: 66 rules.
+2600 rules inserted. Base: 1840 rules (227 with conclusion selected). Queue: 63 rules.
+2800 rules inserted. Base: 1922 rules (241 with conclusion selected). Queue: 117 rules.
+3000 rules inserted. Base: 2001 rules (260 with conclusion selected). Queue: 86 rules.
+3200 rules inserted. Base: 2010 rules (269 with conclusion selected). Queue: 160 rules.
+3400 rules inserted. Base: 2121 rules (276 with conclusion selected). Queue: 140 rules.
+3600 rules inserted. Base: 2258 rules (278 with conclusion selected). Queue: 31 rules.
 Starting query event(auth_VerifierCompletesProtocol(m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp)) ==> event(auth_IssuerSendsLastMessageToHolder(m_handshakeReq_2,m_handshakeResp_2,m_did,m_cred)) && event(auth_ProverSendsLastMessageToVerifierInProtocolFull(m_handshakeReq_2,m_handshakeResp_2,m_did,m_cred,m_handshakeReq,m_handshakeResp,m_uri,m_rule,m_vp))
-goal reachable: begin(auth_ProverSendsLastMessageToVerifierInProtocolFull(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_issuer[])),aenc(sign((n_p_16,n_i_6,pk(ssk_17)),sk_issuer[]),pk(ssk_16)),aenc(sign(sign((n_i_6,genDID(pk(sk_prover[]),sk_prover[]),genDID(pk(sk_issuer[]),sk_issuer[])),sk_prover[]),ssk_16),pk(ssk_17)),aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(sk_prover[]),sk_prover[])),ssk_17),pk(ssk_16)),aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_17,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_18),pk(ssk_19)))) && begin(auth_IssuerSendsLastMessageToHolder(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_issuer[])),aenc(sign((n_p_16,n_i_6,pk(ssk_17)),sk_issuer[]),pk(ssk_16)),aenc(sign(sign((n_i_6,genDID(pk(sk_prover[]),sk_prover[]),genDID(pk(sk_issuer[]),sk_issuer[])),sk_prover[]),ssk_16),pk(ssk_17)),aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(sk_prover[]),sk_prover[])),ssk_17),pk(ssk_16)))) -> end(auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[]),n_p_17,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))))),ssk_18),pk(ssk_19))))
+goal reachable: begin(auth_ProverSendsLastMessageToVerifierInProtocolFull(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_issuer[])),aenc(sign((n_p_16,n_i_6,pk(ssk_17)),sk_issuer[]),pk(ssk_16)),aenc(sign(sign((n_i_6,genDID(pk(sk_prover[]),sk_prover[]),genDID(pk(sk_issuer[]),sk_issuer[])),sk_prover[]),ssk_16),pk(ssk_17)),aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(sk_prover[]),sk_prover[])),ssk_17),pk(ssk_16)),aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_18),pk(ssk_19)))) && begin(auth_IssuerSendsLastMessageToHolder(aenc(sign((n_p_16,pk(ssk_16)),ssk_16),pk(sk_issuer[])),aenc(sign((n_p_16,n_i_6,pk(ssk_17)),sk_issuer[]),pk(ssk_16)),aenc(sign(sign((n_i_6,genDID(pk(sk_prover[]),sk_prover[]),genDID(pk(sk_issuer[]),sk_issuer[])),sk_prover[]),ssk_16),pk(ssk_17)),aenc(sign((issueAC(attr,sk_issuer[]),genDID(pk(sk_prover[]),sk_prover[])),ssk_17),pk(ssk_16)))) -> end(auth_VerifierCompletesProtocol(aenc(sign((n_p_17,pk(ssk_18)),ssk_18),pk(sk_verifier[])),aenc(sign((n_p_17,n_v_10,pk(ssk_19)),sk_verifier[]),pk(ssk_18)),aenc(sign((n_v_10,uri),ssk_18),pk(ssk_19)),aenc(sign((n_c_10,makeRule(genDID(pk(sk_prover[]),sk_prover[]),attr,genDID(pk(sk_issuer[]),sk_issuer[]))),ssk_19),pk(ssk_18)),aenc(sign(encodeDC(proofGen(issueAC(attr,sk_issuer[]),pk(sk_issuer[]),(n_c_10,genDID(pk(sk_verifier[]),sk_verifier[])))),ssk_18),pk(ssk_19))))
 Abbreviations:
 n_p_16 = n_p_2[!1 = @sid]
 ssk_16 = ssk_2[!1 = @sid]
