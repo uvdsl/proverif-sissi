@@ -199,7 +199,7 @@ let prover(sk:SecretKey, cred:AC, verifierDID:DID, talksOnlyToHonest:bool, msg_h
     (* create Verifiable Presentation *)
     (* let vp = sign((n_c,verifierDID,cred),sk) in *)
     let issuerPk = getPubKey(getIssuerFromAC(cred)) in
-    let ph = (n_c,verifierDID,n_p,rule) in (*presentation header*) 
+    let ph = (n_c,verifierDID) in (*presentation header*) 
     let dc = proofGen(cred,issuerPk,ph) in (*derived credential*)
     let vp = encodeDC(dc) in
     (* send authcrypt msg /w VP *)
@@ -317,7 +317,7 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
 
     let issuer = getIssuerFromDC(unauth_dc) in
     let issuerPk = getPubKey(issuer) in
-    let ph = (n_c,genDID(pk(sk),sk),n_p,rule) in (*presentation header*) 
+    let ph = (n_c,genDID(pk(sk),sk)) in (*presentation header*) 
     if proofVerify(unauth_dc, ph, getAttrFromRule(rule), issuerPk) then
     
 
