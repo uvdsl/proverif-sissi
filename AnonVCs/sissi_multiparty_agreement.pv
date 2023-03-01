@@ -42,30 +42,30 @@ reduc forall attr:bitstring,issuerSk:SecretKey; getAttrFromAC(issueAC(attr,issue
 reduc forall attr:bitstring,issuerSk:SecretKey; getAcAsTuple(issueAC(attr,issuerSk))= (attr,genDID(pk(issuerSk),issuerSk)).
 
 type DC. (* Derived Credential*)
-fun proofGen(AC (* messages, signature *), PublicKey (*issuerPk*), bitstring (*presentation header ph*) (* , disclosed_indexes (but since we only model one message, its fine) *)):DC.
-reduc forall attr:bitstring, issuerSk:SecretKey, ph:bitstring; 
+fun proofGen(AC (* messages, signature *), PublicKey (*issuerPk*), bitstring (*presentation header ph*), bitstring (*randomness*) (* , disclosed_indexes (but since we only model one message, its fine) *)):DC.
+reduc forall attr:bitstring, issuerSk:SecretKey, ph:bitstring, randomness:bitstring; 
     proofVerify(
-         proofGen(issueAC(attr,issuerSk),pk(issuerSk),ph) ,
+         proofGen(issueAC(attr,issuerSk),pk(issuerSk),ph,randomness) ,
          ph,
          attr,
          pk(issuerSk))
         = true .
 
-reduc forall attr:bitstring, issuerSk:SecretKey, ph:bitstring; 
-    getDcAsTuple(proofGen(issueAC(attr,issuerSk),pk(issuerSk),ph))
+reduc forall attr:bitstring, issuerSk:SecretKey, ph:bitstring, randomness:bitstring; 
+    getDcAsTuple(proofGen(issueAC(attr,issuerSk),pk(issuerSk),ph, randomness))
         =(attr,genDID(pk(issuerSk),issuerSk), ph) .
 
 
-reduc forall attr:bitstring, issuerSk:SecretKey, ph:bitstring; 
-    getAttrFromDC(proofGen(issueAC(attr,issuerSk),pk(issuerSk),ph))
+reduc forall attr:bitstring, issuerSk:SecretKey, ph:bitstring, randomness:bitstring; 
+    getAttrFromDC(proofGen(issueAC(attr,issuerSk),pk(issuerSk),ph, randomness))
         = attr .
 
-reduc forall attr:bitstring, issuerSk:SecretKey, ph:bitstring; 
-    getIssuerFromDC(proofGen(issueAC(attr,issuerSk),pk(issuerSk),ph))
+reduc forall attr:bitstring, issuerSk:SecretKey, ph:bitstring, randomness:bitstring; 
+    getIssuerFromDC(proofGen(issueAC(attr,issuerSk),pk(issuerSk),ph, randomness))
         = genDID(pk(issuerSk),issuerSk) .
 
-reduc forall attr:bitstring, issuerSk:SecretKey, ph:bitstring; 
-    getPresentationHeaderFromDC(proofGen(issueAC(attr,issuerSk),pk(issuerSk),ph))
+reduc forall attr:bitstring, issuerSk:SecretKey, ph:bitstring, randomness:bitstring; 
+    getPresentationHeaderFromDC(proofGen(issueAC(attr,issuerSk),pk(issuerSk),ph, randomness))
         = ph .
 
 fun encodeDC(DC):bitstring.
@@ -200,7 +200,8 @@ let prover(sk:SecretKey, cred:AC, verifierDID:DID, talksOnlyToHonest:bool, msg_h
     (* let vp = sign((n_c,verifierDID,cred),sk) in *)
     let issuerPk = getPubKey(getIssuerFromAC(cred)) in
     let ph = (n_c,verifierDID) in (*presentation header*) 
-    let dc = proofGen(cred,issuerPk,ph) in (*derived credential*)
+    new randomness:bitstring;
+    let dc = proofGen(cred,issuerPk,ph,randomness) in (*derived credential*)
     let vp = encodeDC(dc) in
     (* send authcrypt msg /w VP *)
     (* send authcrypt msg /w derived credential *)
