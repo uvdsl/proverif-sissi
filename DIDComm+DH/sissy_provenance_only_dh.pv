@@ -134,8 +134,9 @@ let prover(sk:SecretKey, cred:VC, verifierDID:DID, talksOnlyToHonest:bool) (* in
     let msg_handshakeResp = (gy,m) in
     let K = GtoSymK(exp(gy,x)) in
     let pk_v = getPubKey(verifierDID) in
-    if (dec(auth(m,pk_v),K)) = (gy,gx) then
-    let msg_uri = (enc(sign((gx,gy),sk),K),enc(pk_b(pk(sk)),K)) in
+    let (gy':G, gx':G) = auth(dec(m, K),pk_v) in
+    if (gy', gx') = (gy,gx) then
+    let msg_uri = (enc((sign((gx,gy,uri),sk),pk(sk)),K)) in
 
     (* === Message 3 [->] *)
     out(h,msg_uri);
@@ -210,12 +211,12 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     (**)
     (**)
     (* === Message 3 [<-] *)
-    in(h,(m:bitstring,e_pk:bitstring));
+    in(h,(m:bitstring));
 
-    (* Treatment *)
-    let msg_uri = (m,e_pk) in
-    let pk_p = b_pk(dec(e_pk,K)) in
-    if (dec(auth(m,pk_p),K)) = (gx,gy) then
+    (* Treatment sign((gx,gy,uri),sk),pk(sk)*)
+    let msg_uri = (m) in
+    let (sign_g:bitstring, pk_p:PublicKey) = dec(m, K) in
+    if (auth(sign_g,pk_p)) = (gx,gy,uri) then
     new n_c:bitstring;
     let msg = (n_c,rule) in
     let msg_rule = enc(msg,K) in
@@ -293,6 +294,9 @@ query attacker(K_private_fromVerifier).
 (* event_at_the_very_end_of_role_R_in_parallel_with_secrecy_checks
 ==> 
 event_just_before_the_last_send_message_of_S *)
+
+(* query msg_handshakeReq:G, msg_handshakeResp:bitstring, msg_uri:bitstring, msg_rule:bitstring, msg_vp:bitstring; *)
+(* event (auth_VerifierCompletesProtocol(msg_handshakeReq,msg_handshakeResp,msg_uri,msg_rule,msg_vp)). *)
 
 query  m_handshakeReq:G, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_accessToken:bitstring; 
     inj-event(auth_ProverCompletesProtocol(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp, m_accessToken))
