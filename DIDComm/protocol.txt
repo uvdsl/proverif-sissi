@@ -1,0 +1,96 @@
+Issuer (I, sk_I, \textit{attr}, P)  $ \\ 
+$ \textit{ch}(m_{0});  $ \\ 
+$ \textit{let } m'_{0} := \textit{adec}(m_{0},sk_I) \textit{ in}  $ \\ 
+$ \textit{let } (n_p,spk_{PI}) := \textit{auth}(m'_{0},proj_{1}(m'_{0})) \textit{ in}  $ \\ 
+$ \textit{new } ssk_I, n_i;  $ \\ 
+$ \textit{let } m'_{1} := (n_p,n_i,pk(ssk_I)) \textit{ in}  $ \\ 
+$ \textit{let } m_{1} := \textit{authcrypt}(m'_{1},sk_I,spk_{PI}) \textit{ in}  $ \\ 
+$ \overline{\textit{ch}}(m_{1});  $ \\ 
+$ \textit{ch}(m_{2});  $ \\ 
+$ \textit{let } m'_{2} := \textit{authdecrypt}(m_{2},ssk_I,spk_{PI}) \textit{ in}  $ \\ 
+$ \textit{let } pk_P := \textit{getPubKey}(proj_{1}(m'_{2})) \textit{ in}  $ \\ 
+$ \textit{let } (n'_i,P',I') := \textit{auth}(m'_{2},pk_P) \textit{ in}  $ \\ 
+$ \textit{if } n'_i = n_i \textit{ then}  $ \\ 
+$ \textit{if } P' = P \textit{ then}  $ \\ 
+$ \textit{if } I' = i \textit{ then}  $ \\ 
+$ \textit{let } {\textit{VC}} := \textit{issueVC}(P, \textit{attr}, sk_I) \textit{ in}  $ \\ 
+$ \textit{let } m'_{3} := ({\textit{VC}},P) \textit{ in}  $ \\ 
+$ \textit{let } m_{3} := \textit{authcrypt}(m'_{3},ssk_I,spk_{PI}) \textit{ in}  $ \\ 
+$ \overline{\textit{ch}}(m_{3});  $ \\ 
+$
+$Holder (P, sk_P, I, V)  $ \\ 
+$ \textit{let } pk_I := \textit{getPubKey}(I) \textit{ in}  $ \\ 
+$ \textit{new } ssk_{PI}, n_p;  $ \\ 
+$ \textit{let } m'_{0} := (n_p,pk(ssk_{PI})) \textit{ in}  $ \\ 
+$ \textit{let } m_{0} := \textit{authcrypt}(m'_{0},ssk_{PI},pk_I) \textit{ in}  $ \\ 
+$ \overline{\textit{ch}}(m_{0});  $ \\ 
+$ \textit{ch}(m_{1});  $ \\ 
+$ \textit{let } (n'_p,n_i,spk_I) := \textit{authdecrypt}(m_{1},ssk_{PI},pk_I) \textit{ in}  $ \\ 
+$ \textit{if } n'_p = n_p \textit{ then}  $ \\ 
+$ \textit{let } m'_{2} := \textit{sign}((n_i,P,I),sk_P) \textit{ in}  $ \\ 
+$ \textit{let } m_{2} := \textit{authcrypt}(m'_{2},ssk_{PI},spk_I) \textit{ in}  $ \\ 
+$ \overline{\textit{ch}}(m_{2});  $ \\ 
+$ \textit{ch}(m_{3})  $ \\ 
+$ \textit{let } ({\textit{VC}}, P') := \textit{authdecrypt}(m_{3},ssk_{PI},spk_I) \textit{ in}  $ \\ 
+$ \textit{if } P' = P \textit{ then}  $ \\ 
+$ \textit{if } proj_{2}({\textit{VC}}) = I \textit{ then}  $ \\ 
+$  
+$ !Prover (P, sk_P, {\textit{VC}}, V)  $ \\ 
+$ \textit{let } pk_V := \textit{getPubKey}(V) \textit{ in}  $ \\ 
+$ \textit{new } ssk_{PV}, n_p;  $ \\ 
+$ \textit{let } m'_{4} := (n_p,pk(ssk_{PV})) \textit{ in}  $ \\ 
+$ \textit{let } m_{4} := \textit{authcrypt}(m'_{4},ssk_{PV},pk_V) \textit{ in}  $ \\ 
+$ \overline{\textit{ch}}(m_{4});  $ \\ 
+$ \textit{ch}(m_{5});  $ \\ 
+$ \textit{let } m'_{5} := \textit{authdecrypt}(m_{5},ssk_{PV},pk_V) \textit{ in}  $ \\ 
+$ \textit{let } (n'_p,n_v,spk_V) := m'_{5} \textit{ in}  $ \\ 
+$ \textit{if } n'_p := n_p \textit{ then}  $ \\ 
+$ \textit{let } m'_{6} := (n_v, {\textit{URI}}) \textit{ in}  $ \\ 
+$ \textit{let } m_{6} := \textit{authcrypt}(m'_{6},ssk_{PV},spk_V) \textit{ in}  $ \\ 
+$ \overline{\textit{ch}}(m_{6})  $ \\ 
+$ \textit{ch}(m_{7});  $ \\ 
+$ \textit{let } (n_c, {\textit{RULE}}) := \textit{authdecrypt}(m_{7},ssk_{PV},spk_V) \textit{ in}  $ \\ 
+$ \textit{if } proj_{0}({\textit{VC}}) = proj_{0}({\textit{RULE}}) \textit{ then}  $ \\ 
+$ \textit{if } proj_{1}({\textit{VC}}) = proj_{1}({\textit{RULE}}) \textit{ then}  $ \\ 
+$ \textit{if } proj_{2}({\textit{VC}}) = proj_{2}({\textit{RULE}}) \textit{ then}  $ \\  
+$ \textit{let } {\textit{VP}} := \textit{sign}((n_c,V,{\textit{VC}}),sk_P) \textit{ in}  $ \\ 
+$ \textit{let } m_{8} := \textit{authcrypt}({\textit{VP}},ssk_{PV},spk_V) \textit{ in}  $ \\ 
+$ \overline{\textit{ch}}(m_{8})  $ \\ 
+$ \textit{ch}(m_{9})  $ \\ 
+$ \textit{let } m'_{9} := \textit{authdecrypt}(m_{9},ssk,spk_v) \textit{ in}  $ \\ 
+$ \textit{let } \textit{tkn_{access}} = \textit{auth}(m'_{9}, pk_V) \textit{ in}  $ \\ 
+
+
+$
+$Verifier (V, sk_V, {\textit{RULE}}, {\textit{URI}})  $ \\ 
+$ \textit{ch}(m_{4});  $ \\ 
+$ \textit{let } m'_{4} := \textit{adec}(m_{4},sk_V) \textit{ in}  $ \\ 
+$ \textit{let } (n_p,spk_{PV}) := \textit{auth}(m'_{4},proj_{1}(m'_{4})) \textit{ in}  $ \\ 
+$ \textit{new } ssk_V, n_i;  $ \\ 
+$ \textit{let } m'_{5} := (n_p,n_i,pk(ssk_V)) \textit{ in}  $ \\ 
+$ \textit{let } m_{5} := \textit{authcrypt}(m'_{5},sk_V,spk_{PV}) \textit{ in}  $ \\ 
+$ \overline{\textit{ch}}(m_{5});  $ \\ 
+$ \textit{ch}(m_{6});  $ \\ 
+$ \textit{let } (n'_v,{\textit{URI}\,'}) := \textit{authdecrypt}(m_{6},ssk_V,spk_{PV}) \textit{ in}  $ \\ 
+$ \textit{if } n'_v = n_v \textit{ then}  $ \\ 
+$ \textit{if } {\textit{URI}\,'} = {\textit{URI}} \textit{ then}  $ \\ 
+$ \textit{new } n_c;  $ \\ 
+$ \textit{let } m'_{7} := (n_c,{\textit{RULE}}) \textit{ in}  $ \\ 
+$ \textit{let } m_{7} := \textit{authcrypt}(m'_{7},ssk_V,spk_{PV}) \textit{ in}  $ \\ 
+$ \overline{\textit{ch}}(m_{7}));  $ \\ 
+$ \textit{ch}(m_{8});  $ \\ 
+$ \textit{let } \textit{VP}\,' := \textit{authdecrypt}(m_{8},ssk,spk_{PV}) \textit{ in}  $ \\ 
+$ \textit{let } P' := proj_{0}(proj_{2}(\textit{VP}\,')) \textit{ in}  $ \\ 
+$ \textit{if } P' = proj_{0}({\textit{RULE}}) \textit{ then}  $ \\ 
+$ \textit{let } pk_P := \textit{getPubKey}(P') \textit{ in}  $ \\ 
+$ \textit{let } (n'_c,V',{\textit{VC}\,'}) := \textit{auth}(\textit{VP}\,',pk_P) \textit{ in}  $ \\ 
+$ \textit{if } V' = V \textit{ then}  $ \\ 
+$ \textit{if } n'_c = n_c \textit{ then}  $ \\ 
+$ \textit{if } proj_{2}({\textit{VC}\,'}) = proj_{2}({\textit{RULE}}) \textit{ then}  $ \\ 
+$ \textit{let } pk_I = \textit{getPubKey}(proj_{2}({\textit{VC}\,'})  $ \\ 
+$ \textit{let } (P'',\textit{attr}\,',I') = verify({\textit{VC}\,'},pk_I) \textit{ in}  $ \\ 
+$ \textit{if } \textit{attr}\,' = proj_{1}({\textit{RULE}}) \textit{ then}  $ \\ 
+$ \textit{new } \textit{tkn_{access}};  $ \\ 
+$ \textit{let } m'_{9} = \textit{sign}(\textit{tkn_{access}},sk_V) \textit{ in}  $ \\ 
+$ \textit{let } m_{9} = \textit{authcrypt}(m'_{9},ssk_V,spk_{PV}) \textit{ in}  $ \\ 
+$ \overline{\textit{ch}}(m_{9}); $ \\
