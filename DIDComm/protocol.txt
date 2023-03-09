@@ -25,10 +25,10 @@ $ \textit{let } pk_I = \textit{getPubKey}(proj_{2}({\textit{VC}\,'})  $ \\
 
 
 Issuer (I, sk_I, \textit{attr}, P, pk_P)  $ \\ 
+$ \textit{new } ssk_I, n_i;  $ \\ 
 $ \textit{ch}(m_{0});  $ \\ 
 $ \textit{let } m'_{0} := \textit{dec}(m_{0},sk_I) \textit{ in}  $ \\ 
 $ \textit{let } (n_p,spk_{PI}) := \textit{verif}(m'_{0},proj_{1}(m'_{0})) \textit{ in}  $ \\ 
-$ \textit{new } ssk_I, n_i;  $ \\ 
 $ \textit{let } m'_{1} := (n_p,n_i,pk(ssk_I)) \textit{ in}  $ \\ 
 $ \textit{let } m_{1} := \{\textit{sig}(m'_{1},sk_I)\}_{spk_{PI}} \textit{ in}  $ \\ 
 $ \overline{\textit{ch}}(m_{1});  $ \\ 
@@ -84,18 +84,16 @@ $ \textit{let } \textit{tkn}_\textit{access} = \textit{verif}(m'_{9}, pk_V) \tex
 
 $
 $Verifier (V, sk_V, {\textit{RULE}=(P,attr,I)}, pk_P, pk_I, {\textit{URI}})  $ \\ 
+$ \textit{new } ssk_V, n_i, n_c, \textit{tkn}_\textit{access};  $ \\ 
 $ \textit{ch}(m_{4});  $ \\ 
 $ \textit{let } m'_{4} := \textit{dec}(m_{4},sk_V) \textit{ in}  $ \\ 
 $ \textit{let } (n_p,spk_{PV}) := \textit{verif}(m'_{4},proj_{1}(m'_{4})) \textit{ in}  $ \\ 
-$ \textit{new } ssk_V, n_i;  $ \\ 
 $ \textit{let } m'_{5} := (n_p,n_i,pk(ssk_V)) \textit{ in}  $ \\ 
 $ \textit{let } m_{5} := \{\textit{sig}(m'_{5},sk_V)\}_{spk_{PV}} \textit{ in}  $ \\ 
 $ \overline{\textit{ch}}(m_{5});  $ \\ 
 $ \textit{ch}(m_{6});  $ \\ 
 $ \textit{let } (n'_v,{\textit{URI}\,'}) := \textit{verif}(\textit{dec}(m_{6},ssk_V),spk_{PV}) \textit{ in}  $ \\ 
-$ \textit{if } n'_v = n_v \textit{ then}  $ \\ 
-$ \textit{if } {\textit{URI}\,'} = {\textit{URI}} \textit{ then}  $ \\ 
-$ \textit{new } n_c;  $ \\ 
+$ \textit{if } (n'_v,{\textit{URI}\,'}) = (n_v,{\textit{URI}}) \textit{ then}  $ \\ 
 $ \textit{let } m'_{7} := (n_c,{\textit{RULE}}) \textit{ in}  $ \\ 
 $ \textit{let } m_{7} := \{\textit{sig}(m'_{7},ssk_V)\}_{spk_{PV}} \textit{ in}  $ \\ 
 $ \overline{\textit{ch}}(m_{7}));  $ \\ 
@@ -108,7 +106,6 @@ $ \textit{if } proj_{1}({\textit{VP}\,'}) = V' \textit{ then}  $ \\
 $ \textit{if } proj_{0}({\textit{VC}\,'}) = proj_{0}({\textit{RULE}}) \textit{ then}  $ \\ 
 $ \textit{if } proj_{1}({\textit{VC}\,'}) = proj_{1}({\textit{RULE}}) \textit{ then}  $ \\ 
 $ \textit{if } proj_{2}({\textit{VC}\,'}) = proj_{2}({\textit{RULE}}) \textit{ then}  $ \\  
-$ \textit{new } \textit{tkn}_\textit{access};  $ \\ 
 $ \textit{let } m'_{9} = \textit{sig}(\textit{tkn}_\textit{access},sk_V) \textit{ in}  $ \\ 
 $ \textit{let } m_{9} = \{\textit{sig}(m'_{9},ssk_V)\}_{spk_{PV}} \textit{ in}  $ \\ 
 $ \overline{\textit{ch}}(m_{9}); $ \\
