@@ -433,9 +433,9 @@ let holder(sk:SecretKey, issuerDID:DID, verifierDID:DID, talksOnlyToHonest:bool)
     let gy = Bit_to_G(gy_bit) in
     let K = G_to_SymK(exp(gy,X)) in
     let pk_i = getPubKey(issuerDID) in
-    out(h, check_reach_debug1);
-    let (gy':G, gx':G) = auth(dec(m, K),pk_i) in (* <- This line is not working! *)
-    out(h, check_reach_debug2);
+    (* out(h, check_reach_debug1); *)
+    let (gy':G, gx':G) = auth(dec(m, K),pk_i) in
+    (* out(h, check_reach_debug2); *)
     if (gy', gx') = (gy,gx) then
 
     
