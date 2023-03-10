@@ -1,5 +1,9 @@
 (* This is a ProVerif description of the Protocol Flow from the SISSI architecture. *)
 
+(* second last inj-event should be false *)
+
+(* fix code (change handshake G to bitstring, afterwards msc), install deepsec, uri example (equivalence problem, uri1 -> uri2, uri3 for dishonest participants : in parameters) *)
+
 (* --------------------------------------------------------------------------------------------------------- *)
 (* Start Definitions *)
 (* --------------------------------------------------------------------------------------------------------- *)
@@ -19,8 +23,10 @@ fun exp(G, exponent): G.
 fun g(exponent): G.
 equation forall x: exponent, y: exponent; exp(g(x),y) = exp(g(y),x).
 
-fun GtoSymK(G): SymmetricKey.
-fun GtoBit(G): bitstring.
+fun G_to_SymK(G): SymmetricKey.
+
+fun G_to_Bit(G): bitstring.
+fun Bit_to_G(bitstring): G.
 (* END group *)
 
 (* START symmetric encryption *)
@@ -145,18 +151,21 @@ free check_reach_verifier:bitstring [private].
 free check_reach_holder:bitstring [private].
 free check_reach_issuer:bitstring [private].
 
+free check_reach_debug1:bitstring [private].
+free check_reach_debug2:bitstring [private].
+
 (* Authentication *)
-event auth_VerifierSendsLastMessageToProver(G,bitstring,bitstring,bitstring,bitstring, bitstring).
-event auth_ProverCompletesProtocol(G,bitstring,bitstring,bitstring,bitstring, bitstring).
-event auth_ProverSendsLastMessageToVerifier(G,bitstring,bitstring,bitstring, bitstring).
-event auth_VerifierCompletesProtocol(G,bitstring,bitstring,bitstring, bitstring).
+event auth_VerifierSendsLastMessageToProver(bitstring,bitstring,bitstring,bitstring,bitstring, bitstring).
+event auth_ProverCompletesProtocol(bitstring,bitstring,bitstring,bitstring,bitstring, bitstring).
+event auth_ProverSendsLastMessageToVerifier(bitstring,bitstring,bitstring,bitstring, bitstring).
+event auth_VerifierCompletesProtocol(bitstring,bitstring,bitstring,bitstring, bitstring).
 
-event auth_IssuerSendsLastMessageToHolder(G,bitstring,bitstring,bitstring).
-event auth_HolderCompletesProtocol(G,bitstring,bitstring,bitstring).
-event auth_HolderSendsLastMessageToIssuer(G,bitstring,bitstring).
-event auth_IssuerCompletesProtocol(G,bitstring,bitstring).
+event auth_IssuerSendsLastMessageToHolder(bitstring,bitstring,bitstring,bitstring).
+event auth_HolderCompletesProtocol(bitstring,bitstring,bitstring,bitstring).
+event auth_HolderSendsLastMessageToIssuer(bitstring,bitstring,bitstring).
+event auth_IssuerCompletesProtocol(bitstring,bitstring,bitstring).
 
-event auth_ProverSendsLastMessageToVerifierInProtocolFull(G,bitstring,bitstring,bitstring,G, bitstring, bitstring,bitstring,bitstring).
+event auth_ProverSendsLastMessageToVerifierInProtocolFull(bitstring,bitstring,bitstring,bitstring,bitstring, bitstring, bitstring,bitstring,bitstring).
 
 (* --------------------------------------------------------------------------------------------------------- *)
 (* End Definitions *)
@@ -174,12 +183,12 @@ event auth_ProverSendsLastMessageToVerifierInProtocolFull(G,bitstring,bitstring,
   (**)
 
 (** START Prover **)
-let prover(sk:SecretKey, cred:AC, verifierDID:DID, talksOnlyToHonest:bool, msg_handshakeReq_Holder:G,msg_handshakeResp_Holder:bitstring,msg_did_Holder:bitstring,msg_credential_Holder:bitstring) (* input ~ what the agent starts with in private*) =
-    
+let prover(sk:SecretKey, cred:AC, verifierDID:DID, talksOnlyToHonest:bool, msg_handshakeReq_Holder:bitstring,msg_handshakeResp_Holder:bitstring,msg_did_Holder:bitstring,msg_credential_Holder:bitstring) (* input ~ what the agent starts with in private*) =
+
     (* Treatment *)
     new X:exponent;
     let gx = g(X) in
-    let msg_handshakeReq = gx in
+    let msg_handshakeReq = G_to_Bit(gx) in
 
     (* === Message 1 [->] : gx === *)
     out(h,msg_handshakeReq);
@@ -187,17 +196,20 @@ let prover(sk:SecretKey, cred:AC, verifierDID:DID, talksOnlyToHonest:bool, msg_h
     (**)
     (**)
     (**)
-    (* === Message 2 [<-] : (gy, {sign((gx,gy),skv)}K) === *)
+    (* === Message 2 [<-] : (gy, {sign((gy,gx),skv)}K) === *)
     in(h,x:bitstring);
 
     (* Treatment *)
     let msg_handshakeResp = x in
-    let (gy:G,m:bitstring) = x in
-    let K = GtoSymK(exp(gy,X)) in
+    let (gy_bit:bitstring,m:bitstring) = x in
+    let gy = Bit_to_G(gy_bit) in
+    let K = G_to_SymK(exp(gy,X)) in
     let pk_v = getPubKey(verifierDID) in
     let (gy':G, gx':G) = auth(dec(m, K),pk_v) in
     if (gy', gx') = (gy,gx) then
     let msg_uri = (enc(uri,K)) in
+
+    
 
     (* === Message 3 [->] : {uri}K *)
     out(h,msg_uri);
@@ -218,7 +230,7 @@ let prover(sk:SecretKey, cred:AC, verifierDID:DID, talksOnlyToHonest:bool, msg_h
     (* create Verifiable Presentation *)
     (* let vp = sign((n_c,verifierDID,cred),sk) in *)
     let issuerPk = getPubKey(getIssuerFromAC(cred)) in
-    let ph = ((gx,gy),verifierDID) in (*presentation header*) 
+    let ph = ((gx,gy)) in (*presentation header*) 
     new randomness:bitstring;
     let dc = proofGen(cred,issuerPk,ph,randomness) in (*derived credential*)
     let vp = encodeDC(dc) in
@@ -276,14 +288,16 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     (**)
     (**)
     (* === Message 1 [<-] : gx === *)
-    in(h,gx:G);
+    in(h,gx_bit:bitstring); 
 
     (* Treatment *)
-    let msg_handshakeReq = gx in
+    let msg_handshakeReq = gx_bit in
+    let gx = Bit_to_G(gx_bit) in
     new Y:exponent;
     let gy = g(Y) in
-    let K = GtoSymK(exp(gx,Y)) in
-    let msg_handshakeResp = (gy,enc(sign((gy,gx),sk),K)) in
+    let gy_bit = G_to_Bit(gy) in
+    let K = G_to_SymK(exp(gx,Y)) in
+    let msg_handshakeResp = (gy_bit,enc(sign((gy,gx),sk),K)) in
 
     (* === Message 2 [->] === *)
     out(h,msg_handshakeResp);
@@ -338,7 +352,7 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
 
     let issuer = getIssuerFromDC(unauth_dc) in
     let issuerPk = getPubKey(issuer) in
-    let ph = ((gx,gy),genDID(pk(sk),sk)) in (*presentation header*) 
+    let ph = ((gx,gy)) in (*presentation header*) 
     if proofVerify(unauth_dc, ph, getAttrFromRule(rule), issuerPk) then
 
     (* check if verifier is actual recipient*)
@@ -401,7 +415,7 @@ let holder(sk:SecretKey, issuerDID:DID, verifierDID:DID, talksOnlyToHonest:bool)
     (* Treatment *)
     new X:exponent;
     let gx = g(X) in
-    let msg_handshakeReq = gx in
+    let msg_handshakeReq = G_to_Bit(gx) in
 
     (* === Message 1 [->] : gx === *)
     out(h,msg_handshakeReq);
@@ -409,16 +423,22 @@ let holder(sk:SecretKey, issuerDID:DID, verifierDID:DID, talksOnlyToHonest:bool)
     (**)
     (**)
     (**)
-    (* === Message 2 [<-] : (gy, {sign((gx,gy),ski)}K) === *)
+    (* === Message 2 [<-] : (gy, {sign((gy,gx),ski)}K) === *)
     in(h,x:bitstring);
+
 
     (* Treatment *)
     let msg_handshakeResp = x in
-    let (gy:G,m:bitstring) = x in
-    let K = GtoSymK(exp(gy,X)) in
-    let pk_v = getPubKey(verifierDID) in
-    let (gy':G, gx':G) = auth(dec(m, K),pk_v) in
+    let (gy_bit:bitstring,m:bitstring) = x in
+    let gy = Bit_to_G(gy_bit) in
+    let K = G_to_SymK(exp(gy,X)) in
+    let pk_i = getPubKey(issuerDID) in
+    out(h, check_reach_debug1);
+    let (gy':G, gx':G) = auth(dec(m, K),pk_i) in (* <- This line is not working! *)
+    out(h, check_reach_debug2);
     if (gy', gx') = (gy,gx) then
+
+    
     
     (* send authrypt msg /w own DID , proving to be in control of DID*)
     let msg = sign(((gx,gy),genDID(pk(sk),sk),issuerDID),sk) in
@@ -476,14 +496,16 @@ let issuer(sk:SecretKey, attr:bitstring, expectedDID:DID, talksOnlyToHonest:bool
     (**)
     (**)
     (* === Message 1 [<-] : gx === *)
-    in(h,gx:G);
+    in(h,gx_bit:bitstring);
 
     (* Treatment *)
-    let msg_handshakeReq = gx in
+    let msg_handshakeReq = gx_bit in
+    let gx = Bit_to_G(gx_bit) in
     new Y:exponent;
     let gy = g(Y) in
-    let K = GtoSymK(exp(gx,Y)) in
-    let msg_handshakeResp = (gy,enc(sign((gy,gx),sk),K)) in
+    let gy_bit = G_to_Bit(gy) in
+    let K = G_to_SymK(exp(gx,Y)) in
+    let msg_handshakeResp = (gy_bit,enc(sign((gy,gx),sk),K)) in
 
     (* === Message 2 [->] === *)
     out(h,msg_handshakeResp);
@@ -576,6 +598,8 @@ query attacker(check_reach_prover).
 query attacker(check_reach_verifier).
 query attacker(check_reach_holder).
 query attacker(check_reach_issuer).
+query attacker(check_reach_debug1).
+query attacker(check_reach_debug2).
 
 (* AUTHETNICATION *)
 
@@ -583,32 +607,35 @@ query attacker(check_reach_issuer).
 ==> 
 event_just_before_the_last_send_message_of_S *)
 
-query  m_handshakeReq:G, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_accessToken:bitstring; 
+(* query  msg_handshakeReq:bitstring, msg_handshakeResp:bitstring, msg_uri:bitstring, msg_rule:bitstring, msg_vp:bitstring, msg_accessToken:bitstring;  *)
+    (* event(auth_VerifierCompletesProtocol(msg_handshakeReq,msg_handshakeResp,msg_uri,msg_rule,msg_vp)) . *)
+
+query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_accessToken:bitstring; 
     inj-event(auth_ProverCompletesProtocol(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp, m_accessToken))
     ==>
     inj-event(auth_VerifierSendsLastMessageToProver(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp, m_accessToken)) .
 
 
-query  m_handshakeReq:G, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring; 
+query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring; 
     inj-event(auth_VerifierCompletesProtocol(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp))
     ==>
     inj-event(auth_ProverSendsLastMessageToVerifier(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp)) .
 
 
-query  m_handshakeReq:G, m_handshakeResp:bitstring, m_did:bitstring, m_cred:bitstring; 
+query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_did:bitstring, m_cred:bitstring; 
     inj-event(auth_HolderCompletesProtocol(m_handshakeReq, m_handshakeResp, m_did, m_cred))
     ==>
     inj-event(auth_IssuerSendsLastMessageToHolder(m_handshakeReq, m_handshakeResp, m_did, m_cred)) .
 
 
-query  m_handshakeReq:G, m_handshakeResp:bitstring, m_did:bitstring; 
+query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_did:bitstring; 
     inj-event(auth_IssuerCompletesProtocol(m_handshakeReq, m_handshakeResp,  m_did))
     ==>
     inj-event(auth_HolderSendsLastMessageToIssuer(m_handshakeReq, m_handshakeResp, m_did)) .
 
 (*  *)
 
-query  m_handshakeReq:G, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_handshakeReq_2:G, m_handshakeResp_2:bitstring, m_did:bitstring, m_cred:bitstring; 
+query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_handshakeReq_2:bitstring, m_handshakeResp_2:bitstring, m_did:bitstring, m_cred:bitstring; 
     inj-event(
         auth_VerifierCompletesProtocol(
                 m_handshakeReq, 
@@ -640,7 +667,7 @@ query  m_handshakeReq:G, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bits
                 m_cred))
     .
 
-query  m_handshakeReq:G, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_handshakeReq_2:G, m_handshakeResp_2:bitstring, m_did:bitstring, m_cred:bitstring; 
+query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_handshakeReq_2:bitstring, m_handshakeResp_2:bitstring, m_did:bitstring, m_cred:bitstring; 
     event(auth_VerifierCompletesProtocol(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp))
     ==>
     event(auth_IssuerSendsLastMessageToHolder(m_handshakeReq_2, m_handshakeResp_2, m_did, m_cred)) 
