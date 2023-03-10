@@ -26,7 +26,7 @@ equation forall x: exponent, y: exponent; exp(g(x),y) = exp(g(y),x).
 fun G_to_SymK(G): SymmetricKey.
 
 fun G_to_Bit(G): bitstring.
-fun Bit_to_G(bitstring): G.
+reduc forall g:G; Bit_to_G(G_to_Bit(g)) = g.
 (* END group *)
 
 (* START symmetric encryption *)
