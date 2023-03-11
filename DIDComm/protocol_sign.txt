@@ -106,7 +106,7 @@ $ \textit{let } (((((P',attr,I'), \textit{s}_I),n'_c,V'), \textit{s}_P ),\textit
 $ \textit{if } \textit{check}(((((P',attr,I'), \textit{s}_I),n'_c,V'), \textit{s}_P ),\textit{s}_8,spk_{PV}) \textit{ then} $ \\
 $ \textit{if } \textit{check}((((P',attr,I'), \textit{s}_I),n'_c,V'), \textit{s}_P, pk_P) \textit{ then} $\\
 $ \textit{if } \textit{check}((P',attr,I'), \textit{s}_I, pk_I) \textit{ then} $\\
-$ \textit{if } (n'_c,V',(P',attr,I')) = (n_c,V,(P,attr,I)) \textit{ then} $\\
+$ \textit{if } ((P',attr,I'),n'_c,V') = ((P,attr,I),n_c,V) \textit{ then} $\\
 $ \textit{let } m'_{9} := (\textit{tkn},\textit{sig}(\textit{tkn},sk_V)) \textit{ in}  $ \\ 
 $ \textit{let } m_{9} := \{\textit{sig}(m'_{9},ssk_V)\}_{spk_{PV}} \textit{ in}  $ \\ 
 $ \overline{\textit{ch}}(m_{9}); $ \\
