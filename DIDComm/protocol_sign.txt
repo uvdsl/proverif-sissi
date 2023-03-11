@@ -27,15 +27,15 @@ $ \textit{let } pk_I = \textit{getPubKey}(proj_{2}({\textit{VC}\,'}))  $ \\
 $Issuer (I, sk_I, \textit{attr}, P, pk_P)  $ \\ 
 $ \textit{new } ssk_I, n_i;  $ \\ 
 $ \textit{ch}(m_{0});  $ \\ 
-$ \textit{let } ((n_p,spk_{PI}),\textit{sign}_0):= \textit{adec}(m_{0},sk_I) \textit{ in}  $ \\ 
-$ \textit{if } \textit{check}((n_p,spk_{PI}),\textit{sign}_0, spk_{PI}) \textit{ then}  $ \\ 
+$ \textit{let } ((n_p,spk_{PI}),\textit{s}_0):= \textit{adec}(m_{0},sk_I) \textit{ in}  $ \\ 
+$ \textit{if } \textit{check}((n_p,spk_{PI}),\textit{s}_0, spk_{PI}) \textit{ then}  $ \\ 
 $ \textit{let } m'_{1} := (n_p,n_i,pk(ssk_I)) \textit{ in}  $ \\ 
 $ \textit{let } m_{1} := \{(m'_{1},\textit{sig}(m'_{1},sk_I))\}_{spk_{PI}} \textit{ in}  $ \\ 
 $ \overline{\textit{ch}}(m_{1});  $ \\ 
 $ \textit{ch}(m_{2});  $ \\ 
-$ \textit{let } (((n'_i,P',I'),\textit{sign}_P),\textit{sign}_2) := \textit{adec}(m_{2},ssk_I) \textit{ in}  $ \\ 
-$ \textit{if } \textit{check}(((n'_i,P',I'),\textit{sign}_P),\textit{sign}_2,spk_{PI}) \textit{ then}  $ \\ 
-$ \textit{if } \textit{check}((n'_i,P',I'),\textit{sign}_P,pk_P) \textit{ then}  $ \\ 
+$ \textit{let } (((n'_i,P',I'),\textit{s}_P),\textit{s}_2) := \textit{adec}(m_{2},ssk_I) \textit{ in}  $ \\ 
+$ \textit{if } \textit{check}(((n'_i,P',I'),\textit{s}_P),\textit{s}_2,spk_{PI}) \textit{ then}  $ \\ 
+$ \textit{if } \textit{check}((n'_i,P',I'),\textit{s}_P,pk_P) \textit{ then}  $ \\ 
 $ \textit{if } (n'_i,P',I') = (n_i,P,I) \textit{ then}  $ \\ 
 $ \textit{let } {\textit{claims}} := (P, \textit{attr},I) \textit{ in}  $ \\ 
 $ \textit{let } {\textit{VC}} := ({\textit{claims}} ,\textit{sig}({\textit{claims}}, sk_I)) \textit{ in}  $ \\ 
@@ -49,16 +49,16 @@ $ \textit{let } m'_{0} := (n_p,pk(ssk_{PI})) \textit{ in}  $ \\
 $ \textit{let } m_{0} := \{(m'_{0},\textit{sig}(m'_{0},ssk_{PI}))\}_{pk_I} \textit{ in}  $ \\ 
 $ \overline{\textit{ch}}(m_{0});  $ \\ 
 $ \textit{ch}(m_{1});  $ \\ 
-$ \textit{let } ((n'_p,n_i,spk_I), \textit{sign}_1) := \textit{adec}(m_{1},ssk_{PI}) \textit{ in}  $ \\ 
-$ \textit{if } \textit{check}((n'_p,n_i,spk_I),\textit{sign}_1,pk_I) \textit{ then}  $ \\ 
+$ \textit{let } ((n'_p,n_i,spk_I), \textit{s}_1) := \textit{adec}(m_{1},ssk_{PI}) \textit{ in}  $ \\ 
+$ \textit{if } \textit{check}((n'_p,n_i,spk_I),\textit{s}_1,pk_I) \textit{ then}  $ \\ 
 $ \textit{if } n'_p = n_p \textit{ then}  $ \\ 
 $ \textit{let } m'_{2} := ((n_i,P,I),\textit{sig}((n_i,P,I),sk_P)) \textit{ in}  $ \\ 
 $ \textit{let } m_{2} := \{(m'_{2},\textit{sig}(m'_{2},ssk_{PI}))\}_{spk_I} \textit{ in}  $ \\ 
 $ \overline{\textit{ch}}(m_{2});  $ \\ 
 $ \textit{ch}(m_{3});  $ \\ 
-$ \textit{let } ((((P',attr,I'), \textit{sign}_I), P''), \textit{sign}_3) := \textit{adec}(m_{3},ssk_{PI}) \textit{ in}  $ \\ 
-$ \textit{if } \textit{check}((((P',attr,I'), \textit{sign}_I), P''), \textit{sign}_3, spk_I) \textit{ then}  $ \\ 
-$ \textit{if } \textit{check}((P',attr,I'), \textit{sign}_I, pk_I) \textit{ then}  $ \\ 
+$ \textit{let } ((((P',attr,I'), \textit{s}_I), P''), \textit{s}_3) := \textit{adec}(m_{3},ssk_{PI}) \textit{ in}  $ \\ 
+$ \textit{if } \textit{check}((((P',attr,I'), \textit{s}_I), P''), \textit{s}_3, spk_I) \textit{ then}  $ \\ 
+$ \textit{if } \textit{check}((P',attr,I'), \textit{s}_I, pk_I) \textit{ then}  $ \\ 
 $ \textit{if } (P',I',P'') = (P,I,P) \textit{ then}  $ \\ 
 $  
 $ !Prover (P, sk_P, {\textit{VC}=sig((P,attr,I),sk_I)}, V, pk_V)  $ \\ 
@@ -67,45 +67,45 @@ $ \textit{let } m'_{4} := (n_p,pk(ssk_{PV})) \textit{ in}  $ \\
 $ \textit{let } m_{4} := \{(m'_{4},\textit{sig}(m'_{4},ssk_{PV}))\}_{pk_V} \textit{ in}  $ \\ 
 $ \overline{\textit{ch}}(m_{4});  $ \\ 
 $ \textit{ch}(m_{5});  $ \\ 
-$ \textit{let } ((n'_p,n_v,spk_V),\textit{sign}_5) := \textit{adec}(m_{5},ssk_{PV}) \textit{ in}  $ \\ 
-$ \textit{if } \textit{check}((n'_p,n_v,spk_V),\textit{sign}_5,pk_V) \textit{ then}  $ \\ 
+$ \textit{let } ((n'_p,n_v,spk_V),\textit{s}_5) := \textit{adec}(m_{5},ssk_{PV}) \textit{ in}  $ \\ 
+$ \textit{if } \textit{check}((n'_p,n_v,spk_V),\textit{s}_5,pk_V) \textit{ then}  $ \\ 
 $ \textit{if } n'_p := n_p \textit{ then}  $ \\ 
 $ \textit{let } m'_{6} := (n_v, {\textit{URI}}) \textit{ in}  $ \\ 
 $ \textit{let } m_{6} := \{(m'_{6},\textit{sig}(m'_{6},ssk_{PV}))\}_{spk_V} \textit{ in}  $ \\ 
 $ \overline{\textit{ch}}(m_{6})  $ \\ 
 $ \textit{ch}(m_{7});  $ \\ 
-$ \textit{let } ((n_c,\textit{RULE} ),\textit{sign}_7) := \textit{adec}(m_{7},ssk_{PV}) \textit{ in}  $ \\ 
-$ \textit{if } \textit{check}((n_c,\textit{RULE} ),\textit{sign}_7,spk_V) \textit{ then}  $ \\ 
-$ \textit{let } (\textit{claims},\textit{sign}_{VC})=\textit{VC}  \textit{ in}  $ \\ 
+$ \textit{let } ((n_c,\textit{RULE} ),\textit{s}_7) := \textit{adec}(m_{7},ssk_{PV}) \textit{ in}  $ \\ 
+$ \textit{if } \textit{check}((n_c,\textit{RULE} ),\textit{s}_7,spk_V) \textit{ then}  $ \\ 
+$ \textit{let } (\textit{claims},\textit{s}_{I})=\textit{VC}  \textit{ in}  $ \\ 
 $ \textit{if } \textit{claims}=\textit{RULE} \textit{ then}  $ \\ 
-$ \textit{let } {\textit{VP}} := ((n_c,V,{\textit{VC}}), \textit{sig}((n_c,V,{\textit{VC}}),sk_P)) \textit{ in}  $ \\ 
+$ \textit{let } {\textit{VP}} := (({\textit{VC}},n_c,V), \textit{sig}(({\textit{VC}},n_c,V),sk_P)) \textit{ in}  $ \\ 
 $ \textit{let } m_{8} := \{{\textit{VP}},\textit{sig}({\textit{VP}},ssk_{PV})\}_{spk_V} \textit{ in}  $ \\ 
 $ \overline{\textit{ch}}(m_{8})  $ \\ 
 $ \textit{ch}(m_{9})  $ \\ 
-$ \textit{let }((\textit{tkn}_\textit{access},\textit{sign}_\textit{tkn}),\textit{sign}_9) := (\textit{adec}(m_{9},ssk),spk_V) \textit{ in}  $ \\ 
-$ \textit{if } \textit{check}((\textit{tkn}_\textit{access},\textit{sign}_\textit{tkn}),\textit{sign}_9,spk_V) \textit{ then}  $ \\ 
-$ \textit{if } \textit{check}(\textit{tkn}_\textit{access},\textit{sign}_\textit{tkn},pk_V) \textit{ then}  $ \\ 
+$ \textit{let }((\textit{tkn}_\textit{access},\textit{s}_\textit{tkn}),\textit{s}_9) := (\textit{adec}(m_{9},ssk),spk_V) \textit{ in}  $ \\ 
+$ \textit{if } \textit{check}((\textit{tkn}_\textit{access},\textit{s}_\textit{tkn}),\textit{s}_9,spk_V) \textit{ then}  $ \\ 
+$ \textit{if } \textit{check}(\textit{tkn}_\textit{access},\textit{s}_\textit{tkn},pk_V) \textit{ then}  $ \\ 
 
 $Verifier (V, sk_V, {\textit{RULE}=(P,attr,I)}, pk_P, pk_I, {\textit{URI}})  $ \\ 
 $ \textit{new } ssk_V, n_i, n_c, \textit{tkn}_\textit{access};  $ \\ 
 $ \textit{ch}(m_{4});  $ \\ 
-$ \textit{let } ((n_p,spk_{PV}),\textit{sign}_4) := \textit{adec}(m_{4},sk_V) \textit{ in}  $ \\ 
-$ \textit{if } \textit{check}((n_p,spk_{PV}),\textit{sign}_4,spk_{PV}) \textit{ in}  $ \\ 
+$ \textit{let } ((n_p,spk_{PV}),\textit{s}_4) := \textit{adec}(m_{4},sk_V) \textit{ in}  $ \\ 
+$ \textit{if } \textit{check}((n_p,spk_{PV}),\textit{s}_4,spk_{PV}) \textit{ in}  $ \\ 
 $ \textit{let } m'_{5} := (n_p,n_v,pk(ssk_V)) \textit{ in}  $ \\ 
 $ \textit{let } m_{5} := \{ (m'_{5},\textit{sig}(m'_{5},sk_V)) \}_{spk_{PV}} \textit{ in}  $ \\ 
 $ \overline{\textit{ch}}(m_{5});  $ \\ 
 $ \textit{ch}(m_{6});  $ \\ 
-$ \textit{let } ((n'_v,uri'),\textit{sign}_6)  := \textit{adec}(m_{6},ssk_V) \textit{ in}  $ \\ 
-$ \textit{if } \textit{check}((n'_v,uri'),\textit{sign}_6,spk_{PV}) \textit{ then} $ \\
+$ \textit{let } ((n'_v,uri'),\textit{s}_6)  := \textit{adec}(m_{6},ssk_V) \textit{ in}  $ \\ 
+$ \textit{if } \textit{check}((n'_v,uri'),\textit{s}_6,spk_{PV}) \textit{ then} $ \\
 $ \textit{if } (n'_v,{\textit{URI}\,'}) = (n_v,{\textit{URI}}) \textit{ then}  $ \\ 
 $ \textit{let } m'_{7} := (n_c,{\textit{RULE}}) \textit{ in}  $ \\ 
 $ \textit{let } m_{7} := \{(m'_{7},\textit{sig}(m'_{7},ssk_V))\}_{spk_{PV}} \textit{ in}  $ \\ 
 $ \overline{\textit{ch}}(m_{7});  $ \\ 
 $ \textit{ch}(m_{8});  $ \\ 
-$ \textit{let } (((n'_c,V',((P',attr,I'), \textit{sign}_I)), \textit{sign}_P ),\textit{sign}_8) := \textit{adec}(m_{8},ssk_V) \textit{ in}  $ \\ 
-$ \textit{if } \textit{check}(((n'_c,V',((P',attr,I'), \textit{sign}_I)), \textit{sign}_P ),\textit{sign}_8,spk_{PV}) \textit{ then} $ \\
-$ \textit{if } \textit{check}((n'_c,V',((P',attr,I'), \textit{sign}_I)), \textit{sign}_P, pk_P) \textit{ then} $\\
-$ \textit{if } \textit{check}((P',attr,I'), \textit{sign}_I, pk_I) \textit{ then} $\\
+$ \textit{let } (((((P',attr,I'), \textit{s}_I),n'_c,V'), \textit{s}_P ),\textit{s}_8) := \textit{adec}(m_{8},ssk_V) \textit{ in}  $ \\ 
+$ \textit{if } \textit{check}(((((P',attr,I'), \textit{s}_I),n'_c,V'), \textit{s}_P ),\textit{s}_8,spk_{PV}) \textit{ then} $ \\
+$ \textit{if } \textit{check}((((P',attr,I'), \textit{s}_I),n'_c,V'), \textit{s}_P, pk_P) \textit{ then} $\\
+$ \textit{if } \textit{check}((P',attr,I'), \textit{s}_I, pk_I) \textit{ then} $\\
 $ \textit{if } (n'_c,V',(P',attr,I')) = (n_c,V,(P,attr,I)) \textit{ then} $\\
 $ \textit{let } m'_{9} = (\textit{tkn}_\textit{access},\textit{sig}(\textit{tkn}_\textit{access},sk_V)) \textit{ in}  $ \\ 
 $ \textit{let } m_{9} = \{\textit{sig}(m'_{9},ssk_V)\}_{spk_{PV}} \textit{ in}  $ \\ 
