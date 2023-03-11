@@ -76,18 +76,18 @@ $ \overline{\textit{ch}}(m_{6})  $ \\
 $ \textit{ch}(m_{7});  $ \\ 
 $ \textit{let } ((n_c,\textit{RULE} ),\textit{s}_7) := \textit{adec}(m_{7},ssk_{PV}) \textit{ in}  $ \\ 
 $ \textit{if } \textit{check}((n_c,\textit{RULE} ),\textit{s}_7,spk_V) \textit{ then}  $ \\ 
-$ \textit{let } (\textit{claims},\textit{s}_{I})=\textit{VC}  \textit{ in}  $ \\ 
+$ \textit{let } (\textit{claims},\textit{s}_{I}):=\textit{VC}  \textit{ in}  $ \\ 
 $ \textit{if } \textit{claims}=\textit{RULE} \textit{ then}  $ \\ 
 $ \textit{let } {\textit{VP}} := (({\textit{VC}},n_c,V), \textit{sig}(({\textit{VC}},n_c,V),sk_P)) \textit{ in}  $ \\ 
 $ \textit{let } m_{8} := \{{\textit{VP}},\textit{sig}({\textit{VP}},ssk_{PV})\}_{spk_V} \textit{ in}  $ \\ 
 $ \overline{\textit{ch}}(m_{8})  $ \\ 
 $ \textit{ch}(m_{9})  $ \\ 
-$ \textit{let }((\textit{tkn}_\textit{access},\textit{s}_\textit{tkn}),\textit{s}_9) := (\textit{adec}(m_{9},ssk),spk_V) \textit{ in}  $ \\ 
-$ \textit{if } \textit{check}((\textit{tkn}_\textit{access},\textit{s}_\textit{tkn}),\textit{s}_9,spk_V) \textit{ then}  $ \\ 
-$ \textit{if } \textit{check}(\textit{tkn}_\textit{access},\textit{s}_\textit{tkn},pk_V) \textit{ then}  $ \\ 
+$ \textit{let }((\textit{tkn},\textit{s}_\textit{tkn}),\textit{s}_9) := (\textit{adec}(m_{9},ssk),spk_V) \textit{ in}  $ \\ 
+$ \textit{if } \textit{check}((\textit{tkn},\textit{s}_\textit{tkn}),\textit{s}_9,spk_V) \textit{ then}  $ \\ 
+$ \textit{if } \textit{check}(\textit{tkn},\textit{s}_\textit{tkn},pk_V) \textit{ then}  $ \\ 
 
 $Verifier (V, sk_V, {\textit{RULE}=(P,attr,I)}, pk_P, pk_I, {\textit{URI}})  $ \\ 
-$ \textit{new } ssk_V, n_i, n_c, \textit{tkn}_\textit{access};  $ \\ 
+$ \textit{new } ssk_V, n_i, n_c, \textit{tkn};  $ \\ 
 $ \textit{ch}(m_{4});  $ \\ 
 $ \textit{let } ((n_p,spk_{PV}),\textit{s}_4) := \textit{adec}(m_{4},sk_V) \textit{ in}  $ \\ 
 $ \textit{if } \textit{check}((n_p,spk_{PV}),\textit{s}_4,spk_{PV}) \textit{ in}  $ \\ 
@@ -107,8 +107,8 @@ $ \textit{if } \textit{check}(((((P',attr,I'), \textit{s}_I),n'_c,V'), \textit{s
 $ \textit{if } \textit{check}((((P',attr,I'), \textit{s}_I),n'_c,V'), \textit{s}_P, pk_P) \textit{ then} $\\
 $ \textit{if } \textit{check}((P',attr,I'), \textit{s}_I, pk_I) \textit{ then} $\\
 $ \textit{if } (n'_c,V',(P',attr,I')) = (n_c,V,(P,attr,I)) \textit{ then} $\\
-$ \textit{let } m'_{9} = (\textit{tkn}_\textit{access},\textit{sig}(\textit{tkn}_\textit{access},sk_V)) \textit{ in}  $ \\ 
-$ \textit{let } m_{9} = \{\textit{sig}(m'_{9},ssk_V)\}_{spk_{PV}} \textit{ in}  $ \\ 
+$ \textit{let } m'_{9} := (\textit{tkn},\textit{sig}(\textit{tkn},sk_V)) \textit{ in}  $ \\ 
+$ \textit{let } m_{9} := \{\textit{sig}(m'_{9},ssk_V)\}_{spk_{PV}} \textit{ in}  $ \\ 
 $ \overline{\textit{ch}}(m_{9}); $ \\
 
 
