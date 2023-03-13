@@ -166,11 +166,11 @@ let verifier(DID_V:DID, sk_V:SecretKey, rule:bitstring, pk_P:PublicKey, pk_I:Pub
     (**)
     (* receive let m_8 = aenc( (m'_8,sig(m'_8,ssk_P)),spk_V) in *)
     in(h,m_8:bitstring);
-    let (((n'_c:bitstring,DID'_V:DID,((DID'_P:DID,attr:bitstring,DID'_I:DID), sigVal_I:bitstring)), sigVal_P:bitstring), sigVal_8:bitstring) = adec(m_8,ssk_V) in
-    if check(((n'_c,DID'_V,((DID'_P,attr,DID'_I), sigVal_I)), sigVal_P ),sigVal_8,spk_P) then
-    if check((n'_c,DID'_V,((DID'_P,attr,DID'_I), sigVal_I)), sigVal_P ,pk_P) then
-    if check((DID'_P,attr,DID'_I), sigVal_I,pk_I) then
-    if (n'_c,DID'_V,(DID'_P,attr,DID'_I)) = (n_c,DID_V,(DID_P,attr,DID_I)) then
+    let (((n'_c:bitstring,DID'_V:DID,((DID'_P:DID,attr':bitstring,DID'_I:DID), sigVal_I:bitstring)), sigVal_P:bitstring), sigVal_8:bitstring) = adec(m_8,ssk_V) in
+    if check(((n'_c,DID'_V,((DID'_P,attr',DID'_I), sigVal_I)), sigVal_P ),sigVal_8,spk_P) then
+    if check((n'_c,DID'_V,((DID'_P,attr',DID'_I), sigVal_I)), sigVal_P ,pk_P) then
+    if check((DID'_P,attr',DID'_I), sigVal_I,pk_I) then
+    if (n'_c,DID'_V,(DID'_P,attr',DID'_I)) = (n_c,DID_V,(DID_P,attr,DID_I)) then
     new tkn_access:bitstring;
     let m'_9 = (tkn_access, sig(tkn_access,sk_V)) in
     let m_9 = aenc( (m'_9,sig(m'_9,ssk_V)),spk_P) in
@@ -186,8 +186,8 @@ let verifier(DID_V:DID, sk_V:SecretKey, rule:bitstring, pk_P:PublicKey, pk_I:Pub
     out(ch((m'_5,sig(m'_5,sk_V))),m'_5_fromVerifier) |
     out(ch(rule), rule_fromVerifier) |
     out(ch( ( m'_7, sig(m'_7,ssk_V) )), m'_7_fromVerifier) |
-    out(ch((n'_c,DID'_V,(DID'_P,attr,DID'_I, sigVal_I), sigVal_P)),vp_fromVerifier) |
-    out(ch((DID'_P,attr,DID'_I, sigVal_I)),cred_fromVerifier) |
+    out(ch((n'_c,DID'_V,(DID'_P,attr',DID'_I, sigVal_I), sigVal_P)),vp_fromVerifier) |
+    out(ch((DID'_P,attr',DID'_I, sigVal_I)),cred_fromVerifier) |
     out(ch( ( m'_9, sig(m'_9,ssk_V) )), m'_9_fromVerifier) |
     out(ch(tkn_access),access_token_fromVerifier);
     0.
@@ -218,16 +218,16 @@ let holder(DID_P:DID, sk_P:SecretKey, DID_I:DID, pk_I:PublicKey, DID_V:DID, pk_V
     (**)
     (* receive let m_3 = aenc( (m'_3,sig(m'_3,ssk_I)),spk_P) in *)
     in(h,m_3:bitstring);
-    let (((((DID'_P:DID,attr:bitstring,DID'_I:DID), sigVal_I:bitstring),DID''_P:DID,n'_h:bitstring),sigVal'_I:bitstring), sigVal_3:bitstring)  = adec(m_3,ssk_P) in
-    if check(((((DID'_P,attr,DID'_I), sigVal_I), DID''_P, n'_h),sigVal'_I),sigVal_3,spk_I) then
-    if check((((DID'_P,attr,DID'_I), sigVal_I), DID''_P,n'_h),sigVal'_I, pk_I) then
+    let (((((DID'_P:DID,attr':bitstring,DID'_I:DID), sigVal_I:bitstring),DID''_P:DID,n'_h:bitstring),sigVal'_I:bitstring), sigVal_3:bitstring)  = adec(m_3,ssk_P) in
+    if check(((((DID'_P,attr',DID'_I), sigVal_I), DID''_P, n'_h),sigVal'_I),sigVal_3,spk_I) then
+    if check((((DID'_P,attr',DID'_I), sigVal_I), DID''_P,n'_h),sigVal'_I, pk_I) then
     if (DID''_P,n'_h) = (DID_P,n_h) then
-    if check((DID'_P,attr,DID'_I), sigVal_I, pk_I) then
+    if check((DID'_P,attr',DID'_I), sigVal_I, pk_I) then
     if (DID'_P, DID'_I)= (DID_P, DID_I) then
     (* Holder about to complete the Protocol *)
     out(h, Holder_Completes);
 
-    !prover(DID_P, sk_P, ((DID'_P,attr,DID'_I), sigVal_I), DID_V, pk_V, talksOnlyToHonest, m_0,m_1,m_2,m_3) |
+    !prover(DID_P, sk_P, ((DID'_P,attr',DID'_I), sigVal_I), DID_V, pk_V, talksOnlyToHonest, m_0,m_1,m_2,m_3) |
    
     (* phase 1 ; *)
     if talksOnlyToHonest then
