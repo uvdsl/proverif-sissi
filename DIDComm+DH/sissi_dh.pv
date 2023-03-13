@@ -3,8 +3,25 @@
 (* START keys *)
 type SecretKey.
 type PublicKey.
+type SymmetricKey.
 fun pk(SecretKey):PublicKey.
 (* END keys *)
+
+(* START group *)
+type G.
+type exponent.
+fun exp(G, exponent): G.
+fun g(exponent): G.
+equation forall x: exponent, y: exponent; exp(g(x),y) = exp(g(y),x).
+fun GtoSymK(G): SymmetricKey.
+fun bitG(G):bitstring.
+reduc forall elem:G; unbitG(bitG(elem))=elem.
+(* END group *)
+
+(* START symmetric encryption *)
+fun enc(bitstring(*the message*), SymmetricKey):bitstring (*symmetric encrypt input msg*).
+reduc forall msg:bitstring,symk:SymmetricKey; dec(enc(msg,symk),symk)=msg (*symmetric decrypt*).
+(* END symmetric encryption *)
 
 (* START asymmetric encryption *)
 fun aenc(bitstring(*the message*), PublicKey):bitstring (*asymmetric encrypt input msg*).
@@ -89,32 +106,33 @@ event auth_ProverSendsLastMessageToVerifierInProtocolFull(bitstring,bitstring,bi
 
 (** START Prover **)
 let prover(DID_P:DID, sk_P:SecretKey, VC:bitstring, DID_V:DID, pk_V:PublicKey, talksOnlyToHonest:bool, m_0:bitstring,m_1:bitstring,m_2:bitstring,m_3:bitstring) (* input ~ what the agent starts with in private*) =
-    new ssk_P:SecretKey;                          
-    new n_p:bitstring;
-    let m'_4 = (n_p,pk(ssk_P)) in
-    let m_4 = aenc( ( m'_4, sig(m'_4,ssk_P) ) ,pk_V) in
+    new x:exponent;
+    let gx = g(x) in
+    let m'_4 = bitG(gx) in
+    let m_4 = m'_4 in
     out(h, m_4);
     (**)
     (**)
-    (* receive let m_5 = aenc( (m'_5,sig(m'_5,sk_V)),spk_P) in *)
+    (* receive let m_5 = (gy,enc(sign((gy,gx),sk),K)) in *)
     in(h,m_5:bitstring);
-    let ((n'_p:bitstring,n_v:bitstring,spk_V:PublicKey),sigVal_5:bitstring) = adec(m_5,ssk_P) in
-    if check((n'_p,n_v,spk_V),sigVal_5,pk_V) then
-    if n'_p = n_p then
-    let m'_6 = (n_v,uri) in
-    let m_6 = aenc( ( m'_6, sig(m'_6,ssk_P) ) ,spk_V) in
+    let (eGY:bitstring,m:bitstring) = m_5 in
+    let gy = unbitG(eGY) in
+    let K = GtoSymK(exp(gy,x)) in
+    let s_K = dec(m,K) in
+    if check((gy,gx),s_K,pk_V) then 
+    let m'_6 = (sig((gx,gy),sk_P),uri) in
+    let m_6 = enc( m'_6  ,K) in
     out(h, m_6);
     (**)
     (**)
-    (* receive let m_7 = aenc( (m'_7,sig(m'_7,ssk_V)),spk_P) in *)
+    (* receive let m_7 = enc( ((n_c,rule),K) in *)
     in(h,m_7:bitstring);
-    let ((n_c:bitstring,rule:bitstring),sigVal_7:bitstring) = adec(m_7,ssk_P) in
-    if check((n_c,rule),sigVal_7,spk_V) then
+    let ((n_c:bitstring,rule:bitstring)) = dec(m_7,K) in
     let (claims:bitstring,sigVal_VC:bitstring)=VC in
     if claims = rule then
     let m''_8 = (n_c,DID_V,VC) in
     let m'_8 = (m''_8, sig(m''_8,sk_P) ) in
-    let m_8 = aenc( ( m'_8, sig(m'_8,ssk_P) ) ,spk_V) in
+    let m_8 = enc( m'_8 , K) in
     (* event_just_before_the_last_send_message_of_S  *)
     event auth_ProverSendsLastMessageToVerifier(m_4,m_5,m_6,m_7,m_8);
     event auth_ProverSendsLastMessageToVerifierInProtocolFull(m_0,m_1,m_2,m_3, m_4,m_5,m_6,m_7,m_8);
@@ -122,18 +140,16 @@ let prover(DID_P:DID, sk_P:SecretKey, VC:bitstring, DID_V:DID, pk_V:PublicKey, t
     (**)
     (**)
     in(h,m_9:bitstring);
-    let ((tkn_access:bitstring,sigVal_tkn:bitstring),sigVal_9:bitstring) = adec(m_9,ssk_P) in
-    if check((tkn_access,sigVal_tkn),sigVal_9,spk_V) then
+    let (tkn_access:bitstring,sigVal_tkn:bitstring) = dec(m_9,K) in
     if check(tkn_access,sigVal_tkn,pk_V) then
     (* Prover about to complete protocol! *)
     out(h, Prover_Completes);
     (* phase 1 ; *)
     if talksOnlyToHonest then
-    (* event_at_the_very_end_of_role_R_in_parallel_with_secrecy_checks *)
     event auth_ProverCompletesProtocol(m_4,m_5,m_6,m_7,m_8,m_9) |
-    out(ch(( m'_4, sig(m'_4,ssk_P) )),m'_4_fromProver) |
-    out(ch(( m'_6, sig(m'_6,ssk_P) )),m'_6_fromProver) |
-    out(ch(( m'_8, sig(m'_8,ssk_P) )), m'_8_fromProver) | (*VP*)
+    out(ch(( m'_4 )),m'_4_fromProver) |
+    out(ch(( m'_6 )),m'_6_fromProver) |
+    out(ch(( m'_8 )), m'_8_fromProver) | (*VP*)
     out(ch(VC),cred_fromProver) |
     out(ch(tkn_access),access_token_fromProver);
     0.
@@ -142,38 +158,37 @@ let prover(DID_P:DID, sk_P:SecretKey, VC:bitstring, DID_V:DID, pk_V:PublicKey, t
 (** START Verifier **)
 let verifier(DID_V:DID, sk_V:SecretKey, rule:bitstring, pk_P:PublicKey, pk_I:PublicKey, talksOnlyToHonest:bool) (* input ~ what the agent starts with in private*) =
     let ( DID_P:DID, attr:bitstring, DID_I:DID ) = rule in
-    (* receive  m_4 = aenc( ( m'_4, sig(m'_4,ssk_p) ) ,pk_V) in *)
-    in(h,m_4:bitstring);
-    let ((n_p:bitstring,spk_P:PublicKey),sigVal_4:bitstring) = adec(m_4,sk_V) in
-    if check((n_p,spk_P),sigVal_4,spk_P) then  
-    new ssk_V:SecretKey;                          
-    new n_v:bitstring;
-    let m'_5 = (n_p,n_v,pk(ssk_V)) in
-    let m_5 = aenc( (m'_5,sig(m'_5,sk_V)),spk_P) in
+    (* receive  m_4 = ( m'_4 )  in *)
+    in(h, m_4:bitstring);
+    let gx= unbitG(m_4) in
+    new y:exponent;
+    let gy = g(y) in
+    let K = GtoSymK(exp(gx,y)) in
+    let m'_5 = sig((gy,gx),sk_V) in
+    let m_5 = (bitG(gy),enc(m'_5 ,K)) in
     out(h,m_5); 
     (**)
     (**)
-    (* receive let m_6 = aenc( (m'_6,sig(m'_6,ssk_P)),spk_V) in *)
+    (* receive let m_6 = enc( ((s_K, uri)  ,K) in *)
     in(h,m_6:bitstring);
-    let ((n'_v:bitstring,uri':bitstring),sigVal_6:bitstring) = adec(m_6,ssk_V) in
-    if check((n'_v,uri'),sigVal_6,spk_P) then
-    if (n'_v, uri') = (n_v, uri) then
-    new n_c:bitstring;
+    let (s_K:bitstring,uri':bitstring) = dec(m_6,K) in
+    if check((gx,gy),s_K,pk_P) then
+    if uri' = uri then
+    new n_c:bitstring; 
     let m'_7 = (n_c,rule) in
-    let m_7 = aenc( ( m'_7, sig(m'_7,ssk_V) ) ,spk_P) in
+    let m_7 = enc( m'_7 , K) in
     out(h, m_7);
     (**)
     (**)
     (* receive let m_8 = aenc( (m'_8,sig(m'_8,ssk_P)),spk_V) in *)
     in(h,m_8:bitstring);
-    let (((n'_c:bitstring,DID'_V:DID,((DID'_P:DID,attr:bitstring,DID'_I:DID), sigVal_I:bitstring)), sigVal_P:bitstring), sigVal_8:bitstring) = adec(m_8,ssk_V) in
-    if check(((n'_c,DID'_V,((DID'_P,attr,DID'_I), sigVal_I)), sigVal_P ),sigVal_8,spk_P) then
+    let ((n'_c:bitstring,DID'_V:DID,((DID'_P:DID,attr:bitstring,DID'_I:DID), sigVal_I:bitstring)), sigVal_P:bitstring) = dec(m_8,K) in
     if check((n'_c,DID'_V,((DID'_P,attr,DID'_I), sigVal_I)), sigVal_P ,pk_P) then
     if check((DID'_P,attr,DID'_I), sigVal_I,pk_I) then
     if (n'_c,DID'_V,(DID'_P,attr,DID'_I)) = (n_c,DID_V,(DID_P,attr,DID_I)) then
     new tkn_access:bitstring;
     let m'_9 = (tkn_access, sig(tkn_access,sk_V)) in
-    let m_9 = aenc( (m'_9,sig(m'_9,ssk_V)),spk_P) in
+    let m_9 = enc( m'_9 , K) in
     (* event_just_before_the_last_send_message_of_S  *)
     event auth_VerifierSendsLastMessageToProver(m_4,m_5,m_6,m_7,m_8,m_9);
     out(h, m_9);
@@ -181,47 +196,46 @@ let verifier(DID_V:DID, sk_V:SecretKey, rule:bitstring, pk_P:PublicKey, pk_I:Pub
     out(h, Verifier_Completes);
     (* phase 1 ; *)
     if talksOnlyToHonest then
-    (* event_at_the_very_end_of_role_R_in_parallel_with_secrecy_checks *)
     event auth_VerifierCompletesProtocol(m_4,m_5,m_6,m_7,m_8) |
-    out(ch((m'_5,sig(m'_5,sk_V))),m'_5_fromVerifier) |
+    out(ch( ( m'_5 )),m'_5_fromVerifier) |
     out(ch(rule), rule_fromVerifier) |
-    out(ch( ( m'_7, sig(m'_7,ssk_V) )), m'_7_fromVerifier) |
+    out(ch( ( m'_7 )), m'_7_fromVerifier) |
     out(ch((n'_c,DID'_V,(DID'_P,attr,DID'_I, sigVal_I), sigVal_P)),vp_fromVerifier) |
     out(ch((DID'_P,attr,DID'_I, sigVal_I)),cred_fromVerifier) |
-    out(ch( ( m'_9, sig(m'_9,ssk_V) )), m'_9_fromVerifier) |
+    out(ch( ( m'_9 )), m'_9_fromVerifier) |
     out(ch(tkn_access),access_token_fromVerifier);
     0.
 (** END Verifier **)
 
 (** START Holder/Prover **)
 let holder(DID_P:DID, sk_P:SecretKey, DID_I:DID, pk_I:PublicKey, DID_V:DID, pk_V:PublicKey, talksOnlyToHonest:bool) (* input ~ what the agent starts with in private*) =
-    new ssk_P:SecretKey;                          
-    new n_p:bitstring;
-    let m'_0 = (n_p,pk(ssk_P)) in
-    let m_0 = aenc( ( m'_0, sig(m'_0,ssk_P) ) ,pk_I) in
+    new x:exponent;
+    let gx = g(x) in
+    let m'_0 = bitG(gx) in
+    let m_0 = m'_0 in
     out(h, m_0);
     (**)
     (**)
-    (* receive let m_1 = aenc( (m'_1,sig(m'_1,sk_I)),spk_P) in *)
+    (* receive let m_1 = (gy,enc(sign((gy,gx),sk),K)) in *)
     in(h,m_1:bitstring);
-    let ((n'_p:bitstring,n_i:bitstring,spk_I:PublicKey),sigVal_1:bitstring) = adec(m_1,ssk_P) in
-    if check((n'_p,n_i,spk_I),sigVal_1,pk_I) then
-    if n'_p = n_p then
-    new n_h:bitstring;
-    let m''_2 = (n_i,DID_P,DID_I,n_h) in
-    let m'_2 = (m''_2, sig(m''_2,sk_P)) in
-    let m_2 = aenc( ( m'_2, sig(m'_2,ssk_P) ) ,spk_I) in
+    let (eGY:bitstring,m:bitstring) = m_1 in
+    let gy = unbitG(eGY) in
+    let K = GtoSymK(exp(gy,x)) in
+    let s_K = dec(m,K) in
+    if check((gy,gx),s_K,pk_I) then 
+    new n_i:bitstring;
+    let m'_2 = (sig((gx,gy),sk_P),DID_P,DID_I,n_i) in
+    let m_2 = enc( m'_2  ,K) in
     (* event_just_before_the_last_send_message_of_S  *) 
     event auth_HolderSendsLastMessageToIssuer(m_0,m_1,m_2);
     out(h, m_2);
     (**)
     (**)
-    (* receive let m_3 = aenc( (m'_3,sig(m'_3,ssk_I)),spk_P) in *)
+    (* receive let m_3 = enc( (m'_3 , K) in *)
     in(h,m_3:bitstring);
-    let (((((DID'_P:DID,attr:bitstring,DID'_I:DID), sigVal_I:bitstring),DID''_P:DID,n'_h:bitstring),sigVal'_I:bitstring), sigVal_3:bitstring)  = adec(m_3,ssk_P) in
-    if check(((((DID'_P,attr,DID'_I), sigVal_I), DID''_P, n'_h),sigVal'_I),sigVal_3,spk_I) then
+    let ((((DID'_P:DID,attr:bitstring,DID'_I:DID), sigVal_I:bitstring),DID''_P:DID,n'_h:bitstring),sigVal'_I:bitstring)  = dec(m_3,K) in
     if check((((DID'_P,attr,DID'_I), sigVal_I), DID''_P,n'_h),sigVal'_I, pk_I) then
-    if (DID''_P,n'_h) = (DID_P,n_h) then
+    if (DID''_P,n'_h) = (DID_P,n_i) then
     if check((DID'_P,attr,DID'_I), sigVal_I, pk_I) then
     if (DID'_P, DID'_I)= (DID_P, DID_I) then
     (* Holder about to complete the Protocol *)
@@ -232,35 +246,34 @@ let holder(DID_P:DID, sk_P:SecretKey, DID_I:DID, pk_I:PublicKey, DID_V:DID, pk_V
     (* phase 1 ; *)
     if talksOnlyToHonest then
     event auth_HolderCompletesProtocol(m_0,m_1,m_2,m_3) | 
-    out(ch(( m'_0, sig(m'_0,ssk_P) )),m'_0_fromHolder) |
-    out(ch(( m'_2, sig(m'_2,ssk_P) )),m'_2_fromHolder) |
+    out(ch( m'_0 ),m'_0_fromHolder) |
+    out(ch( m'_2 ),m'_2_fromHolder) |
     out(ch(((DID'_P,attr,DID'_I), sigVal_I)),cred_fromHolder); (*currently public anyway...?*)
     0.
 (** END Holder/Prover **)
 
 (** START Issuer **)
 let issuer(DID_I:DID, sk_I:SecretKey, attr:bitstring, DID_P:DID, pk_P:PublicKey, talksOnlyToHonest:bool) (* input ~ what the agent starts with in private*) =
-    (* receive  m_0 = aenc( ( m'_0, sig(m'_0,ssk_p) ) ,pk_I) in *)
-    in(h,m_0:bitstring);
-    let ((n_p:bitstring,spk_P:PublicKey),sigVal_0:bitstring) = adec(m_0,sk_I) in
-    if check((n_p,spk_P),sigVal_0,spk_P) then  
-    new ssk_I:SecretKey;                          
-    new n_i:bitstring;
-    let m'_1 = (n_p,n_i,pk(ssk_I)) in
-    let m_1 = aenc( (m'_1,sig(m'_1,sk_I)),spk_P) in
+    (* receive  m'_0 = g(x) in *)
+    in(h, m_0:bitstring);
+    let gx= unbitG(m_0) in
+    new y:exponent;
+    let gy = g(y) in
+    let K = GtoSymK(exp(gx,y)) in
+    let m'_1 = sig((gy,gx),sk_I) in
+    let m_1 = (bitG(gy),enc(m'_1 ,K)) in
     out(h,m_1); 
     (**)
     (**)
-    (* receive let m_2 = aenc( ( m'_2, sig(m'_2,ssk_P) ) ,spk_I) in *)
+    (* receive let m_2 = enc( (s_K,DID_P,DID_I)  ,K) in *)
     in(h,m_2:bitstring);
-    let (((n'_i:bitstring,DID'_P:DID,DID'_I:DID,n_h:bitstring),sigVal_P:bitstring),sigVal_2:bitstring) = adec(m_2,ssk_I) in
-    if check(((n'_i,DID'_P,DID'_I,n_h),sigVal_P),sigVal_2,spk_P) then
-    if check((n'_i,DID'_P,DID'_I,n_h),sigVal_P,pk_P) then
-    if (n'_i,DID'_P,DID'_I) = (n_i,DID_P,DID_I) then 
+    let (s_K:bitstring,DID'_P:DID,DID'_I:DID,n_h:bitstring) = dec(m_2,K) in
+    if check((gx,gy),s_K,pk_P) then
+    if (DID'_P,DID'_I) = (DID_P,DID_I) then 
     let claims = (DID_P,attr,DID_I) in
     let VC = (claims, sig(claims, sk_I) ) in
     let m'_3 = ((VC,DID_P,n_h), sig((VC,DID_P,n_h),sk_I)) in
-    let m_3 = aenc( (m'_3,sig(m'_3,ssk_I)),spk_P) in
+    let m_3 = enc( m'_3 ,K) in
     (* event_just_before_the_last_send_message_of_S *)
     event auth_IssuerSendsLastMessageToHolder(m_0,m_1,m_2,m_3);
     out(h, m_3);
@@ -269,9 +282,9 @@ let issuer(DID_I:DID, sk_I:SecretKey, attr:bitstring, DID_P:DID, pk_P:PublicKey,
     (* phase 1 ; *)
     if talksOnlyToHonest then
     event auth_IssuerCompletesProtocol(m_0,m_1,m_2) | 
-    out(ch((m'_1,sig(m'_1,sk_I))),m'_1_fromIssuer) |
+    out(ch(m'_1),m'_1_fromIssuer) |
     out(ch(VC),cred_fromIssuer) | (* currently public anyway ...? *)
-    out(ch((m'_3,sig(m'_3,ssk_I))),m'_3_fromIssuer);
+    out(ch(m'_3),m'_3_fromIssuer);
     0.
 (** END Issuer **)
 
@@ -321,19 +334,22 @@ query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_r
 query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring; 
     inj-event(auth_VerifierCompletesProtocol(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp))
     ==>
-    inj-event(auth_ProverSendsLastMessageToVerifier(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp)) .
+    inj-event(auth_ProverSendsLastMessageToVerifier(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp)) 
+    .
 
 
 query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_did:bitstring, m_cred:bitstring; 
     inj-event(auth_HolderCompletesProtocol(m_handshakeReq, m_handshakeResp, m_did, m_cred))
     ==>
-    inj-event(auth_IssuerSendsLastMessageToHolder(m_handshakeReq, m_handshakeResp, m_did, m_cred)) .
+    inj-event(auth_IssuerSendsLastMessageToHolder(m_handshakeReq, m_handshakeResp, m_did, m_cred)) 
+    .
 
 
 query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_did:bitstring; 
     inj-event(auth_IssuerCompletesProtocol(m_handshakeReq, m_handshakeResp,  m_did))
     ==>
-    inj-event(auth_HolderSendsLastMessageToIssuer(m_handshakeReq, m_handshakeResp, m_did)) . 
+    inj-event(auth_HolderSendsLastMessageToIssuer(m_handshakeReq, m_handshakeResp, m_did)) 
+    . 
 
 (* inj-agreement will not work, expected, since re-use of credentials issued once for multiple provings *)
 query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_handshakeReq_2:bitstring, m_handshakeResp_2:bitstring, m_did:bitstring, m_cred:bitstring; 
