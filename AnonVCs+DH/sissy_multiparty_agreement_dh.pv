@@ -107,8 +107,8 @@ reduc forall subject:DID,attr:bitstring,issuer:DID; getAttrFromRule(makeRule(sub
 reduc forall subject:DID,attr:bitstring,issuer:DID; getSubjectFromRule(makeRule(subject,attr,issuer))=subject.
 reduc forall subject:DID,attr:bitstring,issuer:DID; getRuleAsTuple(makeRule(subject,attr,issuer))=(subject,attr,issuer).
 
-fun bit_to_rule(bitstring):ACR.
 fun rule_to_bit(ACR):bitstring.
+reduc forall r:ACR;  bit_to_rule(rule_to_bit(r))=r.
 (* END access control rule *)
 
 (*DEFS*)
@@ -121,6 +121,7 @@ fun ch(bitstring): channel.
 fun chA(AC): channel.
 fun chD(DC): channel.
 fun chR(ACR): channel.
+fun chK(SymmetricKey): channel.
 
 (* free n_p_fromHolder: bitstring [private]. *)
 (* free n_i_fromHolder: bitstring [private]. *)
@@ -265,6 +266,7 @@ let prover(sk:SecretKey, cred:AC, verifierDID:DID, talksOnlyToHonest:bool, msg_h
     (* Query Preparations *)
 
     out(h, check_reach_prover);
+    out(chK(K),check_reach_debug1);
 
     if talksOnlyToHonest then
     (* event_at_the_very_end_of_role_R_in_parallel_with_secrecy_checks *)
@@ -276,7 +278,8 @@ let prover(sk:SecretKey, cred:AC, verifierDID:DID, talksOnlyToHonest:bool, msg_h
     out(ch(vp), vp_fromProver) |
     (* out(chC(cred),cred_fromProver) | *)
     out(chA(cred),cred_fromProver) |
-    out(ch(access_token),access_token_fromProver);
+    out(ch(signed_access_token),access_token_fromProver) ;|
+    out(ch(access_token),access_token_fromProver) ;
     0.
 (** END Prover **)
 
@@ -382,7 +385,7 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     (* --------------------------------------------------------------------------------------- *)
     (* Query Preparations *)
 
-    out(h, check_reach_verifier);
+
 
     if talksOnlyToHonest then
     (* event_at_the_very_end_of_role_R_in_parallel_with_secrecy_checks *)
@@ -393,6 +396,7 @@ let verifier(sk:SecretKey, rule:ACR, talksOnlyToHonest:bool) (* input ~ what the
     (* out(ch((n_c,rule)), credRequest_fromVerifier) | *)
     out(ch(encodeDC(unauth_dc)),unauth_vp_fromVerifier) |
     out(chD(unauth_dc),cred_fromVerifier) |
+        out(h, check_reach_verifier)|
     out(ch(access_token),access_token_fromVerifier);
     0.
 (** END Verifier **)
@@ -577,7 +581,7 @@ query attacker(providingDID_fromHolder). (* should be private, it is a message t
 (* query attacker(n_p_fromIssuer). *)
 query attacker(credIssuing_fromIssuer_notMeaningful). (* should be private, it is a message that includes credential*)
 (* using the n_strongSecrecy is actually a privacy thing, we modified the protocol by introducing it, which is not the way to go. *)
-(*query attacker(cred_fromIssuer).*)  (* can be leaked in our model, as the prover explicitly/knowlingly talks to otherAgent (attacker) trying to authenticate with them (dishonest verifier) *)
+query attacker(cred_fromIssuer).  (* can be leaked in our model, as the prover explicitly/knowlingly talks to otherAgent (attacker) trying to authenticate with them (dishonest verifier) *)
 
 (* query attacker(n_p_fromProver). *)
 query attacker(unsigned_vp_fromProver). (* should be private, it is a message that includes credential, redundant i think*)
@@ -607,10 +611,8 @@ query attacker(check_reach_debug2).
 ==> 
 event_just_before_the_last_send_message_of_S *)
 
-(* query  msg_handshakeReq:bitstring, msg_handshakeResp:bitstring, msg_uri:bitstring, msg_rule:bitstring, msg_vp:bitstring, msg_accessToken:bitstring;  *)
-    (* event(auth_VerifierCompletesProtocol(msg_handshakeReq,msg_handshakeResp,msg_uri,msg_rule,msg_vp)) . *)
 
-query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_accessToken:bitstring; 
+(* query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_accessToken:bitstring; 
     inj-event(auth_ProverCompletesProtocol(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp, m_accessToken))
     ==>
     inj-event(auth_VerifierSendsLastMessageToProver(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp, m_accessToken)) .
@@ -631,11 +633,11 @@ query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_did:bitstring, m_c
 query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_did:bitstring; 
     inj-event(auth_IssuerCompletesProtocol(m_handshakeReq, m_handshakeResp,  m_did))
     ==>
-    inj-event(auth_HolderSendsLastMessageToIssuer(m_handshakeReq, m_handshakeResp, m_did)) .
+    inj-event(auth_HolderSendsLastMessageToIssuer(m_handshakeReq, m_handshakeResp, m_did)) . *)
 
 (*  *)
 
-query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_handshakeReq_2:bitstring, m_handshakeResp_2:bitstring, m_did:bitstring, m_cred:bitstring; 
+(* query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_handshakeReq_2:bitstring, m_handshakeResp_2:bitstring, m_did:bitstring, m_cred:bitstring; 
     inj-event(
         auth_VerifierCompletesProtocol(
                 m_handshakeReq, 
@@ -665,15 +667,15 @@ query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_r
                 m_handshakeResp_2, 
                 m_did, 
                 m_cred))
-    .
-
+    . *)
+(* 
 query  m_handshakeReq:bitstring, m_handshakeResp:bitstring, m_uri:bitstring, m_rule:bitstring, m_vp:bitstring, m_handshakeReq_2:bitstring, m_handshakeResp_2:bitstring, m_did:bitstring, m_cred:bitstring; 
     event(auth_VerifierCompletesProtocol(m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp))
     ==>
     event(auth_IssuerSendsLastMessageToHolder(m_handshakeReq_2, m_handshakeResp_2, m_did, m_cred)) 
     &&
     event(auth_ProverSendsLastMessageToVerifierInProtocolFull(m_handshakeReq_2, m_handshakeResp_2, m_did, m_cred, m_handshakeReq, m_handshakeResp, m_uri, m_rule, m_vp))
-    .
+    . *)
 
 (* --------------------------------------------------------------------------------------------------------- *)
 (* End Assumptions *)
