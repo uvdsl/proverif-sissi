@@ -233,7 +233,7 @@ let holder(DID_P:DID, sk_P:SecretKey, DID_I:DID, pk_I:PublicKey, DID_V:DID, pk_V
     (**)
     (* receive let m_3 = enc( (m'_3 , K) in *)
     in(h,m_3:bitstring);
-    let ((((DID'_P:DID,'attr':bitstring,DID'_I:DID), sigVal_I:bitstring),DID''_P:DID,n'_h:bitstring),sigVal'_I:bitstring)  = dec(m_3,K) in
+    let ((((DID'_P:DID,attr':bitstring,DID'_I:DID), sigVal_I:bitstring),DID''_P:DID,n'_h:bitstring),sigVal'_I:bitstring)  = dec(m_3,K) in
     if check((((DID'_P,attr',DID'_I), sigVal_I), DID''_P,n'_h),sigVal'_I, pk_I) then
     if (DID''_P,n'_h) = (DID_P,n_i) then
     if check((DID'_P,attr',DID'_I), sigVal_I, pk_I) then
