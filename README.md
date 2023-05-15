@@ -1,6 +1,6 @@
 # SISSI Authentication and Authorization Protocol in ProVerif
 
-This is a [ProVerif](https://bblanche.gitlabpages.inria.fr/proverif/) description of the protocol flow for authentication and authorization from the SISSI architecture.
+This is a [ProVerif](https://bblanche.gitlabpages.inria.fr/proverif/) description of the protocol flow for authentication and authorization from the [SISSI architecture](https://dl.acm.org/doi/abs/10.1145/3543507.3583409).
 
 The protocol is indended for a client-server scenario on the Web.
 A client desires are Web resource served by the server.
@@ -8,114 +8,129 @@ Upon request, access is denied and the client is pointed towards the authenticat
 The client acts as the prover and the authentication-authorization endpoint acts as the verifier.
 
 The authentication-authorization endpoint enforces predefined access control rules (ACRs).
-These ACRs specify which _attribute_ the prover needs to have asserted by which _issuer_.
+These ACRs specify which attribute the prover needs to have asserted by which issuer.
 
-```
-Example: The prover P must be a student of university U.
-The prover must hold a credential that says (P,studentOf,U) signed by U.
-The prover must present this credential and prove that they are in-fact in control of P.
-```
-> Note that verifying the truthfullness of the asserted statement, i.e., that the prover P is actually a student of U, is not the task of the verifier but the task of the issuer, i.e., the university U.
-The verifier trusts the issuer university U that the asserted statement is in-fact true.
-This is also the reason why the verifier does not accept such credentials to be signed by anyone but only by issuers that the verifier trusts.
-How that trust between verifier and issuer is established is out-of-scope. (Some ideas: personal knowledge, trusted accreditation bodies, DNS checks of well-known websites, ...)
+## Example
+In a nutshell, Verifiable Credentials (VCs) enable an agent (the "holder") to prove to a second agent (the "verifier") that a third agent (the "issuer") has asserted and signed some statements or claims. 
+In other words, with a presentation of a VC an agent proves to a verifying agent that 
+
+1. they are in possession of the VC
+2. the VC was issued by a particular issuer (agent)
+3. the VC contains some claims, e.g., attributes of the holder
+4. the VC was presented by the proving agent, e.g., the holder itself
+
+For example, consider the use case of a student accessing online teaching material of some  guest professor.
+Here, the student's university, the issuer, provides the student, the holder, a digital student credential, which asserts that the holder is a student signed by the university.
+A guest professor at the university has a (private) Web server where online teaching material is accessible only to students of the university they are guest lecturing at.
+As the professor does not know all the students, i.e., the group of all students is private, the professor can not grant this group access to the Web resources. 
+To gain access to the online teaching material, the students have to prove that they are really enrolled at the university using a presentation, i.e., a VP, of the corresponding digital student credential, i.e., the VC.
+This VP includes the VC and some additional meta data, and is typically signed by the holder to prove that the student assertion is really about them.
+In this way, the professor's Web server can verify the above mentioned facts (1)-(4).
+The use case is generaliseable to general accessing resources on the Web.
+
+
 
 ## Assumptions:
-- Agents are identified using DIDs [1].
-- Each agent is in control of their DID, i.e., in control of the secret key associated to that DID.
-- Prover P holds a credential (P,attr,I) signed by issuer I.
-- Verifier holds an access control rule (P,attr,I) for which a matching and correctly signed credential is to be presented by any prover P.
-- The desired resource is known to be available at URI `u`.
-- The desired resource is served via HTTPS.
+- The __Self-Sovereign Identity (SSI) assumption__:  
+All agents can mint and manage a keypairs in a self-sovereign manner.
+- The __Decentralised Identifier (DID) assumption__:  
+All agents assume that the (integrity of the) link between DID of an agent, the thereby advertised public key and corresponding secret key can be trusted, in the sense that we assume that only the controller of the DID (the agent in control of the corresponding secret key) is able to modify/update the public key linked to the DID.
+Each agent is thus assumed to keep the link between the DID, the thereby advertised their public key and their corresponding secret key, intact (meaning they use the corresponding secret key in communication).
+Possible implementations e.g. via certification in Government Registries , Governed Blockchains or Smart Contracts.
+- The __Verifier-Issuer assumption__:  
+The verifier assumes the issuer to have due diligence on validating the assertions they make, e.g. that Holder is actually a student (which may be out-of-band).
+The verifier thus assumes that the issuer behaves honestly according to the protocol (given the context of the use case).
 
-The HTTPS response from the desired resource indicates _the verifying agent_ via the verifier's DID.
-Resovling the verifier's DID yields the corresponding DID document which includes a `serviceEndpoint`, the authentication-authorizaiton endpoint.
+## The Protocol with Plain VCs (not anonymous)
 
-The authentication-authorization endpoint is a HTTP endpoint, which may or may not be served via HTTPS.
+Find a Message Sequence Chart (MSC) of the plain model [here](./PlainVCs/doc/msc-full-protocol.pdf).
 
-> Note: I am unsure if HTTPS has an impact here. Probably HTTPS is still beneficial. To be discussed!
+Here, we give the corresponding formal model (cf. [Proverif code](./PlainVCs/DIDComm/sissi.pv)):
 
-### 1. Phase - Handshake: Prover/Client authenticates Verifier/Server
+### Grammar
+$ $ | $ $ | $ $ | $ $ | $ $ 
+---|---|---|---|---
+M, N, K ::= | x | $\textit{variables}$ | |
+$ $ | (M, $\ldots$, N) | $\textit{tuples}$ |
+$ $ | $proj_{i}(M)$ |  $i^{th} \textit{projection}$ | $proj_{i}\left(M_1, \ldots, M_i, \ldots, M_n \right)$ | $= M_i$
+$ $ | $pk(K) $ | $\textit{public key}$ |
+$ $ | $\{ M \}_{K} $ | $\textit{encryption}$ |
+$ $ | $dec( M , K )$ | $\textit{decryption}$ | $dec( \{ M \}_{K} , K )$ | $= M$  
+$ $ | $sig( M , K ) $| $\textit{signature}$ |
+$ $ | $check( M , K )$ | $\textit{check signature}$ | $check( sig( M , K ) , K )$ | $= true$
 
-The prover initiates a new communication session, minting a new session key pair for encrypting any communication following DIDComm [2].
-The initial message, i.e., HTTP(S) request to the authentication-authorization enpoint, includes the `prover's session public key` of the prover and a nonce `n_p`.
-The prover signs the message with their `session secret key`. 
-The prover uses the `verifier's DID public key` to encrypt the message.
+### Part 1 - Issuance
 
-The receiving agent, i.e., the verifier, decrypts the message with their `verifier's DID secret key`.
-> Note: This ensures that only the agent that has control over the secret key from the DID that the prover received from the resource's HTTPS response can read the initial message (seeAlso threads 1 and 2).
+Holder $(P, sk_P, I, pk_I, V, pk_V)$ | Issuer $(I, sk_I, attr, P, pk_P)$
+--- | ---
+$ \textit{new } ssk_{PI}, n_p, n_h;  $  | $ \textit{new } ssk_I, n_i;  $
+$ \textit{let } m'_{0} := (n_p,pk(ssk_{PI})) \textit{ in}  $  | $ \textit{ch}(m_{0});  $ 
+$ \textit{let } m_{0} := \{(m'_{0},\textit{sig}(m'_{0},ssk_{PI}))\}_{pk_I} \textit{ in}  $  | $ \textit{let } ((n_p,spk_{PI}),\textit{s}_0):= \textit{adec}(m_{0},sk_I) \textit{ in}  $
+$ \overline{\textit{ch}}(m_{0});  $  | $ \textit{if } \textit{check}((n_p,spk_{PI}),\textit{s}_0, spk_{PI}) \textit{ then}  $
+$ \textit{ch}(m_{1});  $  | $ \textit{let } m'_{1} := (n_p,n_i,pk(ssk_I)) \textit{ in}  $
+$ \textit{let } ((n'_p,n_i,spk_I), \textit{s}_1) := \textit{adec}(m_{1},ssk_{PI}) \textit{ in}  $  | $ \textit{let } m_{1} := \{(m'_{1},\textit{sig}(m'_{1},sk_I))\}_{spk_{PI}} \textit{ in}  $
+$ \textit{if } \textit{check}((n'_p,n_i,spk_I),\textit{s}_1,pk_I) \textit{ then}  $  | $ \overline{\textit{ch}}(m_{1});  $
+$ \textit{if } n'_p = n_p \textit{ then}  $  |  $ \textit{ch}(m_{2});  $
+$ \textit{let } m'_{2} := ((n_i,P,I,n_h),\textit{sig}((n_i,P,I,n_h),sk_P)) \textit{ in}  $  | $ \textit{let } (((n'_i,P',I',n_h),\textit{s}_P),\textit{s}_2) := \textit{adec}(m_{2},ssk_I) \textit{ in}  $ 
+$ \textit{let } m_{2} := \{(m'_{2},\textit{sig}(m'_{2},ssk_{PI}))\}_{spk_I} \textit{ in}  $  | $ \textit{if } \textit{check}(((n'_i,P',I',n_h),\textit{s}_P),\textit{s}_2,spk_{PI}) \textit{ then}  $
+$ \overline{\textit{ch}}(m_{2});  $  | $ \textit{if } \textit{check}((n'_i,P',I'),\textit{s}_P,pk_P) \textit{ then}  $
+$ \textit{ch}(m_{3});  $  | $ \textit{if } (n'_i,P',I') = (n_i,P,I) \textit{ then}  $
+$ \textit{let } (((((P',attr,I'), \textit{s}_I), P'',n'_h), s_H), \textit{s}_3) := \textit{adec}(m_{3},ssk_{PI}) \textit{ in}  $  | $ \textit{let } {\textit{claims}} := (P, \textit{attr},I) \textit{ in}  $
+$ \textit{if } \textit{check}(((((P',attr,I'), \textit{s}_I), P'', n'_h), s_H)\textit{s}_3, spk_I) \textit{ then}  $  | $ \textit{let } {\textit{VC}} := ({\textit{claims}} ,\textit{sig}({\textit{claims}}, sk_I)) \textit{ in}  $ 
+$ \textit{if } \textit{check}((((P',attr,I'), \textit{s}_I), P'', n'_h), \textit{s}_H, spk_I) \textit{ then}  $  | $ \textit{let } m'_{3} := ((\textit{VC},P,n_H),\textit{sig}((\textit{VC},P,n_H),sk_I)) \textit{ in}  $ 
+$ \textit{if } \textit{check}((P',attr,I'), \textit{s}_I, pk_I) \textit{ then}  $  | $ \textit{let } m_{3} := \{(m'_{3},\textit{sig}(m'_{3},ssk_I))\}_{spk_{PI}} \textit{ in}  $
+$ \textit{if } (P',I',P''n'_h) = (P,I,P, n_h) \textit{ then}  $  | $ \overline{\textit{ch}}(m_{3});  $
+$!Prover (P, sk_P, {\textit{VC}}, V, pk_V)  $  |
 
-The verifer extracts the `sender's session public key` from the message and authenticates the integrity of the message.
-Then the verifier mints a new session key pair, mints their own nonce and creates a response message.
-The message includes the sender's nonce `n_p`, the verifier's nonce `n_v` and the `verifier's session public key`.
->Note/Question: Do we need to include the public key of the sender here to prevent MITM/relay of the message? Or is this already sufficiently adressed? To be discussed!
+### Part 2 - Provenance
 
-The message is signed by the `verifier's DID secret key`.
-> Note/Question: Do we need to sign the message using the session key as well? To be discussed!
-
-The message is encrypted using the `sender's session public key`.
-
->Note: In our setting, this was one HTTP(S) request and one HTTP(S) response between the client (prover) and authentication-authorization endpoint (verifier).
-
-The prover receives the message and decrypts it with its `session private key`, authenticates it with the `verifier's DID public key`.
-If the received nonce `n'_p` matches the original `n_p`, the verifier is authenticated to be in control of `the verifier's DID secret key` and thus to be assumed to be the verifier identified by their DID.
-Moreover, the prover now knows the `verifier's session public key`.
-> Note: So far, only the prover has authenticated the verifier.
-The verifier does not know anything yet to whom they are talking. So far - so standard for client-server interactions.
-
-### 2. Phase - Verifier/Server authenticates & authorizes Prover/Client
-
-The prover creates a new message that includes the desired resource's URI `u` and the verifier's nonce `n_v`. 
-The message is signed and then encrypted with the session keys and then send to the verifier (HTTP(S) request).
-
-The verifier decrypts and authenticates the integrity of the message using the session keys.
-If the received nonce `n'_v` matches the original nonce `n_v`, the verifier knows that this request came from the same sender as before and the sender is really in control of the session secret key.
->Note: So far, the verifier only knows they are talking to the same sender as before.
-
-The verifier looks up the ACR `r = (P,attr,I)` for resource u and mints a new nonce `n_c` which together form the new message.
-The new message is signed and encrypted using the session keys and send back to the sender (HTTP(S) response).
-
-> Note: Which ACR is chosen is up to the verifier. The verifier may simply send all the potentially applicable rules or just one of them - depending on how the rules are structured. For example, being a student may only be a first requirement. The prover would also need to be enrolled in a specific course as a second criterion. When the verifier wants to minimise disclosed information, they will only disclose the most general criterion, i.e., being a student, in the first round. Only after the prover has successfully proven to be a student, the verifier will ask for provenance of the course enrollment. 
-
-The prover decrypts and authenticates the integrity of the message.
-The prover checks if they hold any credential that matches the received rule `(P,attr,I)`.
-The matching credential is packaged together with the nonce `n_c` in a _Verifiable Presentation (VP)_ that is signed by the prover with their DID P secret key.
-This VP is then signed and encrypted using the session keys and send to the verifier (HTTP(S) request).
-
-The verifier decrypts and authenticates the integrity of the message.
-By extracting `P`from the credential presented in the VP and resolving the DID to its DID document, the verifier is able to obtain the `prover's DID public key`.
-The verifier authenticates the signature on the VP using that public key.
-If the received nonce `n'_c` matches the original nonce `n_c`, the verifier knows that this request came from the same sender as before and the sender is really in control of the session secret key and the `prover's DID secret key`.
->Note: As per assumption, agents are identified using DIDs and the assumption underlying any digital interaction is that secret keys are not shared with anyone else, the verifier could assume that the sender being in control over the prover's DID secret key is in-fact the prover. #authentication
-
-The verifier further evaluates if the received credential is valid and satisfies the ACR:
-The issuer DID is extracted from the credential.
-If the issuer DID from the credential matches the issuer DID required by the ACR, the resolved thereby yielding the `issuer's DID public key`.
-With that key, the signature of the credential is authenticated.
-If the attribute asserted by the valid credential matches the attribute required by the ACR, the verifier accepts the ACR to be verified.
-> Note: The verifier trusts that the asserted attributes of P are in-fact true. Moreover, the trust relationship from verifier to issuer already predates this interaction as the ACR predefined the specific issuer identified by their DID I to be required. #authorization
-
-As the prover has been successfully been authenticated to be in control of DID P's secret key and P to have an asserted attribute issued by DID I which matches the required ACR, the prover is authorized to access the resource.
-How that is implement exactly is a minor detail, be it via some access token (as indicated in our case) or direct resource access, is not relevant to the protocol at hand.
+Prover  $(P, sk_P, \textit{VC}, V, pk_V)$ | Verifier $(V, sk_V, {\textit{RULE}}, pk_P, pk_I, {\textit{URI}})$ 
+--- | ---
+$ \textit{new } ssk_{PV}, n_p;  $  | $ \textit{new } ssk_V, n_i, n_c, \textit{tkn};  $ 
+$ \textit{let } m'_{4} := (n_p,pk(ssk_{PV})) \textit{ in}  $  | $ \textit{ch}(m_{4});  $
+$ \textit{let } m_{4} := \{(m'_{4},\textit{sig}(m'_{4},ssk_{PV}))\}_{pk_V} \textit{ in}  $  | $ \textit{let } ((n_p,spk_{PV}),\textit{s}_4) := \textit{adec}(m_{4},sk_V) \textit{ in}  $
+$ \overline{\textit{ch}}(m_{4});  $  | $ \textit{if } \textit{check}((n_p,spk_{PV}),\textit{s}_4,spk_{PV}) \textit{ in}  $
+$ \textit{ch}(m_{5});  $  | $ \textit{let } m'_{5} := (n_p,n_v,pk(ssk_V)) \textit{ in}  $
+$ \textit{let } ((n'_p,n_v,spk_V),\textit{s}_5) := \textit{adec}(m_{5},ssk_{PV}) \textit{ in}  $  | $ \textit{let } m_{5} := \{ (m'_{5},\textit{sig}(m'_{5},sk_V)) \}_{spk_{PV}} \textit{ in}  $ 
+$ \textit{if } \textit{check}((n'_p,n_v,spk_V),\textit{s}_5,pk_V) \textit{ then}  $  | $ \overline{\textit{ch}}(m_{5});  $ 
+$ \textit{if } n'_p := n_p \textit{ then}  $  | $ \textit{ch}(m_{6});  $
+$ \textit{let } m'_{6} := (n_v, {\textit{URI}}) \textit{ in}  $  |  $ \textit{let } ((n'_v,uri'),\textit{s}_6)  := \textit{adec}(m_{6},ssk_V) \textit{ in}  $ 
+$ \textit{let } m_{6} := \{(m'_{6},\textit{sig}(m'_{6},ssk_{PV}))\}_{spk_V} \textit{ in}  $  | $ \textit{if } \textit{check}((n'_v,uri'),\textit{s}_6,spk_{PV}) \textit{ then} $  
+$ \overline{\textit{ch}}(m_{6})  $ | $ \textit{if} (n'_v,{\textit{URI}\, \\'}) = (n_v,{\textit{URI}}) \textit{ then}  $
+$ \textit{ch}(m_{7});  $  | $ \textit{let } m'_{7} := (n_c,{\textit{RULE}}) \textit{ in}  $ 
+$ \textit{let } ((n_c,\textit{RULE} ),\textit{s}_7) := \textit{adec}(m_{7},ssk_{PV}) \textit{ in}  $  | $ \textit{let } m_{7} := \{(m'_{7},\textit{sig}(m'_{7},ssk_V))\}_{spk_{PV}} \textit{ in}  $
+$ \textit{if } \textit{check}((n_c,\textit{RULE} ),\textit{s}_7,spk_V) \textit{ then}  $  | $ \overline{\textit{ch}}(m_{7});  $ 
+$ \textit{let } (\textit{claims},\textit{s}_{I}):=\textit{VC}  \textit{ in}  $  | $ \textit{ch}(m_{8});  $
+$ \textit{if } \textit{claims}=\textit{RULE} \textit{ then}  $  | $ \textit{let } (((((P',attr',I'), \textit{s}_I),n'_c,V'), \textit{s}_P ),\textit{s}_8) := \textit{adec}(m_{8},ssk_V) \textit{ in}  $
+$ \textit{let } {\textit{VP}} := (({\textit{VC}},n_c,V), \textit{sig}(({\textit{VC}},n_c,V),sk_P)) \textit{ in}  $  | $ \textit{if } \textit{check}(((((P',attr',I'), \textit{s}_I),n'_c,V'), \textit{s}_P ),\textit{s}_8,spk_{PV}) \textit{ then} $
+$ \textit{let } m_{8} := \{{\textit{VP}},\textit{sig}({\textit{VP}},ssk_{PV})\}_{spk_V} \textit{ in}  $  | $ \textit{if } \textit{check}((((P',attr',I'), \textit{s}_I),n'_c,V'), \textit{s}_P, pk_P) \textit{ then} $
+$ \overline{\textit{ch}}(m_{8})  $  | $ \textit{if } \textit{check}((P',attr',I'), \textit{s}_I, pk_I) \textit{ then} $
+$ \textit{ch}(m_{9})  $  | $ \textit{if } ((P',attr',I'),n'_c,V') = ((P,attr,I),n_c,V) \textit{ then} $
+$ \textit{let }((\textit{tkn},\textit{s}_\textit{tkn}),\textit{s}_9) := (\textit{adec}(m_{9},ssk),spk_V) \textit{ in}  $  | $ \textit{let } m'_{9} := (\textit{tkn},\textit{sig}(\textit{tkn},sk_V)) \textit{ in}  $ 
+$ \textit{if } \textit{check}((\textit{tkn},\textit{s}_\textit{tkn}),\textit{s}_9,spk_V) \textit{ then}  $  | $ \textit{let } m_{9} := \{\textit{sig}(m'_{9},ssk_V)\}_{spk_{PV}} \textit{ in}  $
+$ \textit{if } \textit{check}(\textit{tkn},\textit{s}_\textit{tkn},pk_V) \textit{ then}  $  | $ \overline{\textit{ch}}(m_{9}); $ 
+### Setup
 
 
-## Thread model
-1. URI `u` is a malicious URI, and does not identify or yield the desired resource (_phishing attack_ -> no solution, just excluded per assumption).
-2. The HTTPS response from the desired resource includes a malicious agent's DID as verifier (_man-in-the-middle attack_ -> adressed per HTTPS, except in case of thread 1).
-3. Message `(n_p,n_v,spk_v)` could be relayed to any agent as it does not include the recipients session public key. (_man-in-the-middle attack_ -> is this really necessary or just necessary in general?)
-4. ...?
-5. Dishonest issuer: That is the problem of the verifier. If the verifier trusts a dishonest issuer, it can't be mitigated.
-    - Take the dishonest CA for TLS certificates for example, just a big mess.
-6. Dishonest verifier: 
-    - a VC phisher?
-    - needs to be in control over resource u 
-7. Dishonest prover: 
-    - case (a): prover not in control over DID P 
-        -> cannot present a valid VP of a credential issued to P.
-    - case (b): prover in control over DID P, but prover is not the same agent that was issued credential by I.
-    (identity sharing)
-        -> isnt this the same as for any identity sharing?
+Issuer $(I, sk_I, attr, P, pk_P)$ | Holder $(P, sk_P, I, pk_I, V, pk_V)$ |  Verifier $(V, sk_V, {\textit{RULE}=(P,attr,I)}, pk_P, pk_I, {\textit{URI}})$ 
+--- | --- | ---
+$ \textit{let } pk_I := \textit{getPubKey}(I) \textit{ in}  $ | $ \textit{let } pk_P := \textit{getPubKey}(P) \textit{ in}  $ | $ \textit{let } pk_V := \textit{getPubKey}(V) \textit{ in}  $ 
+$ \textit{let } pk_I = \textit{getPubKey}(proj_{2}({\textit{VC}\,\\'})  $ | $ \textit{let } pk_P := \textit{getPubKey}(proj_{1}(m'_{2})) \textit{ in}  $ 
 
-### References
-[1] https://www.w3.org/TR/did-core/  
-[2] https://identity.foundation/didcomm-messaging/spec/  
+
+### Configuration
+
+$ $ | $ $
+--- | ---
+$\textit{new } sk_I, sk_P, sk_V;  $ | 
+$\overline{ch}((pk(sk_I), pk(sk_P), pk(sk_V))); $ |
+$!\textit{Issuer}^{honest}(I, sk_I, \textit{attr}, P, pk(sk_P))    \mid       $ |
+$!\textit{Holder}^{honest}(P, sk_P, I, pk(sk_I), V, pk(sk_V))          \mid   $ |
+$!\textit{Verifier}^{honest}(V, sk_V, {(  P,   attr,   I  )}, pk(sk_P), pk(sk_I), {\textit{URI}})     \mid   $ |
+$connect(EasP, pk_{EasP}); $ |
+$\textit{Issuer}^{open}(I, sk_I, \textit{attr}, EasP, pk_{EasP}) ~\mid$ |
+$connect(EasI, pk_{EasI}, EasV, pk_{EasV}); $ |
+$\textit{Holder}^{open}(P, sk_P, EasI, pk_{EasI}, EasV, pk_{EasV})          \mid  $ |
+$connect(EasP, pk_{EasP}, EasI, pk_{EasI}); $
+$\textit{Verifier}^{open}(V, sk_V, {(  EasP,   attr,   EasI )}, pk_{EasP}, pk_{EasI}, {\textit{URI}});  $ |
+
