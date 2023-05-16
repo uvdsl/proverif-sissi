@@ -96,7 +96,7 @@ $\textit{if } \textit{check}((n'\_p,n\_v,spk\_V),\textit{s}\_5,pk\_V) \textit{ t
 $\textit{if } n'\_p := n\_p \textit{ then}$  | $\textit{ch}(m\_{6}); $
 $\textit{let } m'\_{6} := (n\_v, {\textit{URI}}) \textit{ in}$  | $\textit{let } ((n'\_v,uri'),\textit{s}\_6)  := \textit{adec}(m\_{6},ssk\_V) \textit{ in}$ 
 $\textit{let } m\_{6} := \{(m'\_{6},\textit{sig}(m'\_{6},ssk\_{PV}))\}\_{spk\_V} \textit{ in}$  | $\textit{if } \textit{check}((n'\_v,uri'),\textit{s}\_6,spk\_{PV}) \textit{ then}$  
-$\overline{\textit{ch}}(m\_{6}) $ | $\textit{if} (n'\_v,{\textit{URI}\, \\'}) = (n\_v,{\textit{URI}}) \textit{ then}$
+$\overline{\textit{ch}}(m\_{6}) $ | $\textit{if} (n'\_v,{\textit{URI} \'}) = (n\_v,{\textit{URI}}) \textit{ then}$
 $\textit{ch}(m\_{7}); $  | $\textit{let } m'\_{7} := (n\_c,{\textit{RULE}}) \textit{ in}$ 
 $\textit{let } ((n\_c,\textit{RULE} ),\textit{s}\_7) := \textit{adec}(m\_{7},ssk\_{PV}) \textit{ in}$  | $\textit{let } m\_{7} := \{(m'\_{7},\textit{sig}(m'\_{7},ssk\_V))\}\_{spk\_{PV}} \textit{ in}$
 $\textit{if } \textit{check}((n\_c,\textit{RULE} ),\textit{s}\_7,spk\_V) \textit{ then}$  | $\overline{\textit{ch}}(m\_{7}); $ 
