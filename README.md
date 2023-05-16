@@ -115,7 +115,7 @@ $\textit{if } \textit{check}(\textit{tkn},\textit{s}\_\textit{tkn},pk\_V) \texti
 Issuer $(I, sk\_I, attr, P, pk\_P)$ | Holder $(P, sk\_P, I, pk\_I, V, pk\_V)$ |  Verifier $(V, sk\_V, {\textit{RULE}=(P,attr,I)}, pk\_P, pk\_I, {\textit{URI}})$ 
 --- | --- | ---
 $\textit{let } pk\_I := \textit{getPubKey}(I) \textit{ in}$ | $\textit{let } pk\_P := \textit{getPubKey}(P) \textit{ in}$ | $\textit{let } pk\_V := \textit{getPubKey}(V) \textit{ in}$ 
-$\textit{let } pk\_I = \textit{getPubKey}(proj\_{2}({\textit{VC}\,\\'}) $ | $\textit{let } pk\_P := \textit{getPubKey}(proj\_{1}(m'\_{2})) \textit{ in}$ 
+$\textit{let } pk\_I = \textit{getPubKey}(proj\_{2}({\textit{VC} \'}) $ | $\textit{let } pk\_P := \textit{getPubKey}(proj\_{1}(m'\_{2})) \textit{ in}$ 
 
 
 ### Configuration
