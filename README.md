@@ -28,7 +28,10 @@ This VP includes the VC and some additional meta data, and is typically signed b
 In this way, the professor's Web server can verify the above mentioned facts (1)-(4).
 The use case is generaliseable to general accessing resources on the Web.
 
-
+How do the students know that they are really talking to the professor (or his Web server) when authenticating online?
+The students may look up the personal homepage of the professor where the professor's identifier (the professor's DID) is advertised.
+With that, the system relies on the Domain Name System (DNS) and the transport protocol of HTTPS to ensure that agents are able to be identified correctly.
+Other approaches, as mentioned below, may include government registries, governed blockchains or smart contracts.
 
 ## Assumptions:
 - The __Self-Sovereign Identity (SSI) assumption__:  
@@ -36,7 +39,7 @@ All agents can mint and manage a keypairs in a self-sovereign manner.
 - The __Decentralised Identifier (DID) assumption__:  
 All agents assume that the (integrity of the) link between DID of an agent, the thereby advertised public key and corresponding secret key can be trusted, in the sense that we assume that only the controller of the DID (the agent in control of the corresponding secret key) is able to modify/update the public key linked to the DID.
 Each agent is thus assumed to keep the link between the DID, the thereby advertised their public key and their corresponding secret key, intact (meaning they use the corresponding secret key in communication).
-Possible implementations e.g. via certification in Government Registries , Governed Blockchains or Smart Contracts.
+Possible implementations e.g. via certification using DNS, in government registries, governed blockchains or smart contracts.
 - The __Verifier-Issuer assumption__:  
 The verifier assumes the issuer to have due diligence on validating the assertions they make, e.g. that Holder is actually a student (which may be out-of-band).
 The verifier thus assumes that the issuer behaves honestly according to the protocol (given the context of the use case).
