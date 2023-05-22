@@ -284,7 +284,7 @@ let holderU(sk, sk', issuerDID, verifierDID) (* input ~ what the agent starts wi
     if recipientDID = genDID(pk(sk),sk) then
     if getIssuerFromVC(credential) = issuerDID then
     (* TODO validate credential *)
-    if verify(credential, pk_i) = attr then
+    if verify(credential, pk_i) = attr then  (* <=== ESSENTIAL CHECK OF SIG FOR UNLINKABILITY (not required for authentication interestingly *)
     (* event received_access_token; and I am the recipient *)
     (* Prover about to complete protocol! *)
 
@@ -293,7 +293,7 @@ let holderU(sk, sk', issuerDID, verifierDID) (* input ~ what the agent starts wi
     (
     !^1 prover(sk, credential, verifierDID, pk_i)
     |
-    let credential' = sign(( genDID(pk(sk'),sk'), attr, issuerDID), sk_issuer) in 
+    let credential' = sign(( attr, issuerDID), sk_issuer) in 
     !^1 prover(sk', credential', verifierDID, pk_i) 
     ).
 
