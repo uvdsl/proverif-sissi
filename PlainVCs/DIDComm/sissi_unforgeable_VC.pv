@@ -182,7 +182,7 @@ let verifier(DID_V:DID, sk_V:SecretKey, rule:bitstring, pk_P:PublicKey, pk_I:Pub
     (* phase 1 ; *)
     if talksOnlyToHonest then
     (* event_at_the_very_end_of_role_R_in_parallel_with_secrecy_checks *)
-    event auth_VerifierCompletesProtocol((DID'_P,attr',DID'_I, sigVal_I)) |
+    event auth_VerifierCompletesProtocol(sigVal_I) |
     out(ch((m'_5,sig(m'_5,sk_V))),m'_5_fromVerifier) |
     out(ch(rule), rule_fromVerifier) |
     out(ch( ( m'_7, sig(m'_7,ssk_V) )), m'_7_fromVerifier) |
@@ -262,7 +262,7 @@ let issuer(DID_I:DID, sk_I:SecretKey, attr:bitstring, DID_P:DID, pk_P:PublicKey,
     let m'_3 = ((VC,DID_P,n_h), sig((VC,DID_P,n_h),sk_I)) in
     let m_3 = aenc( (m'_3,sig(m'_3,ssk_I)),spk_P) in
     (* event_just_before_the_last_send_message_of_S *)
-    event auth_IssuerSendsLastMessageToHolder(VC);
+    event auth_IssuerSendsLastMessageToHolder(sig(claims, sk_I));
     out(h, m_3);
     (* Issuer about to complete the protocol *)
     out(h, Issuer_Completes);
@@ -284,27 +284,6 @@ query attacker(Prover_Completes).
 query attacker(Verifier_Completes).
 *)
 
-(* SECRECY *)
-
-query attacker(m'_0_fromHolder).
-query attacker(m'_1_fromIssuer).
-query attacker(m'_2_fromHolder).
-query attacker(m'_3_fromIssuer).
-query attacker(m'_4_fromProver).
-query attacker(m'_5_fromVerifier). 
-query attacker(m'_6_fromProver).
-query attacker(m'_7_fromVerifier).
-query attacker(m'_8_fromProver).  
-query attacker(m'_9_fromVerifier).
-
-query attacker(rule_fromVerifier). (* basically public, as it is discoverable by an attacker by simply asking the verifier*)
-query attacker(cred_fromVerifier). (* can be leaked in our model, as the prover explicitly/knowlingly talks to otherAgent (attacker) trying to authenticate with them (dishonest verifier) *)
-query attacker(vp_fromVerifier). 
-query attacker(access_token_fromVerifier). (* should be private, even with the credential leaked (this is the actual token, not the message containing it) *)
-
-(*query attacker(cred_fromHolder). *) (* can be leaked in our model, as the prover explicitly/knowlingly talks to otherAgent (attacker) trying to authenticate with them (dishonest verifier) *)
-(*query attacker(cred_fromIssuer).*)  (* can be leaked in our model, as the prover explicitly/knowlingly talks to otherAgent (attacker) trying to authenticate with them (dishonest verifier) *)
-
 
 (* AUTHETNICATION *)
 
@@ -317,31 +296,32 @@ query  VC:bitstring;
 
 (* MAIN *)
 
+
+
 free sk_E:SecretKey. (*other agent may or may not be honest, but we don't know*)
 process (*use root process for setup *)
     (*declare secret keys*)
     new sk_I:SecretKey;
-    new sk_P:SecretKey;
+    new sk_V:SecretKey;
     (*advertise public keys*)
     out(h,pk(sk_I));
-    out(h,pk(sk_P));
+    out(h,pk(sk_V));
     (*advertise DIDs*)
     let DID_I = genDID(pk(sk_I),sk_I) in
-    let DID_P = genDID(pk(sk_P),sk_P) in
+    let DID_V = genDID(pk(sk_V),sk_V) in
     let DID_E = genDID(pk(sk_E),sk_E) in
     out(h,DID_I);
-    out(h,DID_P);
+    out(h,DID_V);
     out(h,DID_E);
     
-    let rule_PI    = ( DID_P, attr, DID_I ) in 
     let rule_EI = ( DID_E, attr, DID_I ) in 
-    let rule_PE = ( DID_P, attr, DID_E ) in
     let rule_EE = ( DID_E, attr, DID_E ) in
 
     (*let agents dance*)
     ( (
-         !issuer   (DID_I, sk_I, attr, DID_P, pk(sk_P), true)      
-       | !issuer   (DID_I, sk_I, attr, DID_E, pk(sk_E), false)  
-       | !verifier (DID_E, sk_E, rule_EI, pk(sk_E), pk(sk_I), true)
-       | !verifier (DID_E, sk_E, rule_EE, pk(sk_E), pk(sk_E), false) 
+         !issuer   (DID_I, sk_I, attr, DID_E, pk(sk_E), false)  
+       | !verifier (DID_V, sk_V, rule_EI, pk(sk_E), pk(sk_I), true)    
+       | !verifier (DID_V, sk_V, rule_EE, pk(sk_E), pk(sk_E), false) 
     ) )
+
+
