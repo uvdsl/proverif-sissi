@@ -182,7 +182,7 @@ let verifier(DID_V:DID, sk_V:SecretKey, rule:bitstring, pk_P:PublicKey, pk_I:Pub
     (* phase 1 ; *)
     if talksOnlyToHonest then
     (* event_at_the_very_end_of_role_R_in_parallel_with_secrecy_checks *)
-    event auth_VerifierCompletesProtocol(sigVal_I) |
+    event auth_VerifierCompletesProtocol((DID'_P,attr',DID'_I, sigVal_I)) |
     out(ch((m'_5,sig(m'_5,sk_V))),m'_5_fromVerifier) |
     out(ch(rule), rule_fromVerifier) |
     out(ch( ( m'_7, sig(m'_7,ssk_V) )), m'_7_fromVerifier) |
