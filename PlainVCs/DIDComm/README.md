@@ -33,4 +33,4 @@ A short description of the other files, marked as OK (the security properties ar
 - __No. 9__, [sissi_unlinkable.dps](sissi_unlinkable.dps), illustrates _unlinkability_ from the perspective of the issuer. It proves that, after issuing a credential, it is impossible for the issuer to track how it is used with honest verifier.
 - __No. 10__, [sissi_attack_verifier_unlinkablity.dps](sissi_attack_verifier_unlinkablity.dps), illustrates a stronger property, i.e., _unlinkability from the perspective of both the issuer
 and verifier_, which further ensures that verifiers cannot link two uses of the
-same credential. This __property cannot be achieved for plain Verifiable Credentials__, since the identifier of the holder appears in each verifiable presentation.
+same credential. This __property cannot be achieved for plain Verifiable Credentials__, since the identifier of the holder appears in each Verifiable Presentation.
