@@ -26,18 +26,18 @@ $Protocol$ | $Property$ | $No.$ | $Relative Path$ | $OK$ | $Attack$
  | | Agreement | 12 | [sissi.pv#L319](AnonVCs/DIDComm/sissi.pv#L319) |  [x]  | [ ]
 | | Unlinkability | 13 | [sissi_unlinkablity_ok_wrt_verifier.dps](AnonVCs/DIDComm/sissi_unlinkablity_ok_wrt_verifier.dps) |  [x]  | [ ]
 |||||
-[Plain VCs + Diffie-Hellman](PlainVCs/DIDComm%2BDH/) | Secrecy | 14 | [sissi.pv#L302](PlainVCs/DIDComm%2BDH//sissi.pv#L302) |  [x]  | [ ]
- | | Agreement | 15 | [sissi.pv#L324](PlainVCs/DIDComm%2BDH//sissi.pv#L324) |  [x]  | [ ]
+[Plain VCs + Diffie-Hellman](PlainVCs/DIDComm%2BDH/) | Secrecy | 14 | [sissi.pv#L302](PlainVCs/DIDComm%2BDH/sissi.pv#L302) |  [x]  | [ ]
+ | | Agreement | 15 | [sissi.pv#L324](PlainVCs/DIDComm%2BDH/sissi.pv#L324) |  [x]  | [ ]
 |||||
-[Anon VCs + Diffie-Hellmann](AnonVCs/DIDComm%2BDH//) | Secrecy | 16 | [sissi.pv#L312](AnonVCs/DIDComm%2BDH//sissi.pv#L312) |  [x]  | [ ]
- | | Agreement | 17 | [sissi.pv#L334](AnonVCs/DIDComm%2BDH//sissi.pv#L334) |  [x]  | [ ]
+[Anon VCs + Diffie-Hellmann](AnonVCs/DIDComm%2BDH/) | Secrecy | 16 | [sissi.pv#L312](AnonVCs/DIDComm%2BDH/sissi.pv#L312) |  [x]  | [ ]
+ | | Agreement | 17 | [sissi.pv#L334](AnonVCs/DIDComm%2BDH/sissi.pv#L334) |  [x]  | [ ]
 |||||
 
 For more detailled information, visit the corresponding "protocol directories", i.e., 
 - [Plain VCs](PlainVCs/DIDComm/) for an instance of the protocol using plain/simple Verifiable Credentials (VCs) and DIDComm (which is typically the instance of the protocol we refer to), 
 - [Anon VCs](AnonVCs/DIDComm/) for an instance of the protocol using anonymous credentials and DIDComm, 
-- [Plain VCs + Diffie-Hellmann](PlainVCs/DIDComm%2BDH//) for an instance of the protocol using plain/simple Verifiable Credentials (VCs) and a Diffie-Hellmann handshake, and 
-- [Anon VCs + Diffie-Hellmann](AnonVCs/DIDComm%2BDH//) for an instance of the protocol using anonymous credentials and a Diffie-Hellmann handshake.
+- [Plain VCs + Diffie-Hellmann](PlainVCs/DIDComm%2BDH/) for an instance of the protocol using plain/simple Verifiable Credentials (VCs) and a Diffie-Hellmann handshake, and 
+- [Anon VCs + Diffie-Hellmann](AnonVCs/DIDComm%2BDH/) for an instance of the protocol using anonymous credentials and a Diffie-Hellmann handshake.
 
 ## Idea
 
