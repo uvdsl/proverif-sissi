@@ -1,6 +1,6 @@
 # SISSI Authentication and Authorization Protocol in ProVerif (and DeepSec)
 
-This repository contains the formal verification of security properties of the protocol flow for authentication and authorization from the [SISSI architecture](https://dl.acm.org/doi/abs/10.1145/3543507.3583409), an SSI authentication protocol.
+This repository contains the formal verification of security properties of the protocol flow for authentication and authorization from the [SISSI architecture](https://dl.acm.org/doi/abs/10.1145/3543507.3583409).
 We use [ProVerif](https://bblanche.gitlabpages.inria.fr/proverif/) for proving _secrecy_ and _agreement_, and use [DeepSec](https://doi.org/10.1109/SP.2018.00033) for proving _unlinkability_.
 
 ## Repository Outline
