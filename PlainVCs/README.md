@@ -23,3 +23,15 @@ $Protocol$ | $Property$ | $No.$ | $Relative Path$ | $OK$ | $Attack$
 [Plain VCs + Diffie-Hellman](DIDComm%2BDH/) | Secrecy | 14 | [sissi.pv#L302](DIDComm%2BDH/sissi.pv#L302) |  [x]  | [ ]
  | | Agreement | 15 | [sissi.pv#L324](DIDComm%2BDH/sissi.pv#L324) |  [x]  | [ ]
 |||||
+
+## Documentation (doc)
+
+In [doc](doc), you will find Message Sequence Charts (MSCs) that illustrate the protocol and variations of the protocol that are prone to attacks. 
+
+$MSC$ | $Description$
+---|--- 
+[msc-full-protocol.pdf](doc/msc-full-protocol.pdf) | An illustration of the protocol, using the current notation (as introduced in the top-level [README.md](../README.md)). It corresponds to the Proverif code in [DIDComm/sissi.pv](DIDComm/sissi.pv).
+[msc-protocol.pdf](doc/msc-protocol.pdf) | An illustration of the protocol, using an old notation. It corresponds to the archived Proverif code in [DIDComm/archive/sissi_multiparty_agreement.pv](DIDComm/archive/sissi_multiparty_agreement.pv).
+[msc-mitm-attack.pdf](doc/msc-mitm-attack.pdf) | An illustration of an attack on the protocol, when the domain, i.e., the intended verifier, of an credential presentation, is omitted. An attack is able to replay a credential presentation. The MSC uses the old notation and corresponds to the Proverif code in [DIDComm/sissi_attack_domain_missing_replay.pv](DIDComm/sissi_attack_domain_missing_replay.pv), which we already updated to the new notation. (Updating the MSC notation is on the TODO list.)
+[msc-njagreement-attack.pdf](doc/msc-njagreement-attack.pdf.pdf) | An illustration of an attack on the protocol, when the holder, i.e., the recipient of a freshly issued credential, does not check and verify the received credential. This results in a potential re-issuance by an attacker using an already issued credential by an honest issuer, thereby violating multi-party agreement. The MSC uses the old notation and corresponds to the Proverif code in [DIDComm/sissi_attack_VC_reissued.pv](DIDComm/sissi_attack_VC_reissued.pv), which we already updated to the new notation. (Updating the MSC notation is on the TODO list.)
+[msc_anon_multiparty_agreement_dh.pdf](doc/msc_anon_multiparty_agreement_dh.pdf) | A hand-scribbled concept on how to use a Diffie-Hellmann (DH) handshake within the protocol. This was the basis for exploring DIDComm+DH where we do not use DIDComm's _authcrypt_ on every message.
