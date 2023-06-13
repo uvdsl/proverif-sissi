@@ -33,6 +33,8 @@ $Protocol$ | $Property$ | $No.$ | $Relative Path$ | $OK$ | $Attack$
  | | Agreement | 17 | [sissi.pv#L334](AnonVCs/DIDComm%2BDH/sissi.pv#L334) |  [x]  | [ ]
 |||||
 
+For a description of the potential attacks when deviating from the protocol, visit the [Plain VCs](PlainVCs/) parent directory.
+
 For more detailled information, visit the corresponding "protocol directories", i.e., 
 - [Plain VCs](PlainVCs/DIDComm/) for an instance of the protocol using plain/simple Verifiable Credentials (VCs) and DIDComm (which is typically the instance of the protocol we refer to), 
 - [Anon VCs](AnonVCs/DIDComm/) for an instance of the protocol using anonymous credentials and DIDComm, 
