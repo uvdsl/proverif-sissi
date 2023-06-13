@@ -38,7 +38,50 @@ $MSC$ | $Description$
 
 ---
 
-# Description of Attacks
+# Description of Attacks 
 
 When not following the protocol but, e.g., omitting fields that are marked as "optional" by SSI specifications, the following attacks may be possible.
+
+## No. 6 - Replay Attack when omitting `domain`.
+According to the W3C recommendation on the VC data model, including the `domain`, e.g., the receiving agent or a Web domain to authenticate with, is optional.
+Moreover, the function or meaning of `domain` is not even explained in the specification which may lead implementors to just skip over a seemingly unimportant element.
+
+In doing so, however, authentication protocols are prone to replay attacks as illustrated in the [MSC](doc/msc-mitm-attack.pdf) and the Proverif [code](DIDComm/sissi_attack_domain_missing_replay.pv):
+A holder, e.g., a student wants to authenticate to Eve, e.g., for some student discount at some online shop. 
+In the authentication process, Eve also authenticates to the holder; the holder knows that they are communicating with Eve and present to them a Verifiable Presentation (VP) of the student credential.
+This process may even complete successfully and the student may even receive their student discount.
+During this authentication process, however, Eve starts a second authentication process with another verifier, e.g., a university to prove that she is a student, except she is not.
+Eve replays content of transmitted messages from the university to the student and vice versa.
+For example, Eve is able to replay the challenge nonce $\texttt{n}_\texttt{c}$ from the university to the holder. 
+Subsequently, this nonce is included in the presentation of the student VC and signed by the holder.
+After receiving this presentation, Eve replays this presentation to the university.
+With the matching nonce and the signature of the holder on this VP, the university may be tempted to believe that they were communication with the holder the whole time, except they were communicating with Eve posing to be the actual holder.
+
+
+By including the `domain` in the VP, such replay attacks are prevented.
+When the holder specifies Eve to be the intended recipient of the VP, Eve can not re-use that VP to authenticate to the university as the university will check if they are really the intended recipient of that VP. 
+
+
+## No. 7 - Replay Attack when omitting `nonce`.
+According to the W3C recommendation on the VC data model, including the `nonce`, e.g., a cryptographic challenge from a potential verifier, is optional.
+Moreover, the function or meaning of `nonce` is not even explained in the specification which may lead implementors to just skip over a seemingly unimportant element.
+
+In doing so, however, authentication protocols are prone to replay attacks as illustrated in the Proverif [code](DIDComm/sissi_attack_no_nonce_VP_leaked.pv).
+A holder, e.g., a student wants to authenticate to their university, e.g., to get access to online course material. 
+The student signs a VP and authenticates to the university using it.
+If this VP is leaked, e.g., because the log files of the university were exposed (line 192 in the code), any agent in possession of that student's VP is now able to authenticate to the university as that agent; the VP is not longer tied to a particular communication session. 
+
+
+## No. 8 - Replay Attack when not checking VC as holder.
+
+There even exist non-trivial attacks on the protocol when considering the multi-party aspect in particular as illustrated in the [MSC](doc/msc-njagreement-attack.pdf) and the Proverif [code](DIDComm/sissi_attack_VC_reissued.pv):
+During the issuance of a VC, the holder must authenticate the issuer and check that the received VC is actually what they expected.
+Otherwise, the security property of multiparty non-injective agreement is not met.
+
+In a nutshell, the attack begins with a non-altered full execution of the protocol:
+The VC is issued by an issuer to the holder and used to authenticate to a verifier.
+Then, however, the verifier, i.e., Eve, re-issues the received VC to the holder again.
+When the holder simply acknowledges the "new" credential without any checks, i.e., lines 225 and 226 are commented out in the [code](DIDComm/sissi_attack_VC_reissued.pv#L225), and then proceeds to use it, the desired security property does not hold.
+By simply checking that the received VC was received from the desired agent,  laissued by the desired agent and includes the desired attributes, this attack can be mitigated.
+
 
