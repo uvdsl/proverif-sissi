@@ -11,35 +11,35 @@ The structure of our GitHub repository.
 $Protocol$ | $Property$ | $No.$ | $Relative Path$ | $OK$ | $Attack$ 
 ---|---|---|---|---|---
 |||||
-[Plain VCs](PlainVCs/DIDComm/) | Secrecy | 1 | [sissi.pv#L287](PlainVCs/DIDComm/sissi.pv#L287) |  [x]  | [ ]
- | | | 2 | [archive/sissi_forward_secrecy.pv](PlainVCs/DIDComm/archive/sissi_forward_secrecy.pv) |  [x]  | [ ]
- | | Agreement | 3 | [sissi.pv#L309](PlainVCs/DIDComm/sissi.pv#L309) |  [x]  | [ ]
- | | | 4 | [sissi_ok_VP_leaked.pv](PlainVCs/DIDComm/sissi_ok_VP_leaked.pv) |  [x]  | [ ]
- | | | 5 | [sissi_unforgeable_VC.pv](PlainVCs/DIDComm/sissi_unforgeable_VC.pv) |  [x]  | [ ]
-| | | 6 | [sissi_attack_domain_missing_replay.pv](PlainVCs/DIDComm/sissi_attack_domain_missing_replay.pv) |  [ ] | [x] 
-| | | 7 | [sissi_attack_no_nonce_VP_leaked.pv](PlainVCs/DIDComm/sissi_attack_no_nonce_VP_leaked.pv) |  [ ] | [x] 
-| | | 8 | [sissi_attack_VC_reissued.pv](PlainVCs/DIDComm/sissi_attack_VC_reissued.pv) |  [ ] | [x] 
-| | Unlinkability | 9 | [sissi_unlinkable.dps](PlainVCs/DIDComm/sissi_unlinkable.dps) |  [x]  | [ ]
-| | | 10 | [sissi_attack_verifier_unlinkablity.dps](PlainVCs/DIDComm/sissi_attack_verifier_unlinkablity.dps) |  [ ] | [x] 
+[Plain VCs](./PlainVCs/DIDComm/) | Secrecy | 1 | [sissi.pv#L287](./PlainVCs/DIDComm/sissi.pv#L287) |  [x]  | [ ]
+ | | | 2 | [archive/sissi_forward_secrecy.pv](./PlainVCs/DIDComm/archive/sissi_forward_secrecy.pv) |  [x]  | [ ]
+ | | Agreement | 3 | [sissi.pv#L309](./PlainVCs/DIDComm/sissi.pv#L309) |  [x]  | [ ]
+ | | | 4 | [sissi_ok_VP_leaked.pv](./PlainVCs/DIDComm/sissi_ok_VP_leaked.pv) |  [x]  | [ ]
+ | | | 5 | [sissi_unforgeable_VC.pv](./PlainVCs/DIDComm/sissi_unforgeable_VC.pv) |  [x]  | [ ]
+| | | 6 | [sissi_attack_domain_missing_replay.pv](./PlainVCs/DIDComm/sissi_attack_domain_missing_replay.pv) |  [ ] | [x] 
+| | | 7 | [sissi_attack_no_nonce_VP_leaked.pv](./PlainVCs/DIDComm/sissi_attack_no_nonce_VP_leaked.pv) |  [ ] | [x] 
+| | | 8 | [sissi_attack_VC_reissued.pv](./PlainVCs/DIDComm/sissi_attack_VC_reissued.pv) |  [ ] | [x] 
+| | Unlinkability | 9 | [sissi_unlinkable.dps](./PlainVCs/DIDComm/sissi_unlinkable.dps) |  [x]  | [ ]
+| | | 10 | [sissi_attack_verifier_unlinkablity.dps](./PlainVCs/DIDComm/sissi_attack_verifier_unlinkablity.dps) |  [ ] | [x] 
 |||||
-[Anon VCs](AnonVCs/DIDComm/) | Secrecy | 11 | [sissi.pv#L297](AnonVCs/DIDComm/sissi.pv#L297) |  [x]  | [ ]
- | | Agreement | 12 | [sissi.pv#L319](AnonVCs/DIDComm/sissi.pv#L319) |  [x]  | [ ]
-| | Unlinkability | 13 | [sissi_unlinkablity_ok_wrt_verifier.dps](AnonVCs/DIDComm/sissi_unlinkablity_ok_wrt_verifier.dps) |  [x]  | [ ]
+[Anon VCs](./AnonVCs/DIDComm/) | Secrecy | 11 | [sissi.pv#L297](./AnonVCs/DIDComm/sissi.pv#L297) |  [x]  | [ ]
+ | | Agreement | 12 | [sissi.pv#L319](./AnonVCs/DIDComm/sissi.pv#L319) |  [x]  | [ ]
+| | Unlinkability | 13 | [sissi_unlinkablity_ok_wrt_verifier.dps](./AnonVCs/DIDComm/sissi_unlinkablity_ok_wrt_verifier.dps) |  [x]  | [ ]
 |||||
-[Plain VCs + Diffie-Hellman](PlainVCs/DIDComm%2BDH/) | Secrecy | 14 | [sissi.pv#L302](PlainVCs/DIDComm%2BDH/sissi.pv#L302) |  [x]  | [ ]
- | | Agreement | 15 | [sissi.pv#L324](PlainVCs/DIDComm%2BDH/sissi.pv#L324) |  [x]  | [ ]
+[Plain VCs + Diffie-Hellman](./PlainVCs/DIDComm%2BDH/) | Secrecy | 14 | [sissi.pv#L302](./PlainVCs/DIDComm%2BDH/sissi.pv#L302) |  [x]  | [ ]
+ | | Agreement | 15 | [sissi.pv#L324](./PlainVCs/DIDComm%2BDH/sissi.pv#L324) |  [x]  | [ ]
 |||||
-[Anon VCs + Diffie-Hellmann](AnonVCs/DIDComm%2BDH/) | Secrecy | 16 | [sissi.pv#L312](AnonVCs/DIDComm%2BDH/sissi.pv#L312) |  [x]  | [ ]
- | | Agreement | 17 | [sissi.pv#L334](AnonVCs/DIDComm%2BDH/sissi.pv#L334) |  [x]  | [ ]
+[Anon VCs + Diffie-Hellmann](./AnonVCs/DIDComm%2BDH/) | Secrecy | 16 | [sissi.pv#L312](./AnonVCs/DIDComm%2BDH/sissi.pv#L312) |  [x]  | [ ]
+ | | Agreement | 17 | [sissi.pv#L334](./AnonVCs/DIDComm%2BDH/sissi.pv#L334) |  [x]  | [ ]
 |||||
 
-For a description of the potential attacks when deviating from the protocol, visit the [Plain VCs](PlainVCs/) parent directory.
+For a description of the potential attacks when deviating from the protocol, visit the [Plain VCs](./PlainVCs/) parent directory.
 
 For more detailled information, visit the corresponding "protocol directories", i.e., 
-- [Plain VCs](PlainVCs/DIDComm/) for an instance of the protocol using plain/simple Verifiable Credentials (VCs) and DIDComm (which is typically the instance of the protocol we refer to), 
-- [Anon VCs](AnonVCs/DIDComm/) for an instance of the protocol using anonymous credentials and DIDComm, 
-- [Plain VCs + Diffie-Hellmann](PlainVCs/DIDComm%2BDH/) for an instance of the protocol using plain/simple Verifiable Credentials (VCs) and a Diffie-Hellmann handshake, and 
-- [Anon VCs + Diffie-Hellmann](AnonVCs/DIDComm%2BDH/) for an instance of the protocol using anonymous credentials and a Diffie-Hellmann handshake.
+- [Plain VCs](./PlainVCs/DIDComm/) for an instance of the protocol using plain/simple Verifiable Credentials (VCs) and DIDComm (which is typically the instance of the protocol we refer to), 
+- [Anon VCs](./AnonVCs/DIDComm/) for an instance of the protocol using anonymous credentials and DIDComm, 
+- [Plain VCs + Diffie-Hellmann](./PlainVCs/DIDComm%2BDH/) for an instance of the protocol using plain/simple Verifiable Credentials (VCs) and a Diffie-Hellmann handshake, and 
+- [Anon VCs + Diffie-Hellmann](./AnonVCs/DIDComm%2BDH/) for an instance of the protocol using anonymous credentials and a Diffie-Hellmann handshake.
 
 ## Idea
 
